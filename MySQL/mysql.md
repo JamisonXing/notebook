@@ -142,6 +142,135 @@ DUAL是虚表
 
 ## 比较运算符
 
+### 符号类型运算符
+
+为真返回1，为假返回0，其他情况返回null。
+
 ![比较运算符](/Users/jamison/Library/Application Support/typora-user-images/image-20221210174015509.png)
 
-### 1. 
+#### 1. 等于= , 不等于!=
+
+- 数字与字符串比较时，字符串若转换数值不成功，会隐式转换为0
+
+![=](/Users/jamison/Library/Application Support/typora-user-images/image-20221211115452430.png)
+
+- 两边都是字符的话，按照ANSI比较
+
+![都是字符](/Users/jamison/Library/Application Support/typora-user-images/image-20221211115804188.png)
+
+- 只要有null结果就为null
+
+![null参与比较](/Users/jamison/Library/Application Support/typora-user-images/image-20221211115915192.png)
+
+- 不能对null进行判断
+
+![=不能对null进行判断](/Users/jamison/Library/Application Support/typora-user-images/image-20221211120359552.png)
+
+#### 2. 安全等于<=>
+
+**为NULL而生**
+
+- 与=区别是可以**对null进行判断**
+
+<img src="/Users/jamison/Library/Application Support/typora-user-images/image-20221211120546886.png" >对null进行判断" />
+
+### 非符号类型运算符
+
+![非符号类型运算符](/Users/jamison/Library/Application Support/typora-user-images/image-20221211121015910.png)
+
+#### 1. IS NULL / IS NOT NULL / ISNULL
+
+
+
+![判空](/Users/jamison/Library/Application Support/typora-user-images/image-20221211121345199.png)
+
+#### 2. LEAST / GREATEST
+
+![LEAST/GREATEST](/Users/jamison/Library/Application Support/typora-user-images/image-20221211122202946.png)
+
+#### 3. BETWEEN ... AND
+
+是**闭区间**[6000,8000]
+
+![betweenAnd](/Users/jamison/Library/Application Support/typora-user-images/image-20221211122439979.png)
+
+#### 4. IN / NOT IN
+
+![IN / NOT IN](/Users/jamison/Library/Application Support/typora-user-images/image-20221211122830003.png)
+
+#### 5.  LIKE 模糊查询
+
+%代表**不定数量**的字符，_代表**一个**字符
+
+![LIKE 模糊查询](/Users/jamison/Library/Application Support/typora-user-images/image-20221211123158891.png)
+
+![image-20221211123744913](/Users/jamison/Library/Application Support/typora-user-images/image-20221211123744913.png)
+
+转义字符**\或者自定义转义字符**
+
+![image-20221211123936463](/Users/jamison/Library/Application Support/typora-user-images/image-20221211123936463.png)
+
+#### 6. REGEXP /  RLIKE
+
+![image-20221211124535174](/Users/jamison/Library/Application Support/typora-user-images/image-20221211124535174.png)
+
+![image-20221211124722794](/Users/jamison/Library/Application Support/typora-user-images/image-20221211124722794.png)
+
+## 逻辑运算符
+
+![逻辑运算符](/Users/jamison/Library/Application Support/typora-user-images/image-20221211124801636.png)
+
+**AND可以和OR一起使用但是AND优先级高于OR，注意顺序**
+
+## 位运算符
+
+![位运算符](/Users/jamison/Library/Application Support/typora-user-images/image-20221211125342054.png)
+
+## 运算符的优先级
+
+![运算符的优先级](/Users/jamison/Library/Application Support/typora-user-images/image-20221211125608022.png)
+
+## 习题
+
+![习题](/Users/jamison/Library/Application Support/typora-user-images/image-20221211131948653.png)
+
+```mysql
+#1
+SELECT last_name,salary
+FROM employees 
+WHERE salary NOT BETWEEN 5000 AND 12000;
+#2
+SELECT last_name,department_id
+FROM employees 
+WHERE department_id IN (20, 50);
+#3
+SELECT last_name,job_id
+FROM employees 
+WHERE manager_id IS NULL;
+#4
+SELECT last_name,salary,commission_pct
+FROM employees 
+WHERE commission_pct IS NOT NULL;
+#5
+SELECT last_name
+FROM employees 
+WHERE last_name LIKE '__a%';
+#6
+SELECT last_name
+FROM employees 
+WHERE last_name LIKE '%a%k%' OR last_name LIKE '%k%a%';
+#7
+SELECT first_name,last_name
+FROM employees 
+-- WHERE first_name LIKE '%e';
+WHERE first_name REGEXP 'e$'
+#8
+SELECT last_name,job_id
+FROM employees 
+WHERE department_id BETWEEN 80 AND 100;
+#9
+SELECT last_name,salary,manager_id
+FROM employees 
+WHERE manager_id IN (100,101,110);
+```
+
