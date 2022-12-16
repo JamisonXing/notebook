@@ -1,4 +1,8 @@
-# 第一章、基本的SELECT语句
+# 附录：常用的SQL标准有哪些
+
+![常用的SQL标准有哪些](/Users/jamison/Library/Application Support/typora-user-images/image-20221216142539271.png)
+
+# 第一章 基本的SELECT语句
 
 ## SQL分类
 
@@ -112,7 +116,7 @@ WHERE department_id = 90;
 
 
 
-# 第二章、运算符
+# 第二章 运算符
 
 ## 算数运算符
 
@@ -274,3 +278,397 @@ FROM employees
 WHERE manager_id IN (100,101,110);
 ```
 
+
+
+# 第三章 排序与分页
+
+## 排序
+
+- **如果没有使用排序操作，默认情况下返回的数据是按照添加数据时的顺序显示的**
+
+![image-20221211211503622](/Users/jamison/Library/Application Support/typora-user-images/image-20221211211503622.png)
+
+- **使用 ORDER BY 对查询到的数据进行排序**
+
+升序：ASC（ascend）
+
+降序：DESC（descend）**默认是这个**
+
+![**使用 ORDER BY 对查询到的数据进行排序**](/Users/jamison/Library/Application Support/typora-user-images/image-20221213115642495.png)
+
+- **我们可以使用列的别名进行排序**
+
+![我们可以使用列的别名进行排序](/Users/jamison/Library/Application Support/typora-user-images/image-20221213120044056.png)
+
+注意：列的别名只能在ORDER BY中使用，不能在Where中使用，执行顺序问题，where执行的时候select还没执行，所以列的别名还没加载
+
+![列的别名只能在ORDER BY中使用](/Users/jamison/Library/Application Support/typora-user-images/image-20221213120517390.png)
+
+执行顺序：
+
+![执行顺序](/Users/jamison/Library/Application Support/typora-user-images/image-20221213120745275.png)
+
+- where需要声明在From后，order by 之前
+
+![image-20221213120853924](/Users/jamison/Library/Application Support/typora-user-images/image-20221213120853924.png)
+
+- 二级排序
+
+当某个排序存在相等情况时，启用二级排序，如果还存在一样的就增加排序级数
+
+![二级排序](/Users/jamison/Library/Application Support/typora-user-images/image-20221213122558933.png)
+
+## 分页
+
+为什么要分页
+
+- 查询返回的记录太多了，查看起来很不方便
+- 降低网络压力
+- 一次请求部分数据，降低延迟提升用户体验
+- ......
+
+
+
+**mysql使用limit实现数据的分页显示**
+
+- 每页显示pageSize条记录，此时显示第pageNo页
+- 公式：LIMIT (pageNo - 1) * pageSize, pageSize
+  - 每页显示20条记录，此时显示第一页
+
+  ![image-20221216111712731](/Users/jamison/Library/Application Support/typora-user-images/image-20221216111712731.png)
+
+  - 每页显示20条记录，此时显示第二页
+
+  ![image-20221216111825880](/Users/jamison/Library/Application Support/typora-user-images/image-20221216111825880.png)
+
+**MySql 8.0的新特性：LIMIT pageSize OFFSET offset**
+
+![image-20221216112746265](/Users/jamison/Library/Application Support/typora-user-images/image-20221216112746265.png)
+
+**排序和分页的课后练习**
+
+![image-20221216120007727](/Users/jamison/Library/Application Support/typora-user-images/image-20221216120007727.png)	解答：
+
+```mysql
+#1
+SELECT last_name, department_id, salary *(1 + IFNULL(commission_pct, 0)) * 12 AS "annue_salary"
+FROM employees
+ORDER BY annue_salary DESC, last_name ASC;
+
+#2
+SELECT last_name, salary
+FROM employees
+WHERE salary NOT BETWEEN 8000 AND 17000
+ORDER BY salary DESC
+LIMIT 20, 20;
+
+#3
+SELECT last_name, email, department_id
+FROM employees
+#WHERE email LIKE '%e%'
+WHERE email REGEXP '[e]'
+ORDER BY LENGTH(email) DESC, department_id ASC;
+```
+
+
+
+# 第四章 多表查询
+
+指两个或者多个表一起完成查询操作。
+
+前提条件：这些表之间是有关系的（一对一，一对多），他们之间一定是有关联字段，这个关联字段可能建立了外键，也可能没有外键。比如：员工表和部门表，这两个靠“部门编号”进行关联。
+
+## 一个案例引发的多表查询
+
+### 1.1 案例说明
+
+![image-20221216121255013](/Users/jamison/Library/Application Support/typora-user-images/image-20221216121255013.png)
+
+**多表查询的实现方式：**
+
+- 错误方式：出现笛卡尔积错误
+
+  ![image-20221216124155537](/Users/jamison/Library/Application Support/typora-user-images/image-20221216124155537.png)
+
+  笛卡尔积的理解：
+
+  ![image-20221216124806008](/Users/jamison/Library/Application Support/typora-user-images/image-20221216124806008.png)
+
+  ![image-20221216124855846](/Users/jamison/Library/Application Support/typora-user-images/image-20221216124855846.png)
+
+- 正确方式：需要有连接条件
+
+  ![image-20221216124635114](/Users/jamison/Library/Application Support/typora-user-images/image-20221216124635114.png)
+
+### 1.2 案例分析和问题解决
+
+- **笛卡尔积错误会在下面条件下产生**
+
+  - 忽略多个表的连接条件（或关联条件）
+  - 连接条件（或关联条件）无效
+  - 所有表中的所有行互相连接
+
+- 为了避免笛卡尔积，可以在**WHERE加入有效的连接条件**
+
+- 加入连接条件后，查询语法：
+
+  ```mysql
+  SELECT table1.column, table2.column
+  FROM table1, table2
+  WHERE table1.column1 = table2.column2; #连接条件
+  ```
+
+  - **在WHERE加入有效的连接条件**
+
+
+
+## 多表查询
+
+- 如果查询语句中出现了多个表中都存在的字段，则必须指明此字段所在的表，不明确会报错
+
+  ![image-20221216130702871](/Users/jamison/Library/Application Support/typora-user-images/image-20221216130702871.png)
+
+  **但是从sql优化的角度来说，建议多表查询时，每个字段前都指明其所在的表。不用去每个表查这个字段，直接指定表，节省了时间。**
+
+  ![image-20221216130921810](/Users/jamison/Library/Application Support/typora-user-images/image-20221216130921810.png)
+
+- 可以给表起别名，在select和where字段中使用别名
+
+  ![image-20221216131239767](/Users/jamison/Library/Application Support/typora-user-images/image-20221216131239767.png)
+
+  **注意：**如果给表起了别名，一旦在select和where字段中使用表名的话，则必须使用表的别名，而不能再使用表的原名，否则会报错。
+
+  ![image-20221216131525431](/Users/jamison/Library/Application Support/typora-user-images/image-20221216131525431.png)
+
+  - 练习：查询员工的employee_id, last_name, department_name, city
+
+    ```mysql
+    SELECT emp.employee_id, emp.last_name, dept.department_name, loc.city
+    FROM employees emp, departments dept, locations loc
+    WHERE emp.department_id = dept.department_id
+    AND dept.location_id = loc.location_id;
+    ```
+
+    **结论：如果有n个表实现多表的查询，则需要至少n-1个连接条件。**
+
+## 多表查询的分类
+
+角度1：等值连接和非等值连接
+
+角度2：自连接和非自连接
+
+角度3：内连接和外连接
+
+###  1.  等值连接和非等值连接
+
+- 非等值连接的例子
+
+  ![image-20221216134305806](/Users/jamison/Library/Application Support/typora-user-images/image-20221216134305806.png)
+
+### 2. 自连接和非自连接
+
+- 练习：查询员工id，员工姓名及其管理者的id和姓名
+
+  ![image-20221216135432295](/Users/jamison/Library/Application Support/typora-user-images/image-20221216135432295.png)
+
+  ![image-20221216135807199](/Users/jamison/Library/Application Support/typora-user-images/image-20221216135807199.png)
+
+### 3. 内连接和外连接
+
+**内连接：**合并具有同一列的两个以上表的行，结果集中不包括一个表和另一个表不匹配的行（简单来说就是不包含不匹配的行，上面写的都是内连接）
+
+**外连接：**合并具有同一列的两个以上表的行，结果集中包括一个表和另一个表不匹配的行之外，还查询到了左表或者右表不匹配的行。
+
+- 外链接的分类：左外连接、右外连接、慢外连接
+
+  ![image-20221216140335134](/Users/jamison/Library/Application Support/typora-user-images/image-20221216140335134.png)
+
+  - 左外连接：两个表在连接过程中除了返回满足连接条件的行以还返回左表中不满足条件的行
+  - 右外连接：两个表在连接过程中除了返回满足连接条件的行以还返回右表中不满足条件的行
+  - 满外连接：两个表在连接过程中除了返回满足连接条件的行以还返回左表和右表中不满足条件的行
+
+**练习**：查询**所有的**员工的last_name, department_name信息（”所有的“就是提示你使用外连接）
+
+![image-20221216143256037](/Users/jamison/Library/Application Support/typora-user-images/image-20221216143256037.png)
+
+- SQL92语法（见附录）实现内连接：见上，略
+
+- SQL92语法（见附录）实现外连接：使用 +       -------MySQL不支持SQL92语法中外连接的写法
+
+  ![image-20221216143522793](/Users/jamison/Library/Application Support/typora-user-images/image-20221216143522793.png)
+
+  思想类似于：左右脚不对称，所以就在右边加个东西垫一下
+
+  ![image-20221216143345556](/Users/jamison/Library/Application Support/typora-user-images/image-20221216143345556.png)
+
+  - SQL99语法使用JOIN ...ON的方式实现多表的查询。这种方式也能解决外连接的问题。MySQL是支持此种方式的。
+
+    - SQL99语法实现内连接
+
+      ![image-20221216151047323](/Users/jamison/Library/Application Support/typora-user-images/image-20221216151047323.png)
+
+    - SQL99语法实现外连接
+
+      ![image-20221216151640359](/Users/jamison/Library/Application Support/typora-user-images/image-20221216151640359.png)
+
+      **注意：MySQL不支持满外连接的这种写法：FULL OUTER JOIN，只能换种方式实现。**
+
+## UNION
+
+利用union关键字，可以给出多条select语句，并将他们的结果组合为单个结果集。合并时，两个表对应的列数和数据类型必须相同，并且相互对应。各个SELECT语句之间使用union或者union all关键字分隔。
+
+语法格式：
+
+![image-20221216153526194](/Users/jamison/Library/Application Support/typora-user-images/image-20221216153526194.png)
+
+**UNION操作符：**
+
+![image-20221216153805718](/Users/jamison/Library/Application Support/typora-user-images/image-20221216153805718.png)
+
+UNION操作符返回两个查询结果集的并集，去除了重复记录。
+
+**UNION ALL操作符：**
+
+![image-20221216153753432](/Users/jamison/Library/Application Support/typora-user-images/image-20221216153753432.png)
+
+UNION ALL操作符返回两个查询结果的并集。对于两个结果集的重复部分，不去重。
+
+> 注意：执行Union all 需要的资源比union 少。如果明确知道两个select查询不存在交集，则使用union all,以提高查询效率。
+
+## 七种JOIN的实现
+
+![七种JOIN的实现](/Users/jamison/Library/Application Support/typora-user-images/image-20221216154236843.png)
+
+- 中图，左上图， 右上图
+
+  ![image-20221216154501479](/Users/jamison/Library/Application Support/typora-user-images/image-20221216154501479.png)
+
+- 左中图（右中图同）
+
+  在左上图的基础上抹掉相同部分
+
+  ![image-20221216155428340](/Users/jamison/Library/Application Support/typora-user-images/image-20221216155428340.png)
+
+- 左下图（满外连接）
+
+  - 方式1：左上图 UNION ALL 右中图
+
+    ![image-20221216160153368](/Users/jamison/Library/Application Support/typora-user-images/image-20221216160153368.png)
+
+    方式2：左中图 UNION ALL 右上图
+
+    ![image-20221216160326690](/Users/jamison/Library/Application Support/typora-user-images/image-20221216160326690.png)
+
+- 右下图：左中图 UNION ALL 右中图
+
+  ![image-20221216160432157](/Users/jamison/Library/Application Support/typora-user-images/image-20221216160432157.png)
+
+## SQL99语法的新特性
+
+以上内容完全满足平时要求，新特性作为了解
+
+- 自然连接
+
+  ![image-20221216162733342](/Users/jamison/Library/Application Support/typora-user-images/image-20221216162733342.png)
+
+- USING
+
+  ![image-20221216162856542](/Users/jamison/Library/Application Support/typora-user-images/image-20221216162856542.png)
+
+  ![image-20221216162928409](/Users/jamison/Library/Application Support/typora-user-images/image-20221216162928409.png)
+
+  自连接不能用
+
+## 本章小结
+
+表连接的约束条件有三种方式：WHERE, ON, USING
+
+- WHERE：适用于所有关联查询
+- `ON`：只能和JOIN一起使用 ， 只能写关联条件，可读性更好。
+- USING：可以和JOIN一起使用，而且要求两个关联字段在关联表中名称一致，而且只能表示关联字段相等。
+
+![image-20221216164513134](/Users/jamison/Library/Application Support/typora-user-images/image-20221216164513134.png)
+
+![image-20221216164531204](/Users/jamison/Library/Application Support/typora-user-images/image-20221216164531204.png)
+
+**注意：**
+
+我们要**控制表连接的数量**。多表连接就相当于嵌套for循环一样，非常消耗资源，会让SQL查询性能下降的严重，因此不要连接不必要的表。在许多DBMS中，也会有最大连接表的限制。
+
+> ![image-20221216165007419](/Users/jamison/Library/Application Support/typora-user-images/image-20221216165007419.png)
+
+## 多表查询课后习题
+
+![image-20221216165439013](/Users/jamison/Library/Application Support/typora-user-images/image-20221216165439013.png)
+
+​	 解答：
+
+```mysql
+#1
+SELECT e.last_name, e.department_id, d.department_name
+FROM employees e LEFT JOIN departments d
+ON e.department_id = d.department_id;
+
+#2
+SELECT e.job_id, d.location_id, e.department_id
+FROM employees e JOIN departments d
+#ON e.department_id = 90 AND d.department_id = 90; 最好不要这样写，连接是连接筛选是筛选。
+ON e.department_id = d.department_id
+WHERE e.department_id = 90;
+
+#3
+SELECT e.last_name, d.department_name, d.location_id, l.city
+FROM employees e LEFT JOIN departments d
+ON e.department_id = d.department_id
+LEFT JOIN locations l #两个地方都要加left，因为要求的是所有，且两个表满足条件的记录都比employees表少
+ON l.location_id = d.location_id
+WHERE e.commission_pct IS NOT NULL;
+
+#4
+SELECT e.last_name, e.job_id, d.department_id, d.department_name
+FROM employees e JOIN departments d
+ON e.department_id = d.department_id
+JOIN locations l
+ON d.location_id = l.location_id
+WHERE l.city = 'Toronto';
+#SQL92语法
+SELECT e.last_name, e.job_id, d.department_id, d.department_name
+FROM employees e, departments d, locations l
+WHERE e.department_id = d.department_id
+AND d.location_id = l.location_id
+AND l.city = 'Toronto';
+
+#5
+SELECT d.department_name, l.street_address, e.last_name, e.job_id, e.salary
+FROM employees e JOIN departments d
+ON e.department_id = d.department_id
+JOIN locations l
+ON d.location_id = l.location_id
+WHERE d.department_name = 'Executive';
+
+#6
+SELECT e.last_name "employees", e.employee_id "Emp#", m.last_name "manager", m.employee_id "Mgr#"
+FROM employees e LEFT JOIN employees m #如果希望查出boss的话，就用左外
+ON e.manager_id = m.employee_id;
+
+#7
+SELECT d.department_name
+FROM employees e RIGHT JOIN departments d
+ON e.department_id = d.department_id
+WHERE e.department_id IS NULL;
+#本题也可以使用子查询
+
+#8
+SELECT l.city
+FROM departments d RIGHT JOIN locations l
+ON d.location_id = l.location_id
+WHERE d.location_id IS NULL;
+
+#9
+SELECT e.last_name, e.department_id, d.department_name
+FROM employees e JOIN departments d
+ON e.department_id = d.department_id
+WHERE d.department_name IN ('Sales', 'IT');
+```
+
+# 第五章 单行函数
