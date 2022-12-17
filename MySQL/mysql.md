@@ -380,7 +380,7 @@ ORDER BY LENGTH(email) DESC, department_id ASC;
 
 ## 一个案例引发的多表查询
 
-### 1.1 案例说明
+### 1. 案例说明
 
 ![image-20221216121255013](/Users/jamison/Library/Application Support/typora-user-images/image-20221216121255013.png)
 
@@ -400,7 +400,7 @@ ORDER BY LENGTH(email) DESC, department_id ASC;
 
   ![image-20221216124635114](/Users/jamison/Library/Application Support/typora-user-images/image-20221216124635114.png)
 
-### 1.2 案例分析和问题解决
+### 2. 案例分析和问题解决
 
 - **笛卡尔积错误会在下面条件下产生**
 
@@ -672,3 +672,183 @@ WHERE d.department_name IN ('Sales', 'IT');
 ```
 
 # 第五章 单行函数
+
+MySQL提供了丰富的内置函数，这些函数使得数据的管理和维护更加方便，能够更好的提供数据的分析和统计功能，在一定程度上提高了数据分析与统计的效率。
+
+MySQL提供的内置函数从`实现功能的角度`可以分为数值函数，字符串函数，日期和时间函数，流程控制函数，加密和解密函数，获取MySQL信息函数，聚合函数等。这里，宋老师将这些丰富的内置函数再分为两类：`单行函数`和`聚合函数（分组函数）`。
+
+![image-20221217110439169](/Users/jamison/Library/Application Support/typora-user-images/image-20221217110439169.png)
+
+**单行函数：**
+
+- 操作数据对象
+- 接收参数返回一个结果
+- **只对一行进行变换**
+- **每行返回一个结果**
+- 可以嵌套
+- 参数可以是一列或者一个值
+
+## 数值函数pp
+
+### 1. 基本函数
+
+![基本数值函数](/Users/jamison/Library/Application Support/typora-user-images/image-20221217111000735.png)
+
+### 2. 角度与弧度互换函数
+
+![角度与弧度互换函数](/Users/jamison/Library/Application Support/typora-user-images/image-20221217112037693.png)
+
+### 3. 三角函数
+
+![image-20221217112113527](/Users/jamison/Library/Application Support/typora-user-images/image-20221217112113527.png)
+
+### 4. 指数和对数
+
+![指数和对数](/Users/jamison/Library/Application Support/typora-user-images/image-20221217112542206.png)
+
+### 5. 进制间的转换
+
+![进制间的转换](/Users/jamison/Library/Application Support/typora-user-images/image-20221217112925701.png)
+
+## 字符串函数
+
+**注意：MySQL字符串的索引从1开始**
+
+![字符串函数](/Users/jamison/Library/Application Support/typora-user-images/image-20221217113234399.png)
+
+![image-20221217114559075](/Users/jamison/Library/Application Support/typora-user-images/image-20221217114559075.png)
+
+![image-20221217115128258](/Users/jamison/Library/Application Support/typora-user-images/image-20221217115128258.png)
+
+## 日期和时间函数
+
+### 1. 获取日期和时间
+
+![image-20221217115543819](/Users/jamison/Library/Application Support/typora-user-images/image-20221217115543819.png)
+
+### 2. 日期与时间戳的转换
+
+![image-20221217120419284](/Users/jamison/Library/Application Support/typora-user-images/image-20221217120419284.png)
+
+### 3. 获取月份、星期、星期数、天数等函数
+
+![image-20221217120612388](/Users/jamison/Library/Application Support/typora-user-images/image-20221217120612388.png)
+
+### 4. 日期的操作函数
+
+![image-20221217121107528](/Users/jamison/Library/Application Support/typora-user-images/image-20221217121107528.png)
+
+### 5. 时间和秒钟的转换函数
+
+![image-20221217121418666](/Users/jamison/Library/Application Support/typora-user-images/image-20221217121418666.png)
+
+### 6. 计算日期和时间的函数
+
+![image-20221217121626014](/Users/jamison/Library/Application Support/typora-user-images/image-20221217121626014.png)
+
+例子：
+
+![image-20221217121917208](/Users/jamison/Library/Application Support/typora-user-images/image-20221217121917208.png)
+
+![image-20221217122003215](/Users/jamison/Library/Application Support/typora-user-images/image-20221217122003215.png)
+
+例子：
+
+![image-20221217122129680](/Users/jamison/Library/Application Support/typora-user-images/image-20221217122129680.png)
+
+### 7. 日期的格式化和解析
+
+格式化：日期 --> 字符串
+
+解析：字符串 --> 日期
+
+![image-20221217122826283](/Users/jamison/Library/Application Support/typora-user-images/image-20221217122826283.png)
+
+格式：
+
+![image-20221217123039613](/Users/jamison/Library/Application Support/typora-user-images/image-20221217123039613.png)
+
+![image-20221217123110591](/Users/jamison/Library/Application Support/typora-user-images/image-20221217123110591.png)
+
+Get_Format函数：
+
+![image-20221217123423743](/Users/jamison/Library/Application Support/typora-user-images/image-20221217123423743.png)
+
+## 流程控制函数
+
+![image-20221217125018330](/Users/jamison/Library/Application Support/typora-user-images/image-20221217125018330.png)
+
+练习一：
+
+![image-20221217125000566](/Users/jamison/Library/Application Support/typora-user-images/image-20221217125000566.png)
+
+练习二：
+
+![image-20221217125210285](/Users/jamison/Library/Application Support/typora-user-images/image-20221217125210285.png)
+
+## 加密和解密函数
+
+![加密解密函数](/Users/jamison/Library/Application Support/typora-user-images/image-20221217155557818.png)
+
+注意：password，decode, encode函数在mysql 8.0弃用 
+
+## MySQL信息函数
+
+![image-20221217160257829](/Users/jamison/Library/Application Support/typora-user-images/image-20221217160257829.png)
+
+## 其他函数
+
+## ![image-20221217160516036](/Users/jamison/Library/Application Support/typora-user-images/image-20221217160516036.png)	单行函数课后练习
+
+![image-20221217161408822](/Users/jamison/Library/Application Support/typora-user-images/image-20221217161408822.png)
+
+```mysql
+#1
+SELECT SYSDATE()
+FROM DUAL;
+
+#2
+SELECT employee_id, last_name, salary, salary * 1.2 "new salary"
+FROM employees;
+
+#3
+SELECT last_name, LENGTH(last_name) "name length"
+FROM employees
+ORDER BY last_name ASC;
+
+#4
+SELECT CONCAT(employee_id, ' ',last_name, ' ', salary) "OUT_PUT"
+FROM employees;
+
+#5
+SELECT employee_id, DATEDIFF(SYSDATE(), hire_date)/365 "worked_years", DATEDIFF(SYSDATE(), hire_date) "worked_days"
+FROM employees
+ORDER BY worked_years DESC;
+
+#6
+SELECT last_name, hire_date, department_id
+FROM employees
+WHERE YEAR(hire_date) >= 1997 #hire_date > '1997-01-01'
+AND department_id IN(80, 90, 110)
+AND commission_pct IS NOT NULL;
+
+#7
+SELECT employee_id, hire_date
+FROM employees
+WHERE DATEDIFF(SYSDATE(), hire_date) > 10000;
+
+#8
+SELECT CONCAT(last_name, ' earns ', salary, 'monthly but wants ', salary * 3)
+FROM employees;
+
+#9
+SELECT last_name, job_id "job", CASE job_id
+																WHEN 'AD_PRES' THEN 'A'
+																WHEN 'ST_MAN' THEN 'b'
+																WHEN 'IT_PROG' THEN 'C'
+																WHEN 'SA_REP' THEN 'D'
+																ELSE 'E'
+																END "grade"
+FROM employees
+```
+
