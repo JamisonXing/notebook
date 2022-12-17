@@ -852,3 +852,105 @@ SELECT last_name, job_id "job", CASE job_id
 FROM employees
 ```
 
+
+
+# 第六章 聚合函数
+
+## 常见的聚合函数
+
+对应上一章，也可以叫做多行函数，聚合函数，他是对一组数据进行汇总的函数，输入的是一组数据的集合，输出的是单个值。
+
+**常用的聚合函数：**
+
+- AVG()
+- SUM()
+- MAX()
+- MIN()
+- COUNT()
+
+**聚合函数语法：**
+
+![image-20221217171412073](/Users/jamison/Library/Application Support/typora-user-images/image-20221217171412073.png)
+
+例子：
+
+![image-20221217172514452](/Users/jamison/Library/Application Support/typora-user-images/image-20221217172514452.png)
+
+![image-20221217172837861](/Users/jamison/Library/Application Support/typora-user-images/image-20221217172837861.png)
+
+练习：查询公司中的平均奖金率
+
+```mysql
+#错误的
+SELECT AVG(commission_pct)
+FROM employees;
+
+#正确的
+SELECT AVG(IFNULL(commission_pct, 0))
+#或者
+,SUM(commission_pct) / COUNT(IFNULL(commission_pct, 0))
+FROM employees;
+```
+
+小问题：如果需要统计表中的记录数，使用count(*), count(1), count(具体字段)那个效率更高呢？
+
+- 如果使用MyISAM存储引擎，则三者效率相同，都是O(1)
+- 如果使用的是InnoDB引擎，则三者效率：count(*) = count(1) > count(字段)
+
+## GROUP BY的使用
+
+### 1. 基本使用
+
+![image-20221217184103970](/Users/jamison/Library/Application Support/typora-user-images/image-20221217184103970.png)
+
+需求：
+
+- 查询各个部门的平均工资，最高工资
+
+  ```mysql
+  SELECT department_id, AVG(salary), MAX(salary)
+  FROM employees
+  GROUP BY department_id;
+  ```
+
+- 查询各个job_id的平均工资
+
+  ```mysql
+  SELECT job_id, AVG(salary)
+  FROM employees
+  GROUP BY job_id;
+  ```
+
+### 2. 使用多个列进行分组
+
+![image-20221217184817238](/Users/jamison/Library/Application Support/typora-user-images/image-20221217184817238.png)
+
+需求：
+
+- 查询各个department_id, job_id的平均工资
+
+  ```mysql
+  SELECT department_id, job_id, AVG(salary)
+  FROM employees
+  GROUP BY department_id, job_id;
+  #或者
+  SELECT job_id, department_id, AVG(salary)
+  FROM employees
+  GROUP BY job_id, department_id;
+  ```
+
+**注意：**
+
+以下是错误的，MySql不会报错但是Oracle会报错，MySQ中不报错但是显示结果错误，job_id显示不全
+
+![image-20221217190332770](/Users/jamison/Library/Application Support/typora-user-images/image-20221217190332770.png)
+
+**以上可以得出一个结论：select中非组函数字段必须声明在group by中，但是group by声明的字段可以不出现在select中。**
+
+**GROUP BY语句的位置**：FROM后面，WHERE后面，ORDER BY前面，LIMIT前面
+
+### 3. GROUP BY中使用WITH ROLLUP
+
+![image-20221217191417066](/Users/jamison/Library/Application Support/typora-user-images/image-20221217191417066.png)
+
+## HAVING的使用（用来过滤数据）
