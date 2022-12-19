@@ -2699,4 +2699,4 @@ public class MyServiceLoader<S> {
 1. 遍历加载所有的实现类，这样效率还是相对较低的；
 2. 当多个 `ServiceLoader` 同时 `load` 时，会有并发问题。
 
-<font color='red'>SPI不是很懂</font>
+<font color='red'>SPI没怎么看懂</font>
