@@ -954,3 +954,138 @@ FROM employees;
 ![image-20221217191417066](/Users/jamison/Library/Application Support/typora-user-images/image-20221217191417066.png)
 
 ## HAVING的使用（用来过滤数据）
+
+### 1. 基本使用
+
+- **需求1**：查询各个部门中最高工资比10000高的部门信息
+
+错误的写法：
+
+```mysql
+SELECT department_id, MAX(salary)
+FROM employees
+WHERE MAX(salary) > 10000
+GROUP BY department_id;
+```
+
+为了解决以上问题：
+
+**要求1：如果过滤条件中使用了聚合函数，则必须使用HAVING来替换WHERE。否则会报错**
+
+**要求2：HAVING必须声明在GROUP BY的后面**
+
+所以正确写法为：
+
+```mysql
+SELECT department_id, MAX(salary)
+FROM employees
+GROUP BY department_id
+HAVING MAX(salary) > 10000;
+```
+
+**要求3：开发中我们使用HAVING的前提是SQL中使用了GROUP BY。**
+
+- **需求2**：查询部门id为10， 20， 30，40这四个部门中最高工资比10000高的部门信息
+
+方式1：
+
+```mysql
+SELECT department_id, MAX(salary)
+FROM employees
+WHERE department_id IN(10, 20, 30, 40)
+GROUP BY department_id
+HAVING MAX(salary) > 10000;
+```
+
+方式2：
+
+```mysql
+SELECT department_id, MAX(salary)
+FROM employees
+GROUP BY department_id
+HAVING MAX(salary) > 10000 AND department_id IN(10, 20, 30, 40);
+```
+
+要求：当过滤条件中有聚合函数时，则此过滤条件必须声明在HAVING中。
+
+​			当过滤条件中没有聚合函数时，则此过滤条件声明在WHERE或HAVING中都可以。但是开发中建议声明在			WHERE中，即方式一，效率更高。
+
+### 2. WHERE和HAVING的对比
+
+![image-20221219133529190](/Users/jamison/Library/Application Support/typora-user-images/image-20221219133529190.png)
+
+![image-20221219134542702](/Users/jamison/Library/Application Support/typora-user-images/image-20221219134542702.png)
+
+当数据量特别大的时候，运行效率会有很大区别，所以要注意他们的使用。
+
+### 3. SQL底层执行原理
+
+- select语句结构
+
+  ![image-20221219134918216](/Users/jamison/Library/Application Support/typora-user-images/image-20221219134918216.png)
+
+- SQL语句的执行顺序
+
+  from-> on -> (left right join) -> where -> group by -> having -> select -> distinct -> order by -> limit
+
+  ![image-20221219135100561](/Users/jamison/Library/Application Support/typora-user-images/image-20221219135100561.png)
+  
+  在select语句中执行这些步骤的时候，每个步骤都会产生一个`虚拟表`，然后将这个虚拟表传入下一个步骤中作为输入。需要注意的是，这些步骤隐含在SQL的执行过程中，对于我们来说是不可见的。
+  
+- SQL语句的执行原理
+
+  ![image-20221219140758938](/Users/jamison/Library/Application Support/typora-user-images/image-20221219140758938.png)
+
+## 聚合函数练习题
+
+![image-20221219141218330](/Users/jamison/Library/Application Support/typora-user-images/image-20221219141218330.png)
+
+解答：
+
+```mysql
+#1
+#不可以
+
+#2
+SELECT MAX(salary), MIN(salary), AVG(salary), SUM(salary)
+FROM employees;
+
+#3
+SELECT job_id, MAX(salary), MIN(salary), AVG(salary), SUM(salary)
+FROM employees
+GROUP BY job_id;
+
+#4
+SELECT job_id, COUNT(*)
+FROM employees
+GROUP BY job_id;
+
+#5
+SELECT MAX(salary) - MIN(salary) "gap"
+FROM employees;
+
+#6
+SELECT manager_id, MIN(salary)
+FROM employees
+WHERE manager_id IS NOT NULL
+GROUP BY manager_id
+HAVING MIN(salary) > 6000;
+
+#7
+SELECT d.department_name, d.location_id, COUNT(employee_id), AVG(salary) "avg_salary"
+FROM employees e RIGHT JOIN departments d
+ON e.department_id = d.department_id
+GROUP BY department_name, location_id
+ORDER BY avg_salary DESC;
+
+#8, 这一题好像有点问题，网友说需要满外连接
+SELECT d.department_name, e.job_id, MIN(salary)
+FROM employees e RIGHT JOIN departments d
+ON e.department_id = d.department_id
+GROUP BY department_name, job_id;
+```
+
+
+
+# 第七章 子查询
+
