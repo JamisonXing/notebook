@@ -1089,3 +1089,137 @@ GROUP BY department_name, job_id;
 
 # 第七章 子查询
 
+子查询指的是一个查询语句嵌套在另一个查询语句内部的查询，这个特性从MySQL 4.1开始引入。
+
+SQL中子查询的使用大大增加了查询的能力，因为很多时候查询需要从结果集中获取数据，或者需要从同一个表中先计算得出一个数据结果，然后与这个数据结果（可能是某个标量，也可能是某个集合）进行比较。
+
+## 从实际问题出发
+
+### 1. 实际问题
+
+需求：谁的工资比Abel高？
+
+```MySQL
+#方式一
+SELECT salary
+FROM employees
+WHERE last_name = 'Abel';
+
+SELECT last_name, salary
+FROM employees
+WHERE salary > 11000;
+
+#方式二：自连接
+SELECT e2.last_name, e2.salary
+FROM employees e1 JOIN employees e2
+ON e1.last_name = 'Abel' AND e1.salary < e2.salary;
+
+#方式三：子查询
+SELECT last_name, salary
+FROM employees
+WHERE salary > (
+								SELECT salary
+								FROM employees
+								WHERE last_name = 'Abel';
+								);
+```
+
+### 2. 子查询的基本使用
+
+- 子查询的语法结构
+
+  ![image-20221219163445203](/Users/jamison/Library/Application Support/typora-user-images/image-20221219163445203.png)
+
+- 子查询（内查询）在主查询之前一次执行完成。
+
+- 子查询的结果供主查询（外查询）使用。
+
+- **注意事项：**
+
+  - 子查询要包含在括号内
+  - 将子查询放在比较条件的右侧（写在左侧不会报错但是可读性差）
+  - 单行操作符对应单行子查询，多行操作符对应对行子查询
+
+### 3. 子查询的分类
+
+![image-20221219164538468](/Users/jamison/Library/Application Support/typora-user-images/image-20221219164538468.png)
+
+小结：
+
+从内查询返回的结果的条目数分为单行和多行子查询，根据内查询是否被执行多次，分为相关和不相关子查询。
+
+![image-20221219164818837](/Users/jamison/Library/Application Support/typora-user-images/image-20221219164818837.png)
+
+## 单行子查询
+
+### 1. 单行比较操作符
+
+![image-20221219165035146](/Users/jamison/Library/Application Support/typora-user-images/image-20221219165035146.png)
+
+- 查询工资大于149号员工工资的员工信息
+
+  ![image-20221219165353229](/Users/jamison/Library/Application Support/typora-user-images/image-20221219165353229.png)
+
+- 返回job_id和141号员工相同，salary比143号员工多的员工姓名，job_id和工资
+
+  ![image-20221219170032167](/Users/jamison/Library/Application Support/typora-user-images/image-20221219170032167.png)
+
+- 返回公司中工资最少的员工的last_name, job_id和salary
+
+  ![image-20221219170347974](/Users/jamison/Library/Application Support/typora-user-images/image-20221219170347974.png)
+
+- 题目：
+
+  ![image-20221219171747896](/Users/jamison/Library/Application Support/typora-user-images/image-20221219171747896.png)
+
+  解答：
+
+  方式一：
+
+  ![image-20221219171813446](/Users/jamison/Library/Application Support/typora-user-images/image-20221219171813446.png)
+
+  方式二（了解）：
+
+  ![image-20221219171904188](/Users/jamison/Library/Application Support/typora-user-images/image-20221219171904188.png)
+
+### 2. HAVING中的子查询
+
+- 首先执行子查询。
+- 向主查询中的HAVING子句返回结果。
+
+**题目：查询最低工资大于50号部门最低工资的部门id和其最低工资**
+
+```mysql
+SELECT department_id, MIN(salary)
+FROM employees
+WHERE department_id IS NOT NULL
+GROUP BY department_id
+HAVING MIN(salary) > (SELECT MIN(salary) FROM employees WHERE department_id = 50);
+```
+
+### 3. CASE中的子查询
+
+题目：
+
+![image-20221219174301374](/Users/jamison/Library/Application Support/typora-user-images/image-20221219174301374.png)
+
+解答：
+
+```mysql
+SELECT employee_id, last_name, (CASE department_id
+	WHEN (SELECT department_id FROM departments WHERE location_id = 1800) THEN
+		'Canada'
+	ELSE
+		'USA'
+END
+) "locations"
+FROM employees;
+```
+
+### 4. 子查询中的空值问题
+
+![image-20221219175051899](/Users/jamison/Library/Application Support/typora-user-images/image-20221219175051899.png)
+
+### 5. 非法使用子查询
+
+![image-20221219175216874](/Users/jamison/Library/Application Support/typora-user-images/image-20221219175216874.png)
