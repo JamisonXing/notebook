@@ -1223,3 +1223,554 @@ FROM employees;
 ### 5. 非法使用子查询
 
 ![image-20221219175216874](/Users/jamison/Library/Application Support/typora-user-images/image-20221219175216874.png)
+
+## 多行子查询
+
+![image-20221220102257051](/Users/jamison/Library/Application Support/typora-user-images/image-20221220102257051.png)
+
+### 	1. 多行比较操作符
+
+![image-20221220102335704](/Users/jamison/Library/Application Support/typora-user-images/image-20221220102335704.png)
+
+**ANY/ALL**
+
+题目：
+
+![image-20221220103451922](/Users/jamison/Library/Application Support/typora-user-images/image-20221220103451922.png)
+
+解答：
+
+![image-20221220103813873](/Users/jamison/Library/Application Support/typora-user-images/image-20221220103813873.png)
+
+题目2：
+
+![image-20221220103743076](/Users/jamison/Library/Application Support/typora-user-images/image-20221220103743076.png)
+
+解答：
+
+![image-20221220103730515](/Users/jamison/Library/Application Support/typora-user-images/image-20221220103730515.png)
+
+题目3：
+
+![image-20221220105030339](/Users/jamison/Library/Application Support/typora-user-images/image-20221220105030339.png)
+
+解答：
+
+- 方式1：
+
+  ![image-20221220105107289](/Users/jamison/Library/Application Support/typora-user-images/image-20221220105107289.png)
+
+- 方式2：
+
+  ![image-20221220105534976](/Users/jamison/Library/Application Support/typora-user-images/image-20221220105534976.png) 
+
+### 2. 空值问题
+
+![image-20221220105634160](/Users/jamison/Library/Application Support/typora-user-images/image-20221220105634160.png)
+
+## 相关子查询
+
+### 1. 相关子查询执行流程
+
+如果子查询依赖于外部查询，通常情况下都是因为子查询中的表使用到了外部的表，并进行了条件关联，因此每执行一次外部查询，子查询都要重新计算一次，这样的子查询就称为关联子查询。
+
+相关子查询按照一行接一行的顺序执行，主查询的每一行都执行一次子查询。
+
+![image-20221220111008688](/Users/jamison/Library/Application Support/typora-user-images/image-20221220111008688.png)
+
+**说明：**子查询使用主查询中的列
+
+### 2. 代码示例
+
+题目1：
+
+![image-20221220112412776](/Users/jamison/Library/Application Support/typora-user-images/image-20221220112412776.png)
+
+解答：
+
+- 方式1：相关子查询
+
+  ![image-20221220112432684](/Users/jamison/Library/Application Support/typora-user-images/image-20221220112432684.png)
+
+- 方式2：在FROM中声明子查询
+
+  ![image-20221220112529129](/Users/jamison/Library/Application Support/typora-user-images/image-20221220112529129.png)
+
+题目2：
+
+![image-20221220114323226](/Users/jamison/Library/Application Support/typora-user-images/image-20221220114323226.png)
+
+解答：GROUP BY中的子查询
+
+![image-20221220114520257](/Users/jamison/Library/Application Support/typora-user-images/image-20221220114520257.png)
+
+**结论：除了LIMIT和GROUP BY不能写子查询之外，其他位置都可以声明子查询**
+
+题目3：
+
+![image-20221220114810977](/Users/jamison/Library/Application Support/typora-user-images/image-20221220114810977.png)
+
+ 解答：
+
+![image-20221220115223389](/Users/jamison/Library/Application Support/typora-user-images/image-20221220115223389.png)
+
+### 3. EXIST与NOT EXIST关键字
+
+题目1：
+
+![image-20221220120703995](/Users/jamison/Library/Application Support/typora-user-images/image-20221220120703995.png)
+
+解答：
+
+- 方式1：自连接
+
+  ![image-20221220120725500](/Users/jamison/Library/Application Support/typora-user-images/image-20221220120725500.png)
+
+- 方式2：
+
+  ![image-20221220120844798](/Users/jamison/Library/Application Support/typora-user-images/image-20221220120844798.png)
+
+- 方式3：EXIST
+
+  ![image-20221220120910976](/Users/jamison/Library/Application Support/typora-user-images/image-20221220120910976.png)
+
+题目2：
+
+![image-20221220121013847](/Users/jamison/Library/Application Support/typora-user-images/image-20221220121013847.png)
+
+解答：
+
+- 方式1：自连接
+
+  ![image-20221220121031527](/Users/jamison/Library/Application Support/typora-user-images/image-20221220121031527.png)
+
+- 方式2：NOT EXIST
+
+  ![image-20221220121314001](/Users/jamison/Library/Application Support/typora-user-images/image-20221220121314001.png)
+
+### 4. 相关更新
+
+![image-20221220121550472](/Users/jamison/Library/Application Support/typora-user-images/image-20221220121550472.png)
+
+### 5. 相关删除
+
+![image-20221220121829935](/Users/jamison/Library/Application Support/typora-user-images/image-20221220121829935.png)
+
+### 6. 抛出一个问题
+
+问题：谁的工资比Abel高
+
+解答：
+
+![image-20221220122349269](/Users/jamison/Library/Application Support/typora-user-images/image-20221220122349269.png)
+
+## 子查询课后练习题
+
+题目：
+
+![image-20221220122803083](/Users/jamison/Library/Application Support/typora-user-images/image-20221220122803083.png)
+
+ ![image-20221220122840620](/Users/jamison/Library/Application Support/typora-user-images/image-20221220122840620.png)
+
+![image-20221220122858987](/Users/jamison/Library/Application Support/typora-user-images/image-20221220122858987.png)
+
+解答：
+
+```mysql
+	 #1
+SELECT last_name, salary
+FROM employees
+WHERE department_id = (
+												SELECT department_id 
+												FROM employees
+												WHERE last_name = 'Zlotkey'
+);
+
+#2
+SELECT employee_id, last_name, salary
+FROM employees
+WHERE salary > (
+									SELECT AVG(salary)
+									FROM employees
+);
+
+#3
+SELECT last_name, job_id, salary
+FROM employees
+WHERE salary > ALL(
+								SELECT salary
+								FROM employees
+								WHERE job_id = 'SA_MAN'
+);
+
+#4
+SELECT employee_id, last_name
+FROM employees
+WHERE department_id IN (
+												SELECT DISTINCT department_id
+												FROM employees
+												WHERE last_name REGEXP '[u]'
+);
+
+#5
+SELECT employee_id
+FROM employees
+WHERE department_id IN (
+												SELECT department_id
+												FROM departments
+												WHERE location_id = 1700
+);
+
+#6
+SELECT last_name, salary
+FROM employees
+WHERE manager_id IN (
+										SELECT employee_id
+										FROM employees
+										WHERE last_name = 'King'
+);
+
+#7
+SELECT last_name, salary
+FROM employees
+WHERE salary <= ALL(
+										SELECT salary
+										FROM employees
+);
+
+#8
+#方法1
+SELECT *
+FROM departments
+WHERE department_id = (
+											SELECT department_id
+											FROM employees
+											GROUP BY department_id
+											HAVING AVG(salary) = (
+																						SELECT MIN(avg_sal)
+																						FROM(
+																								SELECT AVG(salary) avg_sal
+																								FROM employees
+																								GROUP BY department_id
+																								) t_dept_avg_sal
+																						)
+													);
+#方法2
+SELECT *
+FROM departments
+WHERE department_id = (
+											SELECT department_id
+											FROM employees
+											GROUP BY department_id
+											HAVING AVG(salary) <= ALL(
+																								SELECT AVG(salary)
+																								FROM employees
+																								GROUP BY department_id
+																						)
+													);
+#方法3
+SELECT *
+FROM departments
+WHERE department_id = (
+											SELECT department_id
+											FROM employees
+											GROUP BY department_id
+											HAVING AVG(salary) = (
+																								SELECT AVG(salary) avg_sal
+																								FROM employees
+																								GROUP BY department_id
+																								ORDER BY avg_sal
+																								LIMIT 1
+																						)
+											);
+#方法4
+SELECT d.*
+FROM departments d, (
+											SELECT department_id, AVG(salary) avg_sal
+											FROM employees
+											GROUP BY department_id
+											ORDER BY avg_sal ASC
+											LIMIT 0,1
+										) t_dept_avg_sal
+WHERE d.department_id = t_dept_avg_sal.department_id;
+
+#9
+#方法1
+SELECT d.*, (SELECT AVG(salary) FROM employees WHERE department_id = d.department_id) avg_sal
+FROM departments d
+WHERE department_id = (
+											SELECT department_id
+											FROM employees
+											GROUP BY department_id
+											HAVING AVG(salary) = (
+																						SELECT MIN(avg_sal)
+																						FROM(
+																								SELECT AVG(salary) avg_sal
+																								FROM employees
+																								GROUP BY department_id
+																								) t_dept_avg_sal
+																						)
+													);
+#方法2
+SELECT d.*, (SELECT AVG(salary) FROM employees WHERE department_id = d.department_id) avg_sal
+FROM departments d
+WHERE department_id = (
+											SELECT department_id
+											FROM employees
+											GROUP BY department_id
+											HAVING AVG(salary) <= ALL(
+																								SELECT AVG(salary)
+																								FROM employees
+																								GROUP BY department_id
+																						)
+													);
+#方法3
+SELECT d.*, (SELECT AVG(salary) FROM employees WHERE department_id = d.department_id) avg_sal
+FROM departments d
+WHERE department_id = (
+											SELECT department_id
+											FROM employees
+											GROUP BY department_id
+											HAVING AVG(salary) = (
+																								SELECT AVG(salary) avg_sal
+																								FROM employees
+																								GROUP BY department_id
+																								ORDER BY avg_sal
+																								LIMIT 1
+																						)
+											);
+#方法4：
+SELECT d.*, (SELECT AVG(salary) FROM employees WHERE department_id = d.department_id) avg_sal
+FROM departments d, (
+											SELECT department_id, AVG(salary) avg_sal
+											FROM employees
+											GROUP BY department_id
+											ORDER BY avg_sal ASC
+											LIMIT 0,1
+										) t_dept_avg_sal
+WHERE d.department_id = t_dept_avg_sal.department_id;
+
+
+#10
+#方式1
+SELECT *
+FROM jobs
+WHERE job_id = (
+								SELECT job_id
+								FROM employees
+								GROUP BY job_id
+								HAVING AVG(salary) = (
+																			SELECT MAX(avg_sal)
+																			FROM (
+																						SELECT AVG(salary) avg_sal
+																						FROM employees
+																						GROUP BY job_id
+																						) t_job_avg_sal
+																			)
+							);
+#方式2
+SELECT *
+FROM jobs
+WHERE job_id = (
+								SELECT job_id
+								FROM employees
+								GROUP BY job_id
+								HAVING AVG(salary) >= ALL(
+																			SELECT AVG(salary)
+																			FROM employees
+																			GROUP BY job_id
+																			)
+							);
+#方式3
+SELECT *
+FROM jobs
+WHERE job_id = (
+								SELECT job_id
+								FROM employees
+								GROUP BY job_id
+								HAVING AVG(salary) = (
+																			SELECT AVG(salary) avg_sal
+																			FROM employees
+																			GROUP BY job_id
+																			ORDER BY avg_sal desc
+																			LIMIT 0,1
+																			)
+							);
+#方式4
+SELECT j.*
+FROM jobs j, (
+							SELECT job_id, AVG(salary) avg_sal
+							FROM employees
+							GROUP BY job_id
+							ORDER BY avg_sal DESC
+							LIMIT 0,1
+							) t_job_avg_sal
+WHERE j.job_id = t_job_avg_sal.job_id;
+
+
+#11
+SELECT department_id
+FROM employees
+WHERE department_id IS NOT NULL
+GROUP BY department_id
+HAVING AVG(salary) > (
+								SELECT AVG(salary)
+								FROM employees
+);
+
+#12
+SELECT employee_id, last_name
+FROM employees
+WHERE employee_id IN (
+											SELECT DISTINCT manager_id
+											FROM employees
+											);
+
+#13
+#方法1
+SELECT MIN(salary)
+FROM employees
+WHERE department_id = (
+												SELECT department_id
+												FROM employees
+												GROUP BY department_id
+												HAVING MAX(salary) = (
+																							SELECT MIN(max_sal)
+																							FROM(
+																									SELECT MAX(salary) max_sal
+																									FROM employees 
+																									WHERE department_id IS NOT NULL
+																									GROUP BY department_id
+																									) t_dept_max_sal
+																							)
+											);
+#方法2
+SELECT MIN(salary)
+FROM employees
+WHERE department_id = (
+												SELECT department_id
+												FROM employees
+												GROUP BY department_id
+												HAVING MAX(salary) <= ALL(
+																								SELECT MAX(salary) max_sal
+																								FROM employees 
+																								WHERE department_id IS NOT NULL
+																								GROUP BY department_id
+ 																							)
+											);	
+#方法3
+SELECT MIN(salary)
+FROM employees
+WHERE department_id = (
+												SELECT department_id
+												FROM employees
+												GROUP BY department_id
+												HAVING MAX(salary) = (
+																								SELECT MAX(salary) max_sal
+																								FROM employees 
+																								WHERE department_id IS NOT NULL
+																								GROUP BY department_id
+																								ORDER BY max_sal
+																								LIMIT 0,1
+ 																							)
+											);			
+#方法4
+SELECT MIN(salary)
+FROM employees e, (
+									SELECT department_id, MAX(salary) max_sal
+									FROM employees 
+									WHERE department_id IS NOT NULL
+									GROUP BY department_id
+									ORDER BY max_sal
+									LIMIT 0,1
+									) t_dept_max_sal
+WHERE e.department_id = t_dept_max_sal.department_id;
+
+#14
+SELECT last_name, department_id, email, salary
+FROM employees
+WHERE employee_id IN (
+											SELECT DISTINCT manager_id
+											FROM employees e, (
+																					SELECT department_id, AVG(salary) avg_sal
+																					FROM employees
+																					GROUP BY department_id
+																					ORDER BY avg_sal DESC
+																					LIMIT 0,1
+																				) t_dept_avg_sal
+											WHERE e.department_id = t_dept_avg_sal.department_id
+										);
+										
+#15
+#方法1
+SELECT department_id
+FROM departments
+WHERE department_id NOT IN(
+													SELECT DISTINCT department_id
+													FROM employees
+													WHERE job_id = 'ST_CLERK'
+													);
+#方法2
+SELECT department_id
+FROM departments d
+WHERE NOT EXISTS(
+									SELECT *
+									FROM employees e
+									WHERE d.department_id = e.department_id
+									AND e.job_id = 'ST_CLERK'
+								);
+								
+#16
+SELECT last_name
+FROM employees emp
+WHERE NOT EXISTS (
+									SELECT *
+									FROM employees mgr
+									WHERE emp.manager_id = mgr.employee_id
+									);
+									
+#17
+#方式1
+SELECT employee_id, last_name, hire_date, salary
+FROM employees
+WHERE manager_id = (
+										SELECT employee_id
+										FROM employees
+										WHERE last_name = 'De Haan'
+										);
+#方式2
+SELECT employee_id, last_name, hire_date, salary
+FROM employees e1
+WHERE EXISTS(
+							SELECT *
+							FROM employees e2
+							WHERE e1.manager_id = e2.employee_id
+							AND last_name = 'De Haan'
+						);
+						
+#18
+#之前讲过
+
+#19
+SELECT department_name
+FROM departments d
+WHERE 5 < (
+						SELECT COUNT(*)
+						FROM employees e
+						WHERE d.department_id = e.department_id
+					);
+					
+#20
+SELECT country_id
+FROM locations l
+WHERE 2 < (
+						SELECT COUNT(*)
+						FROM departments d
+						WHERE l.location_id = d.location_id
+					);
+```
+
+**子查询的编写技巧**：从里面往，从外往里怎么选择
+
+1. 如果子查询比较简单，建议从外往里写，反之从里往外。
+2. 如果是想关子查询的话通常都是从外往里写。
