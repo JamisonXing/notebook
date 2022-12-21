@@ -1774,3 +1774,178 @@ WHERE 2 < (
 
 1. 如果子查询比较简单，建议从外往里写，反之从里往外。
 2. 如果是想关子查询的话通常都是从外往里写。
+
+
+
+# 第七章 创建和管理表
+
+## 基础知识
+
+### 1. 一条数据存储的过程
+
+![image-20221221115343686](/Users/jamison/Library/Application Support/typora-user-images/image-20221221115343686.png)
+
+### 2. 标识符命名的规则
+
+- 数据库，表名不得超过30字符，变量名限制为29个
+- 必须只能包含A-Z,a-z,0-9,_共63个字符
+- 数据库名，表名，字段名等对象名中间不要包含空格
+- 同一个mysql软件中，数据库不能同名；同一个库中表不能同名；同一个表中，字段不能重名
+- 必须保证你的字段没有保留字、数据库系统或常用方法冲突。如果坚持使用，请用`（着重号）引起来
+- 保存字段名和类型的一致性，在命名字段并为其指定数据类型的时候一定要保证一致性。加入数据类型在一个表里是整数，那在另一个表里可别变成字符型了
+
+### 3. MySQL中基本数据类型
+
+![image-20221221114846857](/Users/jamison/Library/Application Support/typora-user-images/image-20221221114846857.png)
+
+其中，比较常用的数据类型有：
+
+![image-20221221115227421](/Users/jamison/Library/Application Support/typora-user-images/image-20221221115227421.png)
+
+## 创建和管理数据库
+
+### 1. 创建数据库
+
+![image-20221221112533325](/Users/jamison/Library/Application Support/typora-user-images/image-20221221112533325.png)
+
+### 2. 管理数据库
+
+![image-20221221113825501](/Users/jamison/Library/Application Support/typora-user-images/image-20221221113825501.png)
+
+### 3. 修改数据库
+
+![image-20221221113858672](/Users/jamison/Library/Application Support/typora-user-images/image-20221221113858672.png)
+
+### 4. 删除数据库
+
+![image-20221221114256009](/Users/jamison/Library/Application Support/typora-user-images/image-20221221114256009.png)
+
+## 创建数据表
+
+方式1：
+
+![image-20221221115901378](/Users/jamison/Library/Application Support/typora-user-images/image-20221221115901378.png)
+
+方式2：
+
+![image-20221221120354910](/Users/jamison/Library/Application Support/typora-user-images/image-20221221120354910.png)
+
+练习：
+
+![image-20221221120738851](/Users/jamison/Library/Application Support/typora-user-images/image-20221221120738851.png)
+
+## 修改表
+
+### 1. 添加一个字段
+
+![image-20221221121425619](/Users/jamison/Library/Application Support/typora-user-images/image-20221221121425619.png)
+
+### 2. 修改一个字段：数据类型，长度，默认值...
+
+![image-20221221121539515](/Users/jamison/Library/Application Support/typora-user-images/image-20221221121539515.png)
+
+### 3. 重命名一个字段
+
+重命名的过程中可以修改字段
+
+![image-20221221121737079](/Users/jamison/Library/Application Support/typora-user-images/image-20221221121737079.png)
+
+### 4. 删除一个字段
+
+![image-20221221121937521](/Users/jamison/Library/Application Support/typora-user-images/image-20221221121937521.png)
+
+## 重命名表
+
+![image-20221221121953055](/Users/jamison/Library/Application Support/typora-user-images/image-20221221121953055.png)
+
+## 删除表
+
+![image-20221221122234512](/Users/jamison/Library/Application Support/typora-user-images/image-20221221122234512.png)
+
+## 清空表
+
+![image-20221221122219180](/Users/jamison/Library/Application Support/typora-user-images/image-20221221122219180.png)
+
+## DCL中COMMIT和ROLLBACK
+
+![image-20221221123532590](/Users/jamison/Library/Application Support/typora-user-images/image-20221221123532590.png)
+
+## 对比TRUNCATE TABLE 和 DELETE FROM
+
+![image-20221221123651932](/Users/jamison/Library/Application Support/typora-user-images/image-20221221123651932.png)
+
+## DDL和DCL的说明
+
+![image-20221221124253403](/Users/jamison/Library/Application Support/typora-user-images/image-20221221124253403.png)
+
+演示：
+
+![image-20221221124102372](/Users/jamison/Library/Application Support/typora-user-images/image-20221221124102372.png)
+
+![image-20221221124201418](/Users/jamison/Library/Application Support/typora-user-images/image-20221221124201418.png)
+
+阿里巴巴开发规范：
+
+![image-20221221124528950](/Users/jamison/Library/Application Support/typora-user-images/image-20221221124528950.png)	
+
+## 内容扩展
+
+### 拓展1：阿里巴巴MySQL字段命名
+
+![image-20221221124756841](/Users/jamison/Library/Application Support/typora-user-images/image-20221221124756841.png)
+
+### 拓展2：如何理解删除表、清空表等操作需谨慎？
+
+![image-20221221124952076](/Users/jamison/Library/Application Support/typora-user-images/image-20221221124952076.png)
+
+### 拓展3：MySQL8新特性--DDL的原子化
+
+![image-20221221125355677](/Users/jamison/Library/Application Support/typora-user-images/image-20221221125355677.png)
+
+5.7中book1被删除，8.0book1不会被删除。
+
+## 创建和管理表习题
+
+练习一：
+
+![image-20221221125627459](/Users/jamison/Library/Application Support/typora-user-images/image-20221221125627459.png)
+
+![image-20221221125645164](/Users/jamison/Library/Application Support/typora-user-images/image-20221221125645164.png)
+
+![image-20221221125712398](/Users/jamison/Library/Application Support/typora-user-images/image-20221221125712398.png)
+
+![image-20221221125731222](/Users/jamison/Library/Application Support/typora-user-images/image-20221221125731222.png)
+
+![image-20221221125824291](/Users/jamison/Library/Application Support/typora-user-images/image-20221221125824291.png)
+
+![image-20221221125843561](/Users/jamison/Library/Application Support/typora-user-images/image-20221221125843561.png)
+
+![image-20221221125905271](/Users/jamison/Library/Application Support/typora-user-images/image-20221221125905271.png)
+
+![image-20221221125919549](/Users/jamison/Library/Application Support/typora-user-images/image-20221221125919549.png)
+
+![image-20221221125947309](/Users/jamison/Library/Application Support/typora-user-images/image-20221221125947309.png)	
+
+![image-20221221130006507](/Users/jamison/Library/Application Support/typora-user-images/image-20221221130006507.png)
+
+练习2：
+
+![image-20221221130049753](/Users/jamison/Library/Application Support/typora-user-images/image-20221221130049753.png)
+
+![image-20221221130104790](/Users/jamison/Library/Application Support/typora-user-images/image-20221221130104790.png)
+
+![image-20221221130139419](/Users/jamison/Library/Application Support/typora-user-images/image-20221221130139419.png)
+
+![image-20221221130201300](/Users/jamison/Library/Application Support/typora-user-images/image-20221221130201300.png)
+
+![image-20221221130225673](/Users/jamison/Library/Application Support/typora-user-images/image-20221221130225673.png)
+
+![image-20221221130235845](/Users/jamison/Library/Application Support/typora-user-images/image-20221221130235845.png)
+
+![image-20221221130248023](/Users/jamison/Library/Application Support/typora-user-images/image-20221221130248023.png)
+
+![image-20221221130309533](/Users/jamison/Library/Application Support/typora-user-images/image-20221221130309533.png)
+
+![image-20221221130326290](/Users/jamison/Library/Application Support/typora-user-images/image-20221221130326290.png)
+
+![image-20221221130336741](/Users/jamison/Library/Application Support/typora-user-images/image-20221221130336741.png)
