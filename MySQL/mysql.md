@@ -2077,3 +2077,13 @@ DELETE FROM ... WHERE ...
 
 # 第九章 MySQL数据类型精讲
 
+## MySQL中的数据类型
+
+![image-20221221114846857](/Users/jamison/Library/Application Support/typora-user-images/image-20221221114846857.png)
+
+其中，比较常用的数据类型有：
+
+![image-20221221115227421](/Users/jamison/Library/Application Support/typora-user-images/image-20221221115227421.png)
+
+## 整数类型
+
