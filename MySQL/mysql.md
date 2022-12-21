@@ -1949,3 +1949,131 @@ WHERE 2 < (
 ![image-20221221130326290](/Users/jamison/Library/Application Support/typora-user-images/image-20221221130326290.png)
 
 ![image-20221221130336741](/Users/jamison/Library/Application Support/typora-user-images/image-20221221130336741.png)
+
+
+
+# 第八章 数据处理之增删改
+
+准备工作：
+
+![image-20221221134529008](/Users/jamison/Library/Application Support/typora-user-images/image-20221221134529008.png)
+
+## 插入数据
+
+### 1. 实际问题
+
+![image-20221221134329752](/Users/jamison/Library/Application Support/typora-user-images/image-20221221134329752.png)
+
+### 2. 方式1：一条条的添加数据
+
+![image-20221221134743480](/Users/jamison/Library/Application Support/typora-user-images/image-20221221134743480.png)
+
+![image-20221221134922724](/Users/jamison/Library/Application Support/typora-user-images/image-20221221134922724.png)
+
+### 3. 方式2：将查询结果插入到表中
+
+![image-20221221135501407](/Users/jamison/Library/Application Support/typora-user-images/image-20221221135501407.png)
+
+注意：
+
+- VALUES也可以写成VALUE,但是前者是标准写法。
+- 字符和日期数据应包含在单引号中。
+
+## 更新数据
+
+![image-20221221135750014](/Users/jamison/Library/Application Support/typora-user-images/image-20221221135750014.png)
+
+- 使用UPDATE语句更新数据，语法如下
+
+  ```mysql
+  UPDATE table_name
+  SET column1 = value1, column2 = value2, ...
+  [WHERE condition]
+  ```
+
+![image-20221221140059067](/Users/jamison/Library/Application Support/typora-user-images/image-20221221140059067.png)
+
+**注意：**
+
+添加,修改和删除数据的时候是可能存在不成功的情况的，可能是由于约束造成的
+
+![image-20221221140241259](/Users/jamison/Library/Application Support/typora-user-images/image-20221221140241259.png)
+
+## 删除数据
+
+```mysql
+DELETE FROM ... WHERE ...
+```
+
+![image-20221221140443272](/Users/jamison/Library/Application Support/typora-user-images/image-20221221140443272.png)
+
+## MySQL8新特性：计算列
+
+![image-20221221141300226](/Users/jamison/Library/Application Support/typora-user-images/image-20221221141300226.png)
+
+## DDL和DML的综合案例
+
+案例：
+
+![image-20221221141732237](/Users/jamison/Library/Application Support/typora-user-images/image-20221221141732237.png)
+
+![image-20221221141821090](/Users/jamison/Library/Application Support/typora-user-images/image-20221221141821090.png)
+
+![image-20221221141843103](/Users/jamison/Library/Application Support/typora-user-images/image-20221221141843103.png)
+
+![image-20221221141938488](/Users/jamison/Library/Application Support/typora-user-images/image-20221221141938488.png)
+
+![image-20221221142029564](/Users/jamison/Library/Application Support/typora-user-images/image-20221221142029564.png)
+
+解答：
+
+![image-20221221142141574](/Users/jamison/Library/Application Support/typora-user-images/image-20221221142141574.png)
+
+![image-20221221142218779](/Users/jamison/Library/Application Support/typora-user-images/image-20221221142218779.png)
+
+![image-20221221142325547](/Users/jamison/Library/Application Support/typora-user-images/image-20221221142325547.png)
+
+![image-20221221142411391](/Users/jamison/Library/Application Support/typora-user-images/image-20221221142411391.png)
+
+![image-20221221142439795](/Users/jamison/Library/Application Support/typora-user-images/image-20221221142439795.png)
+
+![image-20221221142507315](/Users/jamison/Library/Application Support/typora-user-images/image-20221221142507315.png)
+
+![image-20221221142643413](/Users/jamison/Library/Application Support/typora-user-images/image-20221221142643413.png)
+
+![image-20221221142715527](/Users/jamison/Library/Application Support/typora-user-images/image-20221221142715527.png)
+
+![image-20221221142757936](/Users/jamison/Library/Application Support/typora-user-images/image-20221221142757936.png)
+
+![image-20221221142843285](/Users/jamison/Library/Application Support/typora-user-images/image-20221221142843285.png)
+
+![image-20221221143042483](/Users/jamison/Library/Application Support/typora-user-images/image-20221221143042483.png)
+
+![image-20221221143209452](/Users/jamison/Library/Application Support/typora-user-images/image-20221221143209452.png)
+
+![image-20221221143309145](/Users/jamison/Library/Application Support/typora-user-images/image-20221221143309145.png)
+
+![image-20221221143433172](/Users/jamison/Library/Application Support/typora-user-images/image-20221221143433172.png)
+
+![image-20221221143627812](/Users/jamison/Library/Application Support/typora-user-images/image-20221221143627812.png)
+
+![image-20221221143758510](/Users/jamison/Library/Application Support/typora-user-images/image-20221221143758510.png)
+
+![image-20221221143934496](/Users/jamison/Library/Application Support/typora-user-images/image-20221221143934496.png)
+
+![image-20221221144000647](/Users/jamison/Library/Application Support/typora-user-images/image-20221221144000647.png)
+
+![image-20221221144015032](/Users/jamison/Library/Application Support/typora-user-images/image-20221221144015032.png)
+
+![image-20221221144041552](/Users/jamison/Library/Application Support/typora-user-images/image-20221221144041552.png)
+
+![image-20221221144103508](/Users/jamison/Library/Application Support/typora-user-images/image-20221221144103508.png)
+
+![image-20221221144137646](/Users/jamison/Library/Application Support/typora-user-images/image-20221221144137646.png)
+
+## 数据处理之增删改课后练习
+
+
+
+# 第九章 MySQL数据类型精讲
+
