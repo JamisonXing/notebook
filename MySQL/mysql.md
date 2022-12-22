@@ -2085,5 +2085,187 @@ DELETE FROM ... WHERE ...
 
 ![image-20221221115227421](/Users/jamison/Library/Application Support/typora-user-images/image-20221221115227421.png)
 
+常见数据类型的属性，如下：
+
+![image-20221222115933770](/Users/jamison/Library/Application Support/typora-user-images/image-20221222115933770.png)
+
 ## 整数类型
+
+### 1. 类型介绍
+
+整数类型一共会有五种，包括TINYINT、SMALLINT、MEDIUMINT、INT(INTEGER)和BIGINT。
+
+他们的区别如下表所示：
+
+![image-20221222115650995](/Users/jamison/Library/Application Support/typora-user-images/image-20221222115650995.png)
+
+### 2. 可选属性
+
+1. M
+
+![image-20221222121316620](/Users/jamison/Library/Application Support/typora-user-images/image-20221222121316620.png)
+
+2. UNSIGNED
+
+![image-20221222121538634](/Users/jamison/Library/Application Support/typora-user-images/image-20221222121538634.png)
+
+3. ZEROFILL
+
+![image-20221222121654319](/Users/jamison/Library/Application Support/typora-user-images/image-20221222121654319.png)
+
+### 3. 使用场景
+
+![image-20221222121736015](/Users/jamison/Library/Application Support/typora-user-images/image-20221222121736015.png)
+
+### 4. 如何选择？
+
+![image-20221222121929866](/Users/jamison/Library/Application Support/typora-user-images/image-20221222121929866.png)
+
+## 浮点类型
+
+### 1. 类型介绍
+
+![image-20221222122216897](/Users/jamison/Library/Application Support/typora-user-images/image-20221222122216897.png)	
+
+![image-20221222122248518](/Users/jamison/Library/Application Support/typora-user-images/image-20221222122248518.png)
+
+### 2. 数据精度说明
+
+![image-20221222123112016](/Users/jamison/Library/Application Support/typora-user-images/image-20221222123112016.png)
+
+![image-20221222123131902](/Users/jamison/Library/Application Support/typora-user-images/image-20221222123131902.png)
+
+### 3. 精度误差说明
+
+![image-20221222123337665](/Users/jamison/Library/Application Support/typora-user-images/image-20221222123337665.png)
+
+![image-20221222123401532](/Users/jamison/Library/Application Support/typora-user-images/image-20221222123401532.png)
+
+## 定点数类型
+
+### 1. 类型介绍
+
+![image-20221222123626267](/Users/jamison/Library/Application Support/typora-user-images/image-20221222123626267.png)
+
+![image-20221222124038426](/Users/jamison/Library/Application Support/typora-user-images/image-20221222124038426.png)
+
+### 2. 开发中的经验
+
+![image-20221222124208825](/Users/jamison/Library/Application Support/typora-user-images/image-20221222124208825.png)
+
+## 位类型
+
+![image-20221222124826117](/Users/jamison/Library/Application Support/typora-user-images/image-20221222124826117.png)
+
+![image-20221222125113962](/Users/jamison/Library/Application Support/typora-user-images/image-20221222125113962.png)
+
+## 日期和时间类型
+
+![image-20221222125221299](/Users/jamison/Library/Application Support/typora-user-images/image-20221222125221299.png)
+
+### 1. YEAR类型
+
+![image-20221222125725831](/Users/jamison/Library/Application Support/typora-user-images/image-20221222125725831.png)
+
+### 2. DATE类型
+
+![image-20221222125953532](/Users/jamison/Library/Application Support/typora-user-images/image-20221222125953532.png)
+
+![image-20221222130120442](/Users/jamison/Library/Application Support/typora-user-images/image-20221222130120442.png)
+
+### 3. TIME类型
+
+![image-20221222130253588](/Users/jamison/Library/Application Support/typora-user-images/image-20221222130253588.png)
+
+![image-20221222130340579](/Users/jamison/Library/Application Support/typora-user-images/image-20221222130340579.png)
+
+### 4. DATETIME类型
+
+![image-20221222130508216](/Users/jamison/Library/Application Support/typora-user-images/image-20221222130508216.png)
+
+![image-20221222130613664](/Users/jamison/Library/Application Support/typora-user-images/image-20221222130613664.png)
+
+### 5. TIMESTAMP
+
+![image-20221222132756450](/Users/jamison/Library/Application Support/typora-user-images/image-20221222132756450.png)
+
+![image-20221222132827072](/Users/jamison/Library/Application Support/typora-user-images/image-20221222132827072.png)
+
+![image-20221222133033532](/Users/jamison/Library/Application Support/typora-user-images/image-20221222133033532.png)	![image-20221222133209202](/Users/jamison/Library/Application Support/typora-user-images/image-20221222133209202.png)
+
+![image-20221222133325132](/Users/jamison/Library/Application Support/typora-user-images/image-20221222133325132.png)
+
+### 6. 开发中的经验
+
+![image-20221222133443293](/Users/jamison/Library/Application Support/typora-user-images/image-20221222133443293.png)
+
+## 文本字符串类型
+
+![image-20221222133826674](/Users/jamison/Library/Application Support/typora-user-images/image-20221222133826674.png)
+
+### 1. CHAR和VARCHAR类型
+
+![image-20221222134559674](/Users/jamison/Library/Application Support/typora-user-images/image-20221222134559674.png)
+
+![image-20221222135106898](/Users/jamison/Library/Application Support/typora-user-images/image-20221222135106898.png)
+
+![image-20221222135359802](/Users/jamison/Library/Application Support/typora-user-images/image-20221222135359802.png)
+
+![image-20221222135609157](/Users/jamison/Library/Application Support/typora-user-images/image-20221222135609157.png)
+
+### 2. TEXT类型
+
+![image-20221222135840813](/Users/jamison/Library/Application Support/typora-user-images/image-20221222135840813.png)
+
+![image-20221222135929484](/Users/jamison/Library/Application Support/typora-user-images/image-20221222135929484.png)
+
+![image-20221222140038563](/Users/jamison/Library/Application Support/typora-user-images/image-20221222140038563.png)
+
+## ENUM类型
+
+![image-20221222140138377](/Users/jamison/Library/Application Support/typora-user-images/image-20221222140138377.png)
+
+![image-20221222140447147](/Users/jamison/Library/Application Support/typora-user-images/image-20221222140447147.png)
+
+## SET类型
+
+![image-20221222140518466](/Users/jamison/Library/Application Support/typora-user-images/image-20221222140518466.png)
+
+![image-20221222140618186](/Users/jamison/Library/Application Support/typora-user-images/image-20221222140618186.png)
+
+## 二进制字符串类型
+
+![image-20221222143049325](/Users/jamison/Library/Application Support/typora-user-images/image-20221222143049325.png)
+
+### 1. BINARY和VARBINARY类型
+
+![image-20221222143129046](/Users/jamison/Library/Application Support/typora-user-images/image-20221222143129046.png)
+
+![image-20221222143323797](/Users/jamison/Library/Application Support/typora-user-images/image-20221222143323797.png)
+
+![image-20221222143307467](/Users/jamison/Library/Application Support/typora-user-images/image-20221222143307467.png)
+
+### 2. BLOB类型
+
+![image-20221222143406931](/Users/jamison/Library/Application Support/typora-user-images/image-20221222143406931.png)
+
+![image-20221222143653301](/Users/jamison/Library/Application Support/typora-user-images/image-20221222143653301.png)
+
+## JSON类型
+
+![image-20221222144051564](/Users/jamison/Library/Application Support/typora-user-images/image-20221222144051564.png)
+
+![image-20221222144136267](/Users/jamison/Library/Application Support/typora-user-images/image-20221222144136267.png)
+
+## 空间类型
+
+![image-20221222144252867](/Users/jamison/Library/Application Support/typora-user-images/image-20221222144252867.png)
+
+![image-20221222144318896](/Users/jamison/Library/Application Support/typora-user-images/image-20221222144318896.png)
+
+![image-20221222144335420](/Users/jamison/Library/Application Support/typora-user-images/image-20221222144335420.png)
+
+## 小结和选择建议
+
+![image-20221222144447918](/Users/jamison/Library/Application Support/typora-user-images/image-20221222144447918.png)
 
