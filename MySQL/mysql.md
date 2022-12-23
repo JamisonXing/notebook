@@ -2269,3 +2269,308 @@ DELETE FROM ... WHERE ...
 
 ![image-20221222144447918](/Users/jamison/Library/Application Support/typora-user-images/image-20221222144447918.png)
 
+
+
+# 第十章 约束
+
+## 约束(Constraint)概述
+
+### 1. 为什么需要约束
+
+![image-20221223140556138](/Users/jamison/Library/Application Support/typora-user-images/image-20221223140556138.png)
+
+### 2. 什么是约束
+
+对表中字段的限制
+
+### 3. 约束的分类
+
+单列约束，多列约束；列级约束，表级约束；非空，唯一，主键，外键，检查，默认值约束。
+
+![image-20221223141306194](/Users/jamison/Library/Application Support/typora-user-images/image-20221223141306194.png)
+
+![image-20221223141416393](/Users/jamison/Library/Application Support/typora-user-images/image-20221223141416393.png)
+
+### 4. 如何添加/删除约束
+
+![image-20221223141529326](/Users/jamison/Library/Application Support/typora-user-images/image-20221223141529326.png)
+
+### 5. 查看某个表已有的约束
+
+![image-20221223142307936](/Users/jamison/Library/Application Support/typora-user-images/image-20221223142307936.png)
+
+ 
+
+## 非空约束
+
+### 1. 特点
+
+![image-20221223144002873](/Users/jamison/Library/Application Support/typora-user-images/image-20221223144002873.png)
+
+### 2. 使用方法
+
+![image-20221223144859277](/Users/jamison/Library/Application Support/typora-user-images/image-20221223144859277.png)
+
+![image-20221223144933181](/Users/jamison/Library/Application Support/typora-user-images/image-20221223144933181.png)
+
+## 唯一约束
+
+### 1. 特点
+
+![image-20221223145152478](/Users/jamison/Library/Application Support/typora-user-images/image-20221223145152478.png)
+
+### 2.使用方法
+
+建表时添加：
+
+![image-20221223145611997](/Users/jamison/Library/Application Support/typora-user-images/image-20221223145611997.png)
+
+建表后添加：
+
+![image-20221223150408532](/Users/jamison/Library/Application Support/typora-user-images/image-20221223150408532.png)
+
+![image-20221223150351225](/Users/jamison/Library/Application Support/typora-user-images/image-20221223150351225.png)
+
+### 3. 复合的唯一性约束
+
+![image-20221223150601912](/Users/jamison/Library/Application Support/typora-user-images/image-20221223150601912.png)
+
+### 4. 删除唯一性约束
+
+![image-20221223151539636](/Users/jamison/Library/Application Support/typora-user-images/image-20221223151539636.png)
+
+如何删除：
+
+![image-20221223151942387](/Users/jamison/Library/Application Support/typora-user-images/image-20221223151942387.png)
+
+## PRIMARY KEY主键约束
+
+### 1. 特点
+
+![image-20221223152336278](/Users/jamison/Library/Application Support/typora-user-images/image-20221223152336278.png)
+
+![image-20221223152354662](/Users/jamison/Library/Application Support/typora-user-images/image-20221223152354662.png)
+
+### 2. 使用方法
+
+创建表时
+
+![image-20221223153637602](/Users/jamison/Library/Application Support/typora-user-images/image-20221223153637602.png)
+
+没有必要起名字因为主键名总为PRIMARY
+
+![image-20221223154802586](/Users/jamison/Library/Application Support/typora-user-images/image-20221223154802586.png)
+
+### 3. 删除主键（开发中不会去用）
+
+![image-20221223154852918](/Users/jamison/Library/Application Support/typora-user-images/image-20221223154852918.png)
+
+## 自增列：AUTO_INCREMENT
+
+### 1. 特点
+
+![image-20221223155243078](/Users/jamison/Library/Application Support/typora-user-images/image-20221223155243078.png)
+
+通常结合主键使用
+
+### 2. 使用方法
+
+建表时：
+
+![image-20221223160221452](/Users/jamison/Library/Application Support/typora-user-images/image-20221223160221452.png)
+
+建表后：
+
+![image-20221223160317403](/Users/jamison/Library/Application Support/typora-user-images/image-20221223160317403.png)
+
+### 3. 删除
+
+![image-20221223160402483](/Users/jamison/Library/Application Support/typora-user-images/image-20221223160402483.png)
+
+### 4. MySql8.0新特性-自增变量的持久化
+
+![image-20221223160959909](/Users/jamison/Library/Application Support/typora-user-images/image-20221223160959909.png)
+
+![image-20221223161046275](/Users/jamison/Library/Application Support/typora-user-images/image-20221223161046275.png)
+
+![image-20221223161134590](/Users/jamison/Library/Application Support/typora-user-images/image-20221223161134590.png)
+
+![image-20221223161217167](/Users/jamison/Library/Application Support/typora-user-images/image-20221223161217167.png)
+
+## FOREIGN KEY外键约束
+
+### 1. 作用
+
+![image-20221223161440138](/Users/jamison/Library/Application Support/typora-user-images/image-20221223161440138.png)
+
+### 2. 主表和从表/父表和子表
+
+![image-20221223161540390](/Users/jamison/Library/Application Support/typora-user-images/image-20221223161540390.png)
+
+### 3. 特点
+
+![image-20221223161609558](/Users/jamison/Library/Application Support/typora-user-images/image-20221223161609558.png)
+
+### 4. 使用方法
+
+建表时：
+
+![image-20221223163032492](/Users/jamison/Library/Application Support/typora-user-images/image-20221223163032492.png)
+
+上面会报错，dept_id没有主键或者唯一约束
+
+![image-20221223163201537](/Users/jamison/Library/Application Support/typora-user-images/image-20221223163201537.png)
+
+建表后：
+
+![image-20221223163641452](/Users/jamison/Library/Application Support/typora-user-images/image-20221223163641452.png)
+
+### 5. 约束等级
+
+![image-20221223164335956](/Users/jamison/Library/Application Support/typora-user-images/image-20221223164335956.png)
+
+演示：
+
+![image-20221223164506788](/Users/jamison/Library/Application Support/typora-user-images/image-20221223164506788.png)
+
+### 6. 删除外键约束
+
+![image-20221223164727754](/Users/jamison/Library/Application Support/typora-user-images/image-20221223164727754.png)
+
+### 7. 开发场景
+
+![image-20221223165204425](/Users/jamison/Library/Application Support/typora-user-images/image-20221223165204425.png)
+
+### 8. 阿里开发规范
+
+![image-20221223165317178](/Users/jamison/Library/Application Support/typora-user-images/image-20221223165317178.png)
+
+应用层解决意思就是在代码中解决。
+
+## CHECK约束
+
+### 1. 作用
+
+检查某个字段的值是否符合xx要求，一般指的是值的范围
+
+### 2. 使用方法
+
+说明：MySQL 5.7不支持
+
+![image-20221223165601076](/Users/jamison/Library/Application Support/typora-user-images/image-20221223165601076.png)
+
+## DEFAULT约束
+
+### 1. 使用方法
+
+建表前
+
+![image-20221223170518830](/Users/jamison/Library/Application Support/typora-user-images/image-20221223170518830.png)
+
+建表后
+
+![image-20221223170557007](/Users/jamison/Library/Application Support/typora-user-images/image-20221223170557007.png)
+
+### 2. 删除约束
+
+![image-20221223170640087](/Users/jamison/Library/Application Support/typora-user-images/image-20221223170640087.png)
+
+## 面试
+
+![image-20221223171024140](/Users/jamison/Library/Application Support/typora-user-images/image-20221223171024140.png)
+
+## 约束的课后练习题
+
+### 练习1
+
+![image-20221223172625368](/Users/jamison/Library/Application Support/typora-user-images/image-20221223172625368.png)
+
+ 
+
+题目：
+
+![image-20221223172954375](/Users/jamison/Library/Application Support/typora-user-images/image-20221223172954375.png)
+
+解答：
+
+```mysql
+CREATE DATABASE test04_emp;
+USE test04_emp;
+CREATE TABLE emp2(
+id INT,
+emp_name VARCHAR(15)
+);
+
+CREATE TABLE dept2(
+id INT,
+dept_name VARCHAR(15)
+);
+
+ALTER TABLE emp2
+ADD PRIMARY KEY(id);
+
+ALTER TABLE dept2
+ADD PRIMARY KEY(id);
+
+ALTER TABLE emp2
+ADD dept_id INT;
+
+DESC emp2; 
+
+ALTER TABLE emp2
+ADD CONSTRAINT fk_emp2_deptid FOREIGN KEY(dept_id) REFERENCES dept2(id);
+```
+
+### 练习2
+
+![image-20221223173725929](/Users/jamison/Library/Application Support/typora-user-images/image-20221223173725929.png)
+
+![image-20221223173742679](/Users/jamison/Library/Application Support/typora-user-images/image-20221223173742679.png)
+
+解答：
+
+![image-20221223174442314](/Users/jamison/Library/Application Support/typora-user-images/image-20221223174442314.png)
+
+### 练习3
+
+![image-20221223174538656](/Users/jamison/Library/Application Support/typora-user-images/image-20221223174538656.png)
+
+![image-20221223175556859](/Users/jamison/Library/Application Support/typora-user-images/image-20221223175556859.png)
+
+解答：
+
+```mysql
+CREATE TABLE IF NOT EXISTS offices(
+officeCode INT(10) PRIMARY KEY,
+city VARCHAR(50) NOT NULL,
+address VARCHAR(50),
+country VARCHAR(50) NOT NULL,
+postalCode VARCHAR(15),
+CONSTRAINT uk_off_poscode UNIQUE(postalCode)
+);
+
+DESC offices;
+```
+
+![image-20221223175456176](/Users/jamison/Library/Application Support/typora-user-images/image-20221223175456176.png)
+
+```mysql
+ALTER TABLE employees
+MODIFY moblie VARCHAR(25) AFTER officeCode;
+
+ALTER TABLE employees
+CHANGE birth employee_birth DATETIME;
+
+ALTER TABLE employees
+MODIFY sex CHAR(1) NOT NULL;
+
+ALTER TABLE employees
+DROP COLUMN note;
+
+ALTER TABLE employees
+ADD f_a VARCHAR(100);
+
+RENAME TABLE employees
+TO employees_info;
+```
+
