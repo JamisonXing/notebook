@@ -2574,3 +2574,126 @@ RENAME TABLE employees
 TO employees_info;
 ```
 
+
+
+# 第十一章 视图
+
+## 常见的数据库对象
+
+![image-20221224121514981](/Users/jamison/Library/Application Support/typora-user-images/image-20221224121514981.png)
+
+## 视图概述
+
+![image-20221224122111892](/Users/jamison/Library/Application Support/typora-user-images/image-20221224122111892.png)
+
+### 1. 为什么要使用视图
+
+![image-20221224122223391](/Users/jamison/Library/Application Support/typora-user-images/image-20221224122223391.png)
+
+### 2. 视图的理解
+
+![image-20221224122356342](/Users/jamison/Library/Application Support/typora-user-images/image-20221224122356342.png)
+
+![image-20221224122836297](/Users/jamison/Library/Application Support/typora-user-images/image-20221224122836297.png)
+
+## 创建视图
+
+![image-20221224123140931](/Users/jamison/Library/Application Support/typora-user-images/image-20221224123140931.png)
+
+### 1. 单表创建视图
+
+![image-20221224123709882](/Users/jamison/Library/Application Support/typora-user-images/image-20221224123709882.png)
+
+![image-20221224123754119](/Users/jamison/Library/Application Support/typora-user-images/image-20221224123754119.png)
+
+### 2. 多表创建视图
+
+![image-20221224123918471](/Users/jamison/Library/Application Support/typora-user-images/image-20221224123918471.png)
+
+### 3. 应用：利用视图对数据进行格式化
+
+![image-20221224124340817](/Users/jamison/Library/Application Support/typora-user-images/image-20221224124340817.png)
+
+### 4. 基于视图创建视图
+
+![image-20221224124504388](/Users/jamison/Library/Application Support/typora-user-images/image-20221224124504388.png)
+
+## 查看视图
+
+![image-20221224124548834](/Users/jamison/Library/Application Support/typora-user-images/image-20221224124548834.png)
+
+## 更新视图的数据
+
+### 1. 一般情况
+
+![image-20221224131003874](/Users/jamison/Library/Application Support/typora-user-images/image-20221224131003874.png)
+
+### 2. 不可更新的视图
+
+视图不能更新基表中不存在的字段
+
+![image-20221224130502757](/Users/jamison/Library/Application Support/typora-user-images/image-20221224130502757.png)
+
+还有
+
+![image-20221224130911107](/Users/jamison/Library/Application Support/typora-user-images/image-20221224130911107.png)
+
+> 虽然可以更新视图数据，但总的来说，视图作为`虚拟表`，主要为了方便查询，不建议更新视图的数据。对视图数据的更改，都是通过对实际数据表里数据的操作来完成的。
+
+## 删除和修改视图
+
+### 1. 修改
+
+![image-20221224131546569](/Users/jamison/Library/Application Support/typora-user-images/image-20221224131546569.png)
+
+### 2. 删除
+
+![image-20221224132038817](/Users/jamison/Library/Application Support/typora-user-images/image-20221224132038817.png)
+
+## 总结
+
+### 1. 视图优点
+
+![image-20221224132541750](/Users/jamison/Library/Application Support/typora-user-images/image-20221224132541750.png)
+
+![image-20221224132622258](/Users/jamison/Library/Application Support/typora-user-images/image-20221224132622258.png)
+
+### 2. 视图不足
+
+![image-20221224132942305](/Users/jamison/Library/Application Support/typora-user-images/image-20221224132942305.png)
+
+## 视图课后练习
+
+### 练习1
+
+题目：
+
+![image-20221224132914500](/Users/jamison/Library/Application Support/typora-user-images/image-20221224132914500.png)
+
+解答：
+
+```MySQL
+CREATE OR REPLACE VIEW employee_vu
+AS
+SELECT last_name, employee_id, department_id
+FROM employees;
+
+DESC employee_vu;
+
+SELECT * FROM employee_vu;
+
+CREATE OR REPLACE VIEW employee_vu
+AS
+SELECT last_name, employee_id, department_id
+FROM employees
+WHERE department_id = 80;
+```
+
+### 练习2
+
+题目：
+
+![image-20221224133818928](/Users/jamison/Library/Application Support/typora-user-images/image-20221224133818928.png)
+
+解答：
+
