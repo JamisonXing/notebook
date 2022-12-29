@@ -2697,3 +2697,208 @@ WHERE department_id = 80;
 
 解答：
 
+```mysql
+CREATE TABLE emps
+AS
+SELECT * FROM employees;
+#1
+CREATE OR REPLACE VIEW emp_v1
+AS
+SELECT last_name, salary, email
+FROM emps
+WHERE phone_number LIKE '011%'
+AND email LIKE '%e%';
+
+#2
+CREATE OR REPLACE VIEW emp_v1
+AS
+SELECT last_name, salary, email, phone_number
+FROM emps
+WHERE phone_number LIKE '011%'
+AND email LIKE '%e%';
+
+#3
+-- 会失败，因为没办法添加基表的其他字段
+INSERT INTO emp_v1
+VALUES('Jamison', 'qq@.coom', '011332');
+
+#4
+UPDATE emp_v1
+SET salary = salary + 1000;
+
+#5
+DELETE FROM emp_v1
+WHERE last_name = 'Olsen';
+
+#6
+CREATE OR REPLACE VIEW emp_v2
+AS
+SELECT department_id, MAX(salary)
+FROM emps
+GROUP BY department_id
+HAVING MAX(salary) > 12000;
+
+#7
+-- 不可以,1471 - The target table emp_v2 of the INSERT is not insertable-into
+INSERT INTO emp_v2
+VALUES (4000, 20000);
+
+#8
+DROP VIEW IF EXISTS emp_v1, emp_v2;
+```
+
+
+
+# 第十二章 存储过程和函数
+
+![image-20221224141912009](/Users/jamison/Library/Application Support/typora-user-images/image-20221224141912009.png)
+
+## 存储过程概述
+
+### 1. 理解
+
+![image-20221226105144404](/Users/jamison/Library/Application Support/typora-user-images/image-20221226105144404.png)
+
+### 2. 分类
+
+![image-20221226105308252](/Users/jamison/Library/Application Support/typora-user-images/image-20221226105308252.png)
+
+## 创建存储过程
+
+### 1. 语法分析
+
+![image-20221226105540751](/Users/jamison/Library/Application Support/typora-user-images/image-20221226105540751.png)
+
+![image-20221226110639449](/Users/jamison/Library/Application Support/typora-user-images/image-20221226110639449.png)
+
+![image-20221226111039452](/Users/jamison/Library/Application Support/typora-user-images/image-20221226111039452.png)
+
+![image-20221226111140670](/Users/jamison/Library/Application Support/typora-user-images/image-20221226111140670.png)
+
+### 2. 代码举例
+
+![image-20221226112158436](/Users/jamison/Library/Application Support/typora-user-images/image-20221226112158436.png)
+
+![image-20221229112742113](/Users/jamison/Library/Application Support/typora-user-images/image-20221229112742113.png)
+
+![image-20221229113635294](/Users/jamison/Library/Application Support/typora-user-images/image-20221229113635294.png)	![image-20221229114239945](/Users/jamison/Library/Application Support/typora-user-images/image-20221229114239945.png)
+
+![image-20221229114537553](/Users/jamison/Library/Application Support/typora-user-images/image-20221229114537553.png)
+
+![image-20221229115252756](/Users/jamison/Library/Application Support/typora-user-images/image-20221229115252756.png)
+
+![image-20221229115555638](/Users/jamison/Library/Application Support/typora-user-images/image-20221229115555638.png)
+
+## 调用存储过程
+
+### 1. 格式
+
+![image-20221229115855698](/Users/jamison/Library/Application Support/typora-user-images/image-20221229115855698.png)
+
+### 2. 如何调试
+
+![image-20221229120025477](/Users/jamison/Library/Application Support/typora-user-images/image-20221229120025477.png)
+
+## 存储函数的使用
+
+![image-20221229120259426](/Users/jamison/Library/Application Support/typora-user-images/image-20221229120259426.png)
+
+### 1. 语法分析
+
+![image-20221229120608687](/Users/jamison/Library/Application Support/typora-user-images/image-20221229120608687.png)
+
+### 2. 调用存储函数
+
+![image-20221229120718756](/Users/jamison/Library/Application Support/typora-user-images/image-20221229120718756.png)
+
+### 3. 代码举例
+
+**注意：**
+
+![image-20221229121132093](/Users/jamison/Library/Application Support/typora-user-images/image-20221229121132093.png)
+
+![image-20221229121247521](/Users/jamison/Library/Application Support/typora-user-images/image-20221229121247521.png)
+
+![image-20221229121435589](/Users/jamison/Library/Application Support/typora-user-images/image-20221229121435589.png)
+
+![image-20221229121955600](/Users/jamison/Library/Application Support/typora-user-images/image-20221229121955600.png)
+
+## 对比存储函数和存储过程
+
+![image-20221229122325052](/Users/jamison/Library/Application Support/typora-user-images/image-20221229122325052.png)
+
+## 存储过程和存储函数的查看、删除和修改
+
+### 1. 查看
+
+![image-20221229123716248](/Users/jamison/Library/Application Support/typora-user-images/image-20221229123716248.png)
+
+![image-20221229124518835](/Users/jamison/Library/Application Support/typora-user-images/image-20221229124518835.png)
+
+![image-20221229124546728](/Users/jamison/Library/Application Support/typora-user-images/image-20221229124546728.png)
+
+![image-20221229124751188](/Users/jamison/Library/Application Support/typora-user-images/image-20221229124751188.png)
+
+### 2. 修改
+
+![image-20221229125044646](/Users/jamison/Library/Application Support/typora-user-images/image-20221229125044646.png)
+
+![image-20221229125100934](/Users/jamison/Library/Application Support/typora-user-images/image-20221229125100934.png)
+
+![image-20221229125247424](/Users/jamison/Library/Application Support/typora-user-images/image-20221229125247424.png)
+
+### 3. 删除
+
+![image-20221229125331925](/Users/jamison/Library/Application Support/typora-user-images/image-20221229125331925.png)
+
+## 关于存储过程使用的争议
+
+![image-20221229125803587](/Users/jamison/Library/Application Support/typora-user-images/image-20221229125803587.png)
+
+### 1. 优点
+
+![image-20221229125754506](/Users/jamison/Library/Application Support/typora-user-images/image-20221229125754506.png)
+
+###  2. 缺点
+
+![image-20221226110728541](/Users/jamison/Library/Application Support/typora-user-images/image-20221226110728541.png)
+
+## 存储过程和函数练习题
+
+### 1. 存储过程练习
+
+![image-20221229130238431](/Users/jamison/Library/Application Support/typora-user-images/image-20221229130238431.png)	 ![image-20221229130252102](/Users/jamison/Library/Application Support/typora-user-images/image-20221229130252102.png)
+
+![image-20221229130606584](/Users/jamison/Library/Application Support/typora-user-images/image-20221229130606584.png)
+
+#2
+
+![image-20221229130908652](/Users/jamison/Library/Application Support/typora-user-images/image-20221229130908652.png)
+
+#3
+
+![image-20221229131229821](/Users/jamison/Library/Application Support/typora-user-images/image-20221229131229821.png)
+
+![image-20221229131454286](/Users/jamison/Library/Application Support/typora-user-images/image-20221229131454286.png)
+
+![image-20221229131514853](/Users/jamison/Library/Application Support/typora-user-images/image-20221229131514853.png)
+
+![image-20221229131602344](/Users/jamison/Library/Application Support/typora-user-images/image-20221229131602344.png)
+
+![image-20221229131732561](/Users/jamison/Library/Application Support/typora-user-images/image-20221229131732561.png)
+
+### 2. 存储函数练习
+
+![image-20221229131909438](/Users/jamison/Library/Application Support/typora-user-images/image-20221229131909438.png)
+
+![image-20221229131925244](/Users/jamison/Library/Application Support/typora-user-images/image-20221229131925244.png)
+
+![image-20221229132418241](/Users/jamison/Library/Application Support/typora-user-images/image-20221229132418241.png)
+
+![image-20221229132028490](/Users/jamison/Library/Application Support/typora-user-images/image-20221229132028490.png)
+
+![image-20221229132103379](/Users/jamison/Library/Application Support/typora-user-images/image-20221229132103379.png)
+
+![image-20221229132441918](/Users/jamison/Library/Application Support/typora-user-images/image-20221229132441918.png)
+
+![image-20221229132531802](/Users/jamison/Library/Application Support/typora-user-images/image-20221229132531802.png)
