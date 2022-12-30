@@ -2902,3 +2902,177 @@ DROP VIEW IF EXISTS emp_v1, emp_v2;
 ![image-20221229132441918](/Users/jamison/Library/Application Support/typora-user-images/image-20221229132441918.png)
 
 ![image-20221229132531802](/Users/jamison/Library/Application Support/typora-user-images/image-20221229132531802.png)
+
+
+
+# 第十三章 变量、流程控制和游标
+
+## 变量
+
+![image-20221229133847622](/Users/jamison/Library/Application Support/typora-user-images/image-20221229133847622.png)
+
+### 1. 系统变量
+
+#### 1.1 系统变量分类
+
+![image-20221230093911590](/Users/jamison/Library/Application Support/typora-user-images/image-20221230093911590.png)
+
+![image-20221230094007449](/Users/jamison/Library/Application Support/typora-user-images/image-20221230094007449.png)
+
+#### 1.2 查看系统变量
+
+- 查看所有或部分系统变量
+
+![image-20221230094225040](/Users/jamison/Library/Application Support/typora-user-images/image-20221230094225040.png)
+
+- 查看指定系统变量
+
+  ![image-20221230094456260](/Users/jamison/Library/Application Support/typora-user-images/image-20221230094456260.png)
+
+  ![image-20221230100321229](/Users/jamison/Library/Application Support/typora-user-images/image-20221230100321229.png)
+
+- 修改系统变量
+
+  ![image-20221230100415190](/Users/jamison/Library/Application Support/typora-user-images/image-20221230100415190.png)
+
+  ![image-20221230100549225](/Users/jamison/Library/Application Support/typora-user-images/image-20221230100549225.png)
+
+### 2. 用户变量
+
+#### 2.1 用户变量分类
+
+![image-20221230100724800](/Users/jamison/Library/Application Support/typora-user-images/image-20221230100724800.png)
+
+#### 2.2 会话用户变量
+
+- 变量的定义
+
+  ![image-20221230101001544](/Users/jamison/Library/Application Support/typora-user-images/image-20221230101001544.png)
+
+  ![image-20221230101409819](/Users/jamison/Library/Application Support/typora-user-images/image-20221230101409819.png)
+
+#### 2.3 局部变量
+
+![image-20221230101448133](/Users/jamison/Library/Application Support/typora-user-images/image-20221230101448133.png)
+
+![image-20221230101509587](/Users/jamison/Library/Application Support/typora-user-images/image-20221230101509587.png)
+
+![image-20221230104149924](/Users/jamison/Library/Application Support/typora-user-images/image-20221230104149924.png)
+
+![image-20221230104312322](/Users/jamison/Library/Application Support/typora-user-images/image-20221230104312322.png) ![image-20221230104555399](/Users/jamison/Library/Application Support/typora-user-images/image-20221230104555399.png)
+
+![image-20221230104621482](/Users/jamison/Library/Application Support/typora-user-images/image-20221230104621482.png)
+
+![image-20221230104846138](/Users/jamison/Library/Application Support/typora-user-images/image-20221230104846138.png)
+
+![image-20221230105110770](/Users/jamison/Library/Application Support/typora-user-images/image-20221230105110770.png)
+
+#### 2.4 对比会话变量与局部变量
+
+![image-20221230105336740](/Users/jamison/Library/Application Support/typora-user-images/image-20221230105336740.png)
+
+## 定义条件与处理程序
+
+相当于异常处理
+
+![image-20221230105459837](/Users/jamison/Library/Application Support/typora-user-images/image-20221230105459837.png)
+
+### 1. 定义条件
+
+![image-20221230110100879](/Users/jamison/Library/Application Support/typora-user-images/image-20221230110100879.png)
+
+![image-20221230110126525](/Users/jamison/Library/Application Support/typora-user-images/image-20221230110126525.png)
+
+- 案例1
+
+  ![image-20221230110427529](/Users/jamison/Library/Application Support/typora-user-images/image-20221230110427529.png)
+
+- 案例2
+
+  ![image-20221230110448839](/Users/jamison/Library/Application Support/typora-user-images/image-20221230110448839.png)
+
+### 2. 定义处理程序
+
+![image-20221230110526649](/Users/jamison/Library/Application Support/typora-user-images/image-20221230110526649.png)
+
+![image-20221230110953980](/Users/jamison/Library/Application Support/typora-user-images/image-20221230110953980.png)
+
+![image-20221230111242824](/Users/jamison/Library/Application Support/typora-user-images/image-20221230111242824.png)
+
+## 流程控制
+
+![image-20221230111537514](/Users/jamison/Library/Application Support/typora-user-images/image-20221230111537514.png)
+
+### 1. 分支结构IF
+
+![image-20221230111843391](/Users/jamison/Library/Application Support/typora-user-images/image-20221230111843391.png)
+
+### 2. 分支结构CASE
+
+![image-20221230112214640](/Users/jamison/Library/Application Support/typora-user-images/image-20221230112214640.png)
+
+### 3. 循环结构LOOP
+
+![image-20221230112340838](/Users/jamison/Library/Application Support/typora-user-images/image-20221230112340838.png)
+
+### 4. 循环结构WHILE
+
+![image-20221230113141696](/Users/jamison/Library/Application Support/typora-user-images/image-20221230113141696.png)
+
+![image-20221230113223585](/Users/jamison/Library/Application Support/typora-user-images/image-20221230113223585.png)
+
+### 5. 循环结构REPEAT
+
+![image-20221230113403310](/Users/jamison/Library/Application Support/typora-user-images/image-20221230113403310.png)
+
+![image-20221230113527398](/Users/jamison/Library/Application Support/typora-user-images/image-20221230113527398.png)
+
+**对比这三种循环结构**：
+
+![image-20221230113645477](/Users/jamison/Library/Application Support/typora-user-images/image-20221230113645477.png)
+
+### 6. 跳转语句LEAVE
+
+![image-20221230114907952](/Users/jamison/Library/Application Support/typora-user-images/image-20221230114907952.png)
+
+![image-20221230133724382](/Users/jamison/Library/Application Support/typora-user-images/image-20221230133724382.png)
+
+### 7. 跳转语句ITERATE
+
+![image-20221230133910570](/Users/jamison/Library/Application Support/typora-user-images/image-20221230133910570.png)
+
+![image-20221230134009717](/Users/jamison/Library/Application Support/typora-user-images/image-20221230134009717.png)
+
+## 游标
+
+### 1. 什么是游标（或光标）
+
+![image-20221230134239283](/Users/jamison/Library/Application Support/typora-user-images/image-20221230134239283.png)
+
+![image-20221230134856584](/Users/jamison/Library/Application Support/typora-user-images/image-20221230134856584.png)
+
+### 2. 使用游标步骤
+
+![image-20221230135035831](/Users/jamison/Library/Application Support/typora-user-images/image-20221230135035831.png)
+
+- 第二步 打开游标
+
+  ![image-20221230135139882](/Users/jamison/Library/Application Support/typora-user-images/image-20221230135139882.png)
+
+- 第三步 使用游标
+
+  ![image-20221230135319455](/Users/jamison/Library/Application Support/typora-user-images/image-20221230135319455.png)
+
+- 第四步 关闭游标
+
+  ![image-20221230135357485](/Users/jamison/Library/Application Support/typora-user-images/image-20221230135357485.png)
+
+![image-20221230140039659](/Users/jamison/Library/Application Support/typora-user-images/image-20221230140039659.png)
+
+### 3. 小结
+
+![image-20221230140115239](/Users/jamison/Library/Application Support/typora-user-images/image-20221230140115239.png)
+
+## 补充：MySQL 8.0 新特性
+
+![image-20221230140410647](/Users/jamison/Library/Application Support/typora-user-images/image-20221230140410647.png)
