@@ -3076,3 +3076,71 @@ DROP VIEW IF EXISTS emp_v1, emp_v2;
 ## 补充：MySQL 8.0 新特性
 
 ![image-20221230140410647](/Users/jamison/Library/Application Support/typora-user-images/image-20221230140410647.png)
+
+
+
+# 第十四章 触发器
+
+![image-20221230140950595](/Users/jamison/Library/Application Support/typora-user-images/image-20221230140950595.png)
+
+## 触发器概述
+
+![image-20221230141107602](/Users/jamison/Library/Application Support/typora-user-images/image-20221230141107602.png)
+
+## 触发器创建
+
+### 1. 创建触发器语法
+
+![image-20221230141335354](/Users/jamison/Library/Application Support/typora-user-images/image-20221230141335354.png)
+
+### 2. 代码案例
+
+- 案例一
+
+  ![image-20221230141708395](/Users/jamison/Library/Application Support/typora-user-images/image-20221230141708395.png)
+
+- 举例二
+
+  ![image-20221230141811814](/Users/jamison/Library/Application Support/typora-user-images/image-20221230141811814.png)
+
+## 查看、删除触发器
+
+### 1. 查看
+
+![image-20221230142131076](/Users/jamison/Library/Application Support/typora-user-images/image-20221230142131076.png)
+
+### 2. 删除
+
+![image-20221230142149048](/Users/jamison/Library/Application Support/typora-user-images/image-20221230142149048.png)
+
+## 触发器优缺点
+
+### 1. 优点
+
+- 触发器可以确保数据的完整性
+
+  ![image-20221230142534568](/Users/jamison/Library/Application Support/typora-user-images/image-20221230142534568.png)
+
+  ![image-20221230142552259](/Users/jamison/Library/Application Support/typora-user-images/image-20221230142552259.png)
+
+- 可以帮助我们记录日志
+
+  ![image-20221230142621337](/Users/jamison/Library/Application Support/typora-user-images/image-20221230142621337.png)
+
+- 可以用在操作数据前，对数据进行合法性检查
+
+  ![image-20221230142710914](/Users/jamison/Library/Application Support/typora-user-images/image-20221230142710914.png)
+
+### 2. 缺点
+
+- 最大的问题就是可读性差
+
+  ![image-20221230142900421](/Users/jamison/Library/Application Support/typora-user-images/image-20221230142900421.png)
+
+- 相关数据的变更，可能导致触发器出错
+
+  ![image-20221230142932701](/Users/jamison/Library/Application Support/typora-user-images/image-20221230142932701.png)
+
+### 3. 注意点
+
+![image-20221230143057782](/Users/jamison/Library/Application Support/typora-user-images/image-20221230143057782.png)
