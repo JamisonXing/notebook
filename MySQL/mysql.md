@@ -3144,3 +3144,160 @@ DROP VIEW IF EXISTS emp_v1, emp_v2;
 ### 3. 注意点
 
 ![image-20221230143057782](/Users/jamison/Library/Application Support/typora-user-images/image-20221230143057782.png)
+
+# 第十五章 MySQL 8的其他新特性
+
+了解
+
+
+
+# 第十六章 用户与权限管理
+
+
+
+# 第十七章 逻辑架构
+
+## 逻辑架构剖析
+
+### 1. 服务器处理客户端请求
+
+![image-20221231111652030](/Users/jamison/Library/Application Support/typora-user-images/image-20221231111652030.png)
+
+下面具体来看一下5.7的逻辑架构
+
+![image-20221231112504403](/Users/jamison/Library/Application Support/typora-user-images/image-20221231112504403.png)
+
+### 2. connectors
+
+![image-20221231112627971](/Users/jamison/Library/Application Support/typora-user-images/image-20221231112627971.png)
+
+### 3. 第一层 连接层
+
+![image-20221231112721576](/Users/jamison/Library/Application Support/typora-user-images/image-20221231112721576.png)
+
+![image-20221231112757139](/Users/jamison/Library/Application Support/typora-user-images/image-20221231112757139.png)
+
+![image-20221231112906076](/Users/jamison/Library/Application Support/typora-user-images/image-20221231112906076.png)
+
+### 4. 第二层 服务层
+
+![image-20221231161042420](/Users/jamison/Library/Application Support/typora-user-images/image-20221231161042420.png)
+
+![image-20221231161235794](/Users/jamison/Library/Application Support/typora-user-images/image-20221231161235794.png)
+
+![image-20221231161251442](/Users/jamison/Library/Application Support/typora-user-images/image-20221231161251442.png)
+
+![image-20221231161407301](/Users/jamison/Library/Application Support/typora-user-images/image-20221231161407301.png)
+
+### 5. 第三层 引擎层
+
+![image-20221231161515362](/Users/jamison/Library/Application Support/typora-user-images/image-20221231161515362.png)![image-20221231161530859](/Users/jamison/Library/Application Support/typora-user-images/image-20221231161530859.png)
+
+### 6. 存储层
+
+![image-20221231161559581](/Users/jamison/Library/Application Support/typora-user-images/image-20221231161559581.png)
+
+### 7. 小结
+
+![image-20221231161808418](/Users/jamison/Library/Application Support/typora-user-images/image-20221231161808418.png)
+
+## SQL执行流程
+
+### 1. MySQL中SQ的执行流程
+
+![image-20221231162009662](/Users/jamison/Library/Application Support/typora-user-images/image-20221231162009662.png)
+
+1. 查询缓存
+
+   ![image-20221231162052169](/Users/jamison/Library/Application Support/typora-user-images/image-20221231162052169.png)
+
+   ![image-20221231162239814](/Users/jamison/Library/Application Support/typora-user-images/image-20221231162239814.png)
+
+   ![image-20221231162524727](/Users/jamison/Library/Application Support/typora-user-images/image-20221231162524727.png)
+
+   ![image-20221231162606922](/Users/jamison/Library/Application Support/typora-user-images/image-20221231162606922.png)
+
+   ![image-20221231162812349](/Users/jamison/Library/Application Support/typora-user-images/image-20221231162812349.png)
+
+2. 解析器
+
+   ![image-20221231162915481](/Users/jamison/Library/Application Support/typora-user-images/image-20221231162915481.png)
+
+   ![image-20221231163110015](/Users/jamison/Library/Application Support/typora-user-images/image-20221231163110015.png)
+
+   ![image-20221231163134722](/Users/jamison/Library/Application Support/typora-user-images/image-20221231163134722.png)
+
+   ![image-20221231163159992](/Users/jamison/Library/Application Support/typora-user-images/image-20221231163159992.png)
+
+3. 优化器
+
+   ![image-20221231163739658](/Users/jamison/Library/Application Support/typora-user-images/image-20221231163739658.png)
+
+   ![image-20221231163758367](/Users/jamison/Library/Application Support/typora-user-images/image-20221231163758367.png)
+
+   ![image-20221231163903418](/Users/jamison/Library/Application Support/typora-user-images/image-20221231163903418.png)
+
+   ![image-20221231163931660](/Users/jamison/Library/Application Support/typora-user-images/image-20221231163931660.png)
+
+4. 执行器
+
+   截止到现在，还没有真正去读写真实的表，仅仅只是产出了一个执行计划。于是就进入了执行器阶段。
+
+   ![image-20221231164128155](/Users/jamison/Library/Application Support/typora-user-images/image-20221231164128155.png)
+
+   ![image-20221231164159010](/Users/jamison/Library/Application Support/typora-user-images/image-20221231164159010.png)
+
+   ![image-20221231164328863](/Users/jamison/Library/Application Support/typora-user-images/image-20221231164328863.png)
+
+## 数据库缓冲池
+
+![image-20221231174057191](/Users/jamison/Library/Application Support/typora-user-images/image-20221231174057191.png)
+
+### 1. 缓冲池VS查询缓存
+
+他俩是一个东西吗？不是
+
+- **缓冲池**
+
+![image-20221231174452812](/Users/jamison/Library/Application Support/typora-user-images/image-20221231174452812.png)
+
+缓冲池的重要性：
+
+![image-20221231183124960](/Users/jamison/Library/Application Support/typora-user-images/image-20221231183124960.png)
+
+缓存原则：
+
+![image-20221231183216400](/Users/jamison/Library/Application Support/typora-user-images/image-20221231183216400.png)
+
+缓冲池的预读特性：
+
+![image-20221231183259992](/Users/jamison/Library/Application Support/typora-user-images/image-20221231183259992.png)
+
+- **查询缓存**
+
+![image-20221231183411134](/Users/jamison/Library/Application Support/typora-user-images/image-20221231183411134.png)
+
+### 2. 缓冲池如何读取数据
+
+![image-20221231183445999](/Users/jamison/Library/Application Support/typora-user-images/image-20221231183445999.png)
+
+### 3. 查看/设置缓冲池的大小
+
+![image-20221231183632987](/Users/jamison/Library/Application Support/typora-user-images/image-20221231183632987.png)
+
+### 4. 多个Buffer Pool实例
+
+![image-20221231184124457](/Users/jamison/Library/Application Support/typora-user-images/image-20221231184124457.png)
+
+![image-20221231184139161](/Users/jamison/Library/Application Support/typora-user-images/image-20221231184139161.png)
+
+### 5. 引申问题
+
+Buffer Pool是MySQL内存结构中十分核心的一个组成，可以将他想象成一个黑盒子。
+
+**黑盒下的更新数据流程**
+
+![image-20221231184400039](/Users/jamison/Library/Application Support/typora-user-images/image-20221231184400039.png)
+
+通过Redo Log & Undo Log来恢复
+
