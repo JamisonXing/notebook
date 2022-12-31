@@ -3301,3 +3301,86 @@ Buffer Pool是MySQL内存结构中十分核心的一个组成，可以将他想�
 
 通过Redo Log & Undo Log来恢复
 
+
+
+# 第十八章 存储引擎
+
+![image-20221231184925790](/Users/jamison/Library/Application Support/typora-user-images/image-20221231184925790.png)
+
+查看，设置存储引擎
+
+## 引擎介绍
+
+### 1. InnoDB引擎：具备外键支持功能的事务存储引擎
+
+![image-20221231205526627](/Users/jamison/Library/Application Support/typora-user-images/image-20221231205526627.png)
+
+### 2. MyISAM引擎：主要的非事务存储引擎
+
+![image-20221231205919767](/Users/jamison/Library/Application Support/typora-user-images/image-20221231205919767.png)
+
+### 3. Archive引擎：用于数据存档
+
+![image-20221231211405778](/Users/jamison/Library/Application Support/typora-user-images/image-20221231211405778.png)
+
+![image-20221231211428400](/Users/jamison/Library/Application Support/typora-user-images/image-20221231211428400.png)
+
+![image-20221231211443634](/Users/jamison/Library/Application Support/typora-user-images/image-20221231211443634.png)
+
+### 4. Blackhole引擎：丢弃写操作，读操作会返回空内容
+
+![image-20221231211540083](/Users/jamison/Library/Application Support/typora-user-images/image-20221231211540083.png)
+
+### 5. CSV引擎：存储数据时，以逗号分隔各个数据项
+
+![image-20221231211913170](/Users/jamison/Library/Application Support/typora-user-images/image-20221231211913170.png)
+
+![image-20221231211945657](/Users/jamison/Library/Application Support/typora-user-images/image-20221231211945657.png)
+
+### 6. Memory引擎：置于内存的表
+
+![image-20221231212054575](/Users/jamison/Library/Application Support/typora-user-images/image-20221231212054575.png)
+
+![image-20221231212227151](/Users/jamison/Library/Application Support/typora-user-images/image-20221231212227151.png)
+
+### 7. Federated引擎：访问远程表
+
+![image-20221231212322265](/Users/jamison/Library/Application Support/typora-user-images/image-20221231212322265.png)
+
+### 8. Merge引擎：MyISAM表构成的表集合
+
+### 9. NDB引擎：MySQL集群专用存储引擎
+
+![image-20221231212503974](/Users/jamison/Library/Application Support/typora-user-images/image-20221231212503974.png)
+
+## MyISAM和InnoDB对比
+
+![image-20221231210224503](/Users/jamison/Library/Application Support/typora-user-images/image-20221231210224503.png)
+
+![image-20221231210252796](/Users/jamison/Library/Application Support/typora-user-images/image-20221231210252796.png)
+
+## 淘宝、阿里巴巴用哪个
+
+![image-20221231210326269](/Users/jamison/Library/Application Support/typora-user-images/image-20221231210326269.png)
+
+## 课外补充
+
+### 1. InnoDB表的优势
+
+![image-20221231210439820](/Users/jamison/Library/Application Support/typora-user-images/image-20221231210439820.png)
+
+### 2. InnoDB和ACID模型
+
+![image-20221231210655390](/Users/jamison/Library/Application Support/typora-user-images/image-20221231210655390.png)
+
+![image-20221231210721383](/Users/jamison/Library/Application Support/typora-user-images/image-20221231210721383.png)
+
+![image-20221231210814669](/Users/jamison/Library/Application Support/typora-user-images/image-20221231210814669.png)
+
+### 3. InnoDB架构
+
+![image-20221231210901833](/Users/jamison/Library/Application Support/typora-user-images/image-20221231210901833.png)
+
+![image-20221231210930549](/Users/jamison/Library/Application Support/typora-user-images/image-20221231210930549.png)
+
+![image-20221231210945109](/Users/jamison/Library/Application Support/typora-user-images/image-20221231210945109.png)
