@@ -3699,3 +3699,346 @@ Buffer Pool是MySQL内存结构中十分核心的一个组成，可以将他想�
 
 ![image-20230103102332792](/Users/jamison/Library/Application Support/typora-user-images/image-20230103102332792.png)
 
+
+
+# 第二十章 InnoDB数据存储结构
+
+## 数据库存储结构：页
+
+![image-20230103104643731](/Users/jamison/Library/Application Support/typora-user-images/image-20230103104643731.png)
+
+### 1. 磁盘与内存交互的基本单位：页
+
+![image-20230103104750604](/Users/jamison/Library/Application Support/typora-user-images/image-20230103104750604.png)
+
+![image-20230103104825220](/Users/jamison/Library/Application Support/typora-user-images/image-20230103104825220.png)
+
+### 2. 页结构概述
+
+![image-20230103104902058](/Users/jamison/Library/Application Support/typora-user-images/image-20230103104902058.png)
+
+### 3. 页的大小
+
+![image-20230103104923087](/Users/jamison/Library/Application Support/typora-user-images/image-20230103104923087.png)
+
+### 4. 页的上层结构
+
+![image-20230103105034023](/Users/jamison/Library/Application Support/typora-user-images/image-20230103105034023.png)
+
+![image-20230103105046786](/Users/jamison/Library/Application Support/typora-user-images/image-20230103105046786.png)
+
+## 页的内部结构
+
+![image-20230103112115122](/Users/jamison/Library/Application Support/typora-user-images/image-20230103112115122.png)
+
+![image-20230103112129378](/Users/jamison/Library/Application Support/typora-user-images/image-20230103112129378.png)
+
+![image-20230103112457549](/Users/jamison/Library/Application Support/typora-user-images/image-20230103112457549.png)
+
+### 第1部分：File Header(文件头部)和File Trailer(文件尾部)
+
+#### 1.1 File Header
+
+![image-20230103112527885](/Users/jamison/Library/Application Support/typora-user-images/image-20230103112527885.png)
+
+**FILE_PAGE_OFFSET 4字节:**
+
+![image-20230103112656542](/Users/jamison/Library/Application Support/typora-user-images/image-20230103112656542.png)
+
+**FILE_PAGE_TYPE 2字节:**
+
+![image-20230103112733279](/Users/jamison/Library/Application Support/typora-user-images/image-20230103112733279.png)
+
+**FILE_PAGE_PREV 4字节和FILE_PAGE_NEXT 4字节： **
+
+![image-20230103112848717](/Users/jamison/Library/Application Support/typora-user-images/image-20230103112848717.png)
+
+**FILE_PAGE_SPACE_OR_CHKSUM 4字节：**
+
+![image-20230103113019947](/Users/jamison/Library/Application Support/typora-user-images/image-20230103113019947.png)
+
+![image-20230103113111502](/Users/jamison/Library/Application Support/typora-user-images/image-20230103113111502.png)
+
+**FILE_PAGE_LSN 8字节:**
+
+![image-20230103113205126](/Users/jamison/Library/Application Support/typora-user-images/image-20230103113205126.png)
+
+#### 2.1 File Trailer
+
+8字节
+
+![image-20230103113306429](/Users/jamison/Library/Application Support/typora-user-images/image-20230103113306429.png)
+
+### 第2部分：Free Space, User Records, Infimum+Supremum
+
+空闲空间，用户记录， 最大最小记录
+
+![image-20230103115528487](/Users/jamison/Library/Application Support/typora-user-images/image-20230103115528487.png)
+
+#### 2.1 Free Space
+
+![image-20230103115606479](/Users/jamison/Library/Application Support/typora-user-images/image-20230103115606479.png)
+
+#### 2.2 User Records
+
+![image-20230103115638551](/Users/jamison/Library/Application Support/typora-user-images/image-20230103115638551.png)
+
+#### 2.3 Infimum+Supremum
+
+![image-20230103120305042](/Users/jamison/Library/Application Support/typora-user-images/image-20230103120305042.png)
+
+![image-20230103120343294](/Users/jamison/Library/Application Support/typora-user-images/image-20230103120343294.png)
+
+### 第3部分：Page Directory, Page Header
+
+#### 3.1 Page Directory
+
+页目录，页面头部
+
+**为什么需要页目录？**
+
+![image-20230103133041884](/Users/jamison/Library/Application Support/typora-user-images/image-20230103133041884.png)
+
+![image-20230103133143857](/Users/jamison/Library/Application Support/typora-user-images/image-20230103133143857.png)
+
+![image-20230103133350178](/Users/jamison/Library/Application Support/typora-user-images/image-20230103133350178.png)
+
+![image-20230103133455129](/Users/jamison/Library/Application Support/typora-user-images/image-20230103133455129.png)
+
+![image-20230103133533701](/Users/jamison/Library/Application Support/typora-user-images/image-20230103133533701.png)
+
+![image-20230103133643101](/Users/jamison/Library/Application Support/typora-user-images/image-20230103133643101.png)
+
+![image-20230103133653807](/Users/jamison/Library/Application Support/typora-user-images/image-20230103133653807.png)
+
+**页目录分组的个数如何确定？**
+
+![image-20230103133813390](/Users/jamison/Library/Application Support/typora-user-images/image-20230103133813390.png)
+
+**页目录结构下如何快速查找记录？**
+
+![image-20230103134036667](/Users/jamison/Library/Application Support/typora-user-images/image-20230103134036667.png)
+
+![image-20230103134047564](/Users/jamison/Library/Application Support/typora-user-images/image-20230103134047564.png)
+
+![image-20230103134135033](/Users/jamison/Library/Application Support/typora-user-images/image-20230103134135033.png)
+
+![image-20230103134203177](/Users/jamison/Library/Application Support/typora-user-images/image-20230103134203177.png)
+
+![image-20230103134216286](/Users/jamison/Library/Application Support/typora-user-images/image-20230103134216286.png)
+
+#### 3.2 Page Header
+
+![image-20230103134502650](/Users/jamison/Library/Application Support/typora-user-images/image-20230103134502650.png)
+
+![image-20230103134753578](/Users/jamison/Library/Application Support/typora-user-images/image-20230103134753578.png)
+
+**PAGE_DIRECTION**
+
+![image-20230103134611334](/Users/jamison/Library/Application Support/typora-user-images/image-20230103134611334.png)
+
+**PAGE_N_DIRECTION**
+
+![image-20230103134653351](/Users/jamison/Library/Application Support/typora-user-images/image-20230103134653351.png)
+
+### 4. 从数据页角度看B+树如何查询
+
+![image-20230103151537578](/Users/jamison/Library/Application Support/typora-user-images/image-20230103151537578.png)
+
+**1. B+树是如何进行记录检索的？**
+
+![image-20230103151612858](/Users/jamison/Library/Application Support/typora-user-images/image-20230103151612858.png)
+
+**2. 普通索引和唯一索引在查询效率上有什么不同？**
+
+![image-20230103151744211](/Users/jamison/Library/Application Support/typora-user-images/image-20230103151744211.png)
+
+## InnoDB行格式（或记录格式）
+
+![image-20230103151925939](/Users/jamison/Library/Application Support/typora-user-images/image-20230103151925939.png)
+
+### 1. 指定行格式的语法
+
+![image-20230103152036030](/Users/jamison/Library/Application Support/typora-user-images/image-20230103152036030.png)
+
+### 2. COMPACT行格式
+
+![image-20230103152129688](/Users/jamison/Library/Application Support/typora-user-images/image-20230103152129688.png)
+
+#### 2.1 变长字段长度列表
+
+![image-20230103152218704](/Users/jamison/Library/Application Support/typora-user-images/image-20230103152218704.png)
+
+![image-20230103152309030](/Users/jamison/Library/Application Support/typora-user-images/image-20230103152309030.png)
+
+#### 2.2 NULL值列表
+
+![image-20230103152336991](/Users/jamison/Library/Application Support/typora-user-images/image-20230103152336991.png)
+
+![image-20230103152352091](/Users/jamison/Library/Application Support/typora-user-images/image-20230103152352091.png)
+
+#### 2.3 记录头信息 5字节：
+
+![image-20230103115744813](/Users/jamison/Library/Application Support/typora-user-images/image-20230103115744813.png)
+
+![image-20230103115800376](/Users/jamison/Library/Application Support/typora-user-images/image-20230103115800376.png)
+
+![image-20230103115833974](/Users/jamison/Library/Application Support/typora-user-images/image-20230103115833974.png)
+
+![image-20230103115853889](/Users/jamison/Library/Application Support/typora-user-images/image-20230103115853889.png)
+
+![image-20230103115904574](/Users/jamison/Library/Application Support/typora-user-images/image-20230103115904574.png)
+
+##### delete_mask
+
+![image-20230103120010704](/Users/jamison/Library/Application Support/typora-user-images/image-20230103120010704.png)
+
+##### min_rec_mask
+
+![image-20230103120101988](/Users/jamison/Library/Application Support/typora-user-images/image-20230103120101988.png)
+
+##### record_type
+
+![image-20230103120124541](/Users/jamison/Library/Application Support/typora-user-images/image-20230103120124541.png)
+
+##### heap_no
+
+![image-20230103120200731](/Users/jamison/Library/Application Support/typora-user-images/image-20230103120200731.png)
+
+##### n_owned
+
+![image-20230103120442045](/Users/jamison/Library/Application Support/typora-user-images/image-20230103120442045.png)
+
+##### next_record
+
+![image-20230103120538782](/Users/jamison/Library/Application Support/typora-user-images/image-20230103120538782.png)
+
+###### 演示：删除操作
+
+分为多组：最小记录为一组，最大记录和用户记录为一组，所以删除一条后，最大记录的n_owned为5-1=4，后面Page Directory时候会讲到
+
+![image-20230103120641626](/Users/jamison/Library/Application Support/typora-user-images/image-20230103120641626.png)
+
+![image-20230103120707337](/Users/jamison/Library/Application Support/typora-user-images/image-20230103120707337.png)
+
+###### 演示：添加操作
+
+![image-20230103120733234](/Users/jamison/Library/Application Support/typora-user-images/image-20230103120733234.png)
+
+![image-20230103120902090](/Users/jamison/Library/Application Support/typora-user-images/image-20230103120902090.png)
+
+#### 2.4 记录的真实数据
+
+![image-20230103152556533](/Users/jamison/Library/Application Support/typora-user-images/image-20230103152556533.png)
+
+![image-20230103152647449](/Users/jamison/Library/Application Support/typora-user-images/image-20230103152647449.png)
+
+![image-20230103152708101](/Users/jamison/Library/Application Support/typora-user-images/image-20230103152708101.png)
+
+![image-20230103152744374](/Users/jamison/Library/Application Support/typora-user-images/image-20230103152744374.png)
+
+### 3. Dynamic和Compress行格式
+
+#### 3.1 行溢出
+
+![image-20230103154741668](/Users/jamison/Library/Application Support/typora-user-images/image-20230103154741668.png)
+
+![image-20230103154850836](/Users/jamison/Library/Application Support/typora-user-images/image-20230103154850836.png)
+
+![image-20230103154905595](/Users/jamison/Library/Application Support/typora-user-images/image-20230103154905595.png)
+
+#### 3.2 不同
+
+![image-20230103154955740](/Users/jamison/Library/Application Support/typora-user-images/image-20230103154955740.png)
+
+### 4. Redundant行格式
+
+很老，了解
+
+![image-20230103155123935](/Users/jamison/Library/Application Support/typora-user-images/image-20230103155123935.png)
+
+#### 4.1 字段长度偏移列表
+
+![image-20230103155230593](/Users/jamison/Library/Application Support/typora-user-images/image-20230103155230593.png)
+
+![image-20230103155330657](/Users/jamison/Library/Application Support/typora-user-images/image-20230103155330657.png)
+
+#### 4.2 记录头信息
+
+![image-20230103155431518](/Users/jamison/Library/Application Support/typora-user-images/image-20230103155431518.png)
+
+![image-20230103155507311](/Users/jamison/Library/Application Support/typora-user-images/image-20230103155507311.png)
+
+![image-20230103155532695](/Users/jamison/Library/Application Support/typora-user-images/image-20230103155532695.png)
+
+![image-20230103155550585](/Users/jamison/Library/Application Support/typora-user-images/image-20230103155550585.png)
+
+![image-20230103155602780](/Users/jamison/Library/Application Support/typora-user-images/image-20230103155602780.png)
+
+## 区、段与碎片区
+
+### 1. 为什么要有区？
+
+![image-20230103163705449](/Users/jamison/Library/Application Support/typora-user-images/image-20230103163705449.png)
+
+### 2. 为什么要有段？
+
+![image-20230103163813549](/Users/jamison/Library/Application Support/typora-user-images/image-20230103163813549.png)
+
+### 3. 为什么要有碎片区？
+
+![image-20230103164200588](/Users/jamison/Library/Application Support/typora-user-images/image-20230103164200588.png)
+
+### 4. 区的分类
+
+![image-20230103164233189](/Users/jamison/Library/Application Support/typora-user-images/image-20230103164233189.png)
+
+## 表空间
+
+![image-20230103164257249](/Users/jamison/Library/Application Support/typora-user-images/image-20230103164257249.png)
+
+### 1. 独立表空间
+
+![image-20230103164314347](/Users/jamison/Library/Application Support/typora-user-images/image-20230103164314347.png)
+
+**独立表空间结构**
+
+![image-20230103164334081](/Users/jamison/Library/Application Support/typora-user-images/image-20230103164334081.png)
+
+**真实表空间对应的文件大小**
+
+![image-20230103164403041](/Users/jamison/Library/Application Support/typora-user-images/image-20230103164403041.png)
+
+**查看InnoDB的表空间类型**
+
+![image-20230103164502397](/Users/jamison/Library/Application Support/typora-user-images/image-20230103164502397.png)
+
+### 2. 系统表空间
+
+![image-20230103164522346](/Users/jamison/Library/Application Support/typora-user-images/image-20230103164522346.png)
+
+**InnoDB数据字典**
+
+![image-20230103164621278](/Users/jamison/Library/Application Support/typora-user-images/image-20230103164621278.png)
+
+![image-20230103164648084](/Users/jamison/Library/Application Support/typora-user-images/image-20230103164648084.png)
+
+![image-20230103164709262](/Users/jamison/Library/Application Support/typora-user-images/image-20230103164709262.png)
+
+![image-20230103164731628](/Users/jamison/Library/Application Support/typora-user-images/image-20230103164731628.png)
+
+## 附录：数据页加载的三种方式
+
+![image-20230103163935584](/Users/jamison/Library/Application Support/typora-user-images/image-20230103163935584.png)
+
+### 1. 内存读取
+
+![image-20230103163951716](/Users/jamison/Library/Application Support/typora-user-images/image-20230103163951716.png)
+
+### 2. 随机读取
+
+![image-20230103164028498](/Users/jamison/Library/Application Support/typora-user-images/image-20230103164028498.png)
+
+### 3. 顺序读取
+
+![image-20230103164043719](/Users/jamison/Library/Application Support/typora-user-images/image-20230103164043719.png)
