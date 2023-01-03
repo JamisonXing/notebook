@@ -3384,3 +3384,318 @@ Buffer Pool是MySQL内存结构中十分核心的一个组成，可以将他想�
 ![image-20221231210930549](/Users/jamison/Library/Application Support/typora-user-images/image-20221231210930549.png)
 
 ![image-20221231210945109](/Users/jamison/Library/Application Support/typora-user-images/image-20221231210945109.png)
+
+
+
+# 第十九章 索引的数据结构
+
+## 为什么要使用索引
+
+![image-20230101092128915](/Users/jamison/Library/Application Support/typora-user-images/image-20230101092128915.png)
+
+![image-20230101092211694](/Users/jamison/Library/Application Support/typora-user-images/image-20230101092211694.png)
+
+![image-20230101092245467](/Users/jamison/Library/Application Support/typora-user-images/image-20230101092245467.png)
+
+![image-20230101092255108](/Users/jamison/Library/Application Support/typora-user-images/image-20230101092255108.png)
+
+## 索引及其优缺点
+
+### 1. 索引概述
+
+![image-20230101100302758](/Users/jamison/Library/Application Support/typora-user-images/image-20230101100302758.png)
+
+### 2. 优点
+
+![image-20230101100318535](/Users/jamison/Library/Application Support/typora-user-images/image-20230101100318535.png)
+
+### 3. 缺点
+
+![image-20230101100336038](/Users/jamison/Library/Application Support/typora-user-images/image-20230101100336038.png)
+
+> ![image-20230101100505978](/Users/jamison/Library/Application Support/typora-user-images/image-20230101100505978.png)
+
+## InnoDB中索引的推演
+
+### 1. 索引之前的查找
+
+先看一个具体的例子：
+
+![image-20230101102433983](/Users/jamison/Library/Application Support/typora-user-images/image-20230101102433983.png)
+
+- 在一个页中查找
+
+![image-20230101102456890](/Users/jamison/Library/Application Support/typora-user-images/image-20230101102456890.png)
+
+- 在很多页中查找
+
+![image-20230101102545613](/Users/jamison/Library/Application Support/typora-user-images/image-20230101102545613.png)
+
+###  2. 设计索引
+
+![image-20230101110318905](/Users/jamison/Library/Application Support/typora-user-images/image-20230101110318905.png)
+
+![image-20230101110343923](/Users/jamison/Library/Application Support/typora-user-images/image-20230101110343923.png)
+
+![image-20230101110403577](/Users/jamison/Library/Application Support/typora-user-images/image-20230101110403577.png)
+
+#### 2.1 一个简单的索引设计方案
+
+![image-20230101110449885](/Users/jamison/Library/Application Support/typora-user-images/image-20230101110449885.png)
+
+![image-20230101110513379](/Users/jamison/Library/Application Support/typora-user-images/image-20230101110513379.png)
+
+![image-20230101110559953](/Users/jamison/Library/Application Support/typora-user-images/image-20230101110559953.png)
+
+![image-20230101110614844](/Users/jamison/Library/Application Support/typora-user-images/image-20230101110614844.png)
+
+- 给所有的页建立一个目录项
+
+![image-20230101110749761](/Users/jamison/Library/Application Support/typora-user-images/image-20230101110749761.png)
+
+![image-20230101110818337](/Users/jamison/Library/Application Support/typora-user-images/image-20230101110818337.png)
+
+#### 2.2 InnoDB中的索引方案
+
+##### 2.2.1 迭代一次：目录项记录的页
+
+![image-20230101173635979](/Users/jamison/Library/Application Support/typora-user-images/image-20230101173635979.png)
+
+![image-20230101173719561](/Users/jamison/Library/Application Support/typora-user-images/image-20230101173719561.png)
+
+![image-20230101173841441](/Users/jamison/Library/Application Support/typora-user-images/image-20230101173841441.png)
+
+![image-20230101173909491](/Users/jamison/Library/Application Support/typora-user-images/image-20230101173909491.png)
+
+##### 2.2.2 迭代2次：多个目录项记录的页
+
+![image-20230101174120360](/Users/jamison/Library/Application Support/typora-user-images/image-20230101174120360.png)
+
+![image-20230101174230985](/Users/jamison/Library/Application Support/typora-user-images/image-20230101174230985.png)
+
+##### 2.2.3 迭代3次：目录项记录页的目录页
+
+![image-20230101174332616](/Users/jamison/Library/Application Support/typora-user-images/image-20230101174332616.png)
+
+![image-20230101174354511](/Users/jamison/Library/Application Support/typora-user-images/image-20230101174354511.png)
+
+![image-20230101174422171](/Users/jamison/Library/Application Support/typora-user-images/image-20230101174422171.png)
+
+##### ![image-20230101174439007](/Users/jamison/Library/Application Support/typora-user-images/image-20230101174439007.png)2.2.4 B+Tree
+
+![image-20230101174520021](/Users/jamison/Library/Application Support/typora-user-images/image-20230101174520021.png)
+
+#### 2.3. 常见索引概念
+
+索引按照物理实现方式，索引分为2种：聚簇（聚集）和非聚簇（非聚集）索引。我们也把非聚集索引称为二级索引或者辅助索引。
+
+##### 2.3.1 聚簇索引
+
+![image-20230102175639495](/Users/jamison/Library/Application Support/typora-user-images/image-20230102175639495.png)
+
+特点：
+
+![image-20230102175713002](/Users/jamison/Library/Application Support/typora-user-images/image-20230102175713002.png)
+
+![image-20230102175752331](/Users/jamison/Library/Application Support/typora-user-images/image-20230102175752331.png)
+
+优点：
+
+![image-20230102175816077](/Users/jamison/Library/Application Support/typora-user-images/image-20230102175816077.png)
+
+缺点：
+
+![image-20230102175857619](/Users/jamison/Library/Application Support/typora-user-images/image-20230102175857619.png)
+
+限制：
+
+![image-20230102175922107](/Users/jamison/Library/Application Support/typora-user-images/image-20230102175922107.png)
+
+##### 2.3.2 二级索引（辅助索引，非聚簇索引）
+
+![image-20230102180046380](/Users/jamison/Library/Application Support/typora-user-images/image-20230102180046380.png)
+
+这个B+树与上面介绍的聚簇索引有几处不同：
+
+![image-20230102180223622](/Users/jamison/Library/Application Support/typora-user-images/image-20230102180223622.png)
+
+所以如果我们现在想通过c2列的值查找某些记录的话就可以使用我们刚刚创建好的这个B+树了。以查找c2列的值为4的记录为例，查找过程如下：
+
+![image-20230102180425745](/Users/jamison/Library/Application Support/typora-user-images/image-20230102180425745.png)
+
+**回表的概念：**
+
+![image-20230102180503626](/Users/jamison/Library/Application Support/typora-user-images/image-20230102180503626.png)
+
+![image-20230102180528540](/Users/jamison/Library/Application Support/typora-user-images/image-20230102180528540.png)
+
+![image-20230102180606753](/Users/jamison/Library/Application Support/typora-user-images/image-20230102180606753.png)
+
+小结：
+
+![image-20230102180629153](/Users/jamison/Library/Application Support/typora-user-images/image-20230102180629153.png)
+
+##### 2.3.3 联合索引
+
+![image-20230102180710319](/Users/jamison/Library/Application Support/typora-user-images/image-20230102180710319.png)
+
+为c2和c3列建立的索引示意图如下：
+
+![image-20230102180756811](/Users/jamison/Library/Application Support/typora-user-images/image-20230102180756811.png)
+
+如图所示，我们需要注意以下几点：
+
+![image-20230102180839102](/Users/jamison/Library/Application Support/typora-user-images/image-20230102180839102.png)
+
+### 3. InnoDB的B+树索引的注意事项
+
+#### 3.1 根页面的位置万年不动
+
+![image-20230102193046823](/Users/jamison/Library/Application Support/typora-user-images/image-20230102193046823.png)
+
+#### 3.2 内节点中目录项记录的唯一性
+
+![image-20230102193207150](/Users/jamison/Library/Application Support/typora-user-images/image-20230102193207150.png)
+
+![image-20230102193225192](/Users/jamison/Library/Application Support/typora-user-images/image-20230102193225192.png)
+
+![image-20230102193545890](/Users/jamison/Library/Application Support/typora-user-images/image-20230102193545890.png)
+
+![image-20230102193556787](/Users/jamison/Library/Application Support/typora-user-images/image-20230102193556787.png)
+
+#### 3.3 一个页面最多存储2条记录
+
+![image-20230102193702015](/Users/jamison/Library/Application Support/typora-user-images/image-20230102193702015.png)
+
+### 4. MyISAM中的索引方案
+
+![image-20230102194005300](/Users/jamison/Library/Application Support/typora-user-images/image-20230102194005300.png)
+
+#### 4.1 MyISAM索引的原理
+
+![image-20230102194047157](/Users/jamison/Library/Application Support/typora-user-images/image-20230102194047157.png)
+
+![image-20230102194153180](/Users/jamison/Library/Application Support/typora-user-images/image-20230102194153180.png)
+
+![image-20230102194259813](/Users/jamison/Library/Application Support/typora-user-images/image-20230102194259813.png)
+
+![image-20230102194219126](/Users/jamison/Library/Application Support/typora-user-images/image-20230102194219126.png)
+
+#### 4.2 MyISAM与InnoDB对比
+
+![image-20230102194411402](/Users/jamison/Library/Application Support/typora-user-images/image-20230102194411402.png)
+
+小结：
+
+![image-20230102194451420](/Users/jamison/Library/Application Support/typora-user-images/image-20230102194451420.png)
+
+![image-20230102194502566](/Users/jamison/Library/Application Support/typora-user-images/image-20230102194502566.png)
+
+### 5. 索引的代价
+
+![image-20230102194533017](/Users/jamison/Library/Application Support/typora-user-images/image-20230102194533017.png)
+
+### 6. MySQL数据结构选择的合理性
+
+![image-20230103100505868](/Users/jamison/Library/Application Support/typora-user-images/image-20230103100505868.png)
+
+#### 6.1 全表遍历
+
+一个一个找，不讲了。
+
+#### 6.2 Hash结构
+
+![image-20230103100646062](/Users/jamison/Library/Application Support/typora-user-images/image-20230103100646062.png)
+
+![image-20230103100716960](/Users/jamison/Library/Application Support/typora-user-images/image-20230103100716960.png)
+
+![image-20230103100733342](/Users/jamison/Library/Application Support/typora-user-images/image-20230103100733342.png)
+
+![image-20230103100744579](/Users/jamison/Library/Application Support/typora-user-images/image-20230103100744579.png)
+
+![image-20230103100752920](/Users/jamison/Library/Application Support/typora-user-images/image-20230103100752920.png)
+
+**hash结构效率这么高，那为什么索引结构要设计成树形结构呢？**
+
+![image-20230103100844450](/Users/jamison/Library/Application Support/typora-user-images/image-20230103100844450.png)
+
+**Hash索引使用引擎如表所示：**
+
+![image-20230103100920349](/Users/jamison/Library/Application Support/typora-user-images/image-20230103100920349.png)
+
+**Hash索引的适用性**
+
+![image-20230103101012711](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101012711.png)
+
+![image-20230103101032398](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101032398.png)
+
+#### 6.3 二叉搜索树
+
+![image-20230103101056685](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101056685.png)
+
+![image-20230103101121941](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101121941.png)
+
+![image-20230103101130479](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101130479.png)
+
+#### 6.4 AVL树
+
+![image-20230103101159476](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101159476.png)
+
+![image-20230103101239977](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101239977.png)
+
+#### 6.5 B-Tree
+
+![image-20230103101327335](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101327335.png)
+
+![image-20230103101402227](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101402227.png)
+
+![image-20230103101418253](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101418253.png)
+
+小结：
+
+![image-20230103101442811](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101442811.png)
+
+![image-20230103101501982](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101501982.png)
+
+#### 6.6 B+Tree
+
+![image-20230103101523610](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101523610.png)
+
+![image-20230103101550853](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101550853.png)
+
+![image-20230103101615821](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101615821.png)
+
+![image-20230103101636520](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101636520.png)
+
+![image-20230103101652833](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101652833.png)
+
+![image-20230103101718686](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101718686.png)
+
+**思考题：为了减少IO，索引树会一次性加载吗？**
+
+> ![image-20230103101806303](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101806303.png)
+
+**思考题：B+树的存储能力如何？为什么说一般查找行记录，最多需要1~3次磁盘IO**
+
+> ![image-20230103101938836](/Users/jamison/Library/Application Support/typora-user-images/image-20230103101938836.png)
+
+**思考题：Hash索引与B+索引的区别**
+
+> ![image-20230103102038116](/Users/jamison/Library/Application Support/typora-user-images/image-20230103102038116.png)
+>
+> ![image-20230103102049530](/Users/jamison/Library/Application Support/typora-user-images/image-20230103102049530.png)
+
+**思考题：Hash索引和B+树索引是在建索引的时候手动指定吗？**
+
+> ![image-20230103102231558](/Users/jamison/Library/Application Support/typora-user-images/image-20230103102231558.png)
+>
+> ![image-20230103102246392](/Users/jamison/Library/Application Support/typora-user-images/image-20230103102246392.png)
+
+#### 6.7 R树
+
+![image-20230103102316937](/Users/jamison/Library/Application Support/typora-user-images/image-20230103102316937.png)
+
+#### 6.8 小结
+
+![image-20230103102332792](/Users/jamison/Library/Application Support/typora-user-images/image-20230103102332792.png)
+
