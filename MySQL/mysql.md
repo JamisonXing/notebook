@@ -4042,3 +4042,287 @@ Buffer Pool是MySQL内存结构中十分核心的一个组成，可以将他想�
 ### 3. 顺序读取
 
 ![image-20230103164043719](/Users/jamison/Library/Application Support/typora-user-images/image-20230103164043719.png)
+
+
+
+# 第二十一章 索引的创建与设计原则
+
+## 索引的声明和使用
+
+### 1. 索引的分类
+
+![image-20230105122438166](/Users/jamison/Library/Application Support/typora-user-images/image-20230105122438166.png)
+
+1. 普通索引
+
+   ![image-20230105122506434](/Users/jamison/Library/Application Support/typora-user-images/image-20230105122506434.png)
+
+2. 唯一性索引
+
+   ![image-20230105122539738](/Users/jamison/Library/Application Support/typora-user-images/image-20230105122539738.png)
+
+3. 主键索引
+
+   ![image-20230105122611288](/Users/jamison/Library/Application Support/typora-user-images/image-20230105122611288.png)
+
+4. 单列索引
+
+   ![image-20230105122624820](/Users/jamison/Library/Application Support/typora-user-images/image-20230105122624820.png)
+
+5. 多列（组合、联合）索引
+
+   ![image-20230105122651941](/Users/jamison/Library/Application Support/typora-user-images/image-20230105122651941.png)
+
+6. 全文检索
+
+   ![image-20230105122733097](/Users/jamison/Library/Application Support/typora-user-images/image-20230105122733097.png)
+
+7. 补充：空间索引
+
+   ![image-20230105122803754](/Users/jamison/Library/Application Support/typora-user-images/image-20230105122803754.png)
+
+小结：不同存储引擎支持的索引类型也不一样
+
+![image-20230105122842897](/Users/jamison/Library/Application Support/typora-user-images/image-20230105122842897.png)
+
+### 2. 创建索引
+
+![image-20230105131259023](/Users/jamison/Library/Application Support/typora-user-images/image-20230105131259023.png)
+
+#### 2.1 创建表的时候创建索引
+
+- 隐式
+
+  ![image-20230105131359743](/Users/jamison/Library/Application Support/typora-user-images/image-20230105131359743.png)
+
+- 显示
+
+  ![image-20230105131419999](/Users/jamison/Library/Application Support/typora-user-images/image-20230105131419999.png)
+
+  例子：
+
+  1. 普通索引
+
+     ![image-20230105131500738](/Users/jamison/Library/Application Support/typora-user-images/image-20230105131500738.png)
+
+  2. 创建唯一索引
+
+     ![image-20230105131533156](/Users/jamison/Library/Application Support/typora-user-images/image-20230105131533156.png)
+
+  3. 主键索引
+
+     ![image-20230105131606149](/Users/jamison/Library/Application Support/typora-user-images/image-20230105131606149.png)
+
+  4. 单列索引
+
+     ![image-20230105131636993](/Users/jamison/Library/Application Support/typora-user-images/image-20230105131636993.png)
+
+     上面unique不是必须的
+
+  5. 联合索引
+
+     ![image-20230105131706843](/Users/jamison/Library/Application Support/typora-user-images/image-20230105131706843.png)
+
+  6. 创建全文索引
+
+     ![image-20230105131751209](/Users/jamison/Library/Application Support/typora-user-images/image-20230105131751209.png)
+
+     ![image-20230105131840727](/Users/jamison/Library/Application Support/typora-user-images/image-20230105131840727.png)
+
+     ![image-20230105131906255](/Users/jamison/Library/Application Support/typora-user-images/image-20230105131906255.png)
+
+  7. 创建空间索引
+
+     ![image-20230105131942372](/Users/jamison/Library/Application Support/typora-user-images/image-20230105131942372.png)
+
+
+  #### 2.2 表创建之后添加索引
+
+![image-20230105132029029](/Users/jamison/Library/Application Support/typora-user-images/image-20230105132029029.png)
+
+  ![image-20230105132050126](/Users/jamison/Library/Application Support/typora-user-images/image-20230105132050126.png)
+
+### 3. 删除索引
+
+![image-20230105141218295](/Users/jamison/Library/Application Support/typora-user-images/image-20230105141218295.png)
+
+![image-20230105141302381](/Users/jamison/Library/Application Support/typora-user-images/image-20230105141302381.png)
+
+## MySQL8.0索引新特性
+
+### 1. 支持降序索引
+
+![image-20230105141403471](/Users/jamison/Library/Application Support/typora-user-images/image-20230105141403471.png)
+
+![image-20230105141504851](/Users/jamison/Library/Application Support/typora-user-images/image-20230105141504851.png)
+
+![image-20230105141545148](/Users/jamison/Library/Application Support/typora-user-images/image-20230105141545148.png)
+
+![image-20230105141640073](/Users/jamison/Library/Application Support/typora-user-images/image-20230105141640073.png)
+
+### 2. 隐藏索引
+
+![image-20230105141707605](/Users/jamison/Library/Application Support/typora-user-images/image-20230105141707605.png)
+
+1. 创建表时直接创建
+
+   ![image-20230105141746176](/Users/jamison/Library/Application Support/typora-user-images/image-20230105141746176.png)
+
+   ![image-20230105141829191](/Users/jamison/Library/Application Support/typora-user-images/image-20230105141829191.png)
+
+2. 创建表后
+
+   ![image-20230105141941241](/Users/jamison/Library/Application Support/typora-user-images/image-20230105141941241.png)
+
+3. 切换索引可见状态
+
+   ![image-20230105142031599](/Users/jamison/Library/Application Support/typora-user-images/image-20230105142031599.png)
+
+4. 使隐藏索引对查询优化不可见
+
+   ![image-20230105142245214](/Users/jamison/Library/Application Support/typora-user-images/image-20230105142245214.png)
+
+   ![image-20230105142335280](/Users/jamison/Library/Application Support/typora-user-images/image-20230105142335280.png)
+
+   ![image-20230105142359454](/Users/jamison/Library/Application Support/typora-user-images/image-20230105142359454.png)
+
+## 索引设计原则
+
+![image-20230105145840459](/Users/jamison/Library/Application Support/typora-user-images/image-20230105145840459.png)
+
+### 1. 数据准备
+
+![image-20230105145915550](/Users/jamison/Library/Application Support/typora-user-images/image-20230105145915550.png)
+
+![image-20230105145943654](/Users/jamison/Library/Application Support/typora-user-images/image-20230105145943654.png)
+
+![image-20230105150015881](/Users/jamison/Library/Application Support/typora-user-images/image-20230105150015881.png)
+
+![image-20230105150119203](/Users/jamison/Library/Application Support/typora-user-images/image-20230105150119203.png)
+
+![image-20230105150136850](/Users/jamison/Library/Application Support/typora-user-images/image-20230105150136850.png)
+
+![image-20230105150154990](/Users/jamison/Library/Application Support/typora-user-images/image-20230105150154990.png)
+
+### 2. 哪些情况适合创建索引
+
+#### 2.1 字段的数值有唯一性限制
+
+![image-20230105150302446](/Users/jamison/Library/Application Support/typora-user-images/image-20230105150302446.png)
+
+#### 2.2 频繁地作为WHERE查询的字段
+
+![image-20230105150417252](/Users/jamison/Library/Application Support/typora-user-images/image-20230105150417252.png)
+
+![image-20230105150439581](/Users/jamison/Library/Application Support/typora-user-images/image-20230105150439581.png)
+
+#### 2.3 经常GROUP BY和ORDER BY的列
+
+![image-20230105152655727](/Users/jamison/Library/Application Support/typora-user-images/image-20230105152655727.png)
+
+![image-20230105152743188](/Users/jamison/Library/Application Support/typora-user-images/image-20230105152743188.png)
+
+![image-20230105152805555](/Users/jamison/Library/Application Support/typora-user-images/image-20230105152805555.png)
+
+![image-20230105152854127](/Users/jamison/Library/Application Support/typora-user-images/image-20230105152854127.png)
+
+![image-20230105152918207](/Users/jamison/Library/Application Support/typora-user-images/image-20230105152918207.png)
+
+如果改变联合索引的顺序
+
+![image-20230105153008016](/Users/jamison/Library/Application Support/typora-user-images/image-20230105153008016.png)
+
+![image-20230105153031946](/Users/jamison/Library/Application Support/typora-user-images/image-20230105153031946.png)
+
+#### 2.4  UPDATE、DELETE的WHERE条件列
+
+![image-20230105153146152](/Users/jamison/Library/Application Support/typora-user-images/image-20230105153146152.png)
+
+![image-20230105153202852](/Users/jamison/Library/Application Support/typora-user-images/image-20230105153202852.png)
+
+![image-20230105153222356](/Users/jamison/Library/Application Support/typora-user-images/image-20230105153222356.png)
+
+#### 2.5 DISTINCT字段需要创建索引
+
+![image-20230105160107433](/Users/jamison/Library/Application Support/typora-user-images/image-20230105160107433.png)
+
+#### 2.6 多表JOIN连接操作时，创建索引注意事项
+
+![image-20230105160245712](/Users/jamison/Library/Application Support/typora-user-images/image-20230105160245712.png)
+
+#### 2.7 使用列类型小的创建索引
+
+![image-20230105161218865](/Users/jamison/Library/Application Support/typora-user-images/image-20230105161218865.png)
+
+#### 2.8 使用字符串前缀创建索引
+
+![image-20230105161305830](/Users/jamison/Library/Application Support/typora-user-images/image-20230105161305830.png)
+
+![image-20230105161336023](/Users/jamison/Library/Application Support/typora-user-images/image-20230105161336023.png)
+
+![image-20230105161351173](/Users/jamison/Library/Application Support/typora-user-images/image-20230105161351173.png)
+
+#### 2.9 区分度高（散列性高）的列作为索引
+
+![image-20230105161522364](/Users/jamison/Library/Application Support/typora-user-images/image-20230105161522364.png)
+
+#### 2.10 使用最频繁的列放到联合索引的左侧
+
+![image-20230105161652067](/Users/jamison/Library/Application Support/typora-user-images/image-20230105161652067.png)
+
+#### 2.11 在多个字段都要创建索引的情况下，联合索引优于单列索引
+
+### 3. 限制索引的数目
+
+![image-20230105161903979](/Users/jamison/Library/Application Support/typora-user-images/image-20230105161903979.png)
+
+### 4. 哪些情况不适合创建索引
+
+#### 4.1 在WHERE使用不到的字段，不要使用索引
+
+![image-20230105162026618](/Users/jamison/Library/Application Support/typora-user-images/image-20230105162026618.png)
+
+#### 4.2 数据量小的表不需要创建索引
+
+![image-20230105162538538](/Users/jamison/Library/Application Support/typora-user-images/image-20230105162538538.png)
+
+![image-20230105162553749](/Users/jamison/Library/Application Support/typora-user-images/image-20230105162553749.png)
+
+![image-20230105162618670](/Users/jamison/Library/Application Support/typora-user-images/image-20230105162618670.png)
+
+![image-20230105162632688](/Users/jamison/Library/Application Support/typora-user-images/image-20230105162632688.png)
+
+#### 4.3 有大量重复数据的列不需要建立索引
+
+![image-20230105162720550](/Users/jamison/Library/Application Support/typora-user-images/image-20230105162720550.png)
+
+![image-20230105162747367](/Users/jamison/Library/Application Support/typora-user-images/image-20230105162747367.png)
+
+![image-20230105162808238](/Users/jamison/Library/Application Support/typora-user-images/image-20230105162808238.png)
+
+#### 4.4 避免对经常更新的表使用过多的索引
+
+![image-20230105162939027](/Users/jamison/Library/Application Support/typora-user-images/image-20230105162939027.png)
+
+#### 4.5 不建议使用无序的值作为索引
+
+![image-20230105163010720](/Users/jamison/Library/Application Support/typora-user-images/image-20230105163010720.png)
+
+#### 4.6 删除不再使用或者很少使用的索引
+
+![image-20230105163041674](/Users/jamison/Library/Application Support/typora-user-images/image-20230105163041674.png)
+
+#### 4.7 不要定义冗余或者重复的索引
+
+- 冗余索引
+
+  ![image-20230105163130465](/Users/jamison/Library/Application Support/typora-user-images/image-20230105163130465.png)
+
+- 重复索引
+
+  ![image-20230105163149877](/Users/jamison/Library/Application Support/typora-user-images/image-20230105163149877.png)
+
+### 3.5 小结
+
+![image-20230105163210873](/Users/jamison/Library/Application Support/typora-user-images/image-20230105163210873.png)
+
