@@ -4326,3 +4326,525 @@ Buffer Pool是MySQL内存结构中十分核心的一个组成，可以将他想�
 
 ![image-20230105163210873](/Users/jamison/Library/Application Support/typora-user-images/image-20230105163210873.png)
 
+
+
+# 第二十二章 性能分析工具的使用
+
+![image-20230105170310812](/Users/jamison/Library/Application Support/typora-user-images/image-20230105170310812.png)
+
+## 数据库服务器优化的步骤
+
+![image-20230105170336786](/Users/jamison/Library/Application Support/typora-user-images/image-20230105170336786.png)
+
+![image-20230105170359571](/Users/jamison/Library/Application Support/typora-user-images/image-20230105170359571.png)
+
+![image-20230105170415332](/Users/jamison/Library/Application Support/typora-user-images/image-20230105170415332.png)
+
+![image-20230105170500981](/Users/jamison/Library/Application Support/typora-user-images/image-20230105170500981.png)
+
+**详细解释下这张图：**
+
+![image-20230105170550807](/Users/jamison/Library/Application Support/typora-user-images/image-20230105170550807.png)
+
+![image-20230105170611740](/Users/jamison/Library/Application Support/typora-user-images/image-20230105170611740.png)
+
+**小结：**
+
+![image-20230105170637523](/Users/jamison/Library/Application Support/typora-user-images/image-20230105170637523.png)
+
+## 查看系统性能参数
+
+![image-20230105170714205](/Users/jamison/Library/Application Support/typora-user-images/image-20230105170714205.png)
+
+![image-20230105170814163](/Users/jamison/Library/Application Support/typora-user-images/image-20230105170814163.png)
+
+## 统计SQL的查询成本：last_query_cost
+
+![image-20230105170913232](/Users/jamison/Library/Application Support/typora-user-images/image-20230105170913232.png)
+
+![image-20230105170946862](/Users/jamison/Library/Application Support/typora-user-images/image-20230105170946862.png)
+
+![image-20230105171029809](/Users/jamison/Library/Application Support/typora-user-images/image-20230105171029809.png)
+
+![image-20230105171039396](/Users/jamison/Library/Application Support/typora-user-images/image-20230105171039396.png)
+
+## 定位执行慢的SQL：慢查询日志
+
+![image-20230105174125401](/Users/jamison/Library/Application Support/typora-user-images/image-20230105174125401.png)
+
+### 1. 开启慢查询日志参数
+
+1. 开启query_log
+
+   ![image-20230105174218950](/Users/jamison/Library/Application Support/typora-user-images/image-20230105174218950.png)
+
+   ![image-20230105174243423](/Users/jamison/Library/Application Support/typora-user-images/image-20230105174243423.png)
+
+2. 修改long_query_time阈值
+
+   ![image-20230105174325111](/Users/jamison/Library/Application Support/typora-user-images/image-20230105174325111.png)
+
+   ![image-20230105174343917](/Users/jamison/Library/Application Support/typora-user-images/image-20230105174343917.png)
+
+### 2. 查看慢查询数目
+
+![image-20230105174432379](/Users/jamison/Library/Application Support/typora-user-images/image-20230105174432379.png)
+
+### 3. 案例演示
+
+![image-20230105174455285](/Users/jamison/Library/Application Support/typora-user-images/image-20230105174455285.png)
+
+![image-20230105174507776](/Users/jamison/Library/Application Support/typora-user-images/image-20230105174507776.png)
+
+![image-20230105174528427](/Users/jamison/Library/Application Support/typora-user-images/image-20230105174528427.png)
+
+![image-20230105174538044](/Users/jamison/Library/Application Support/typora-user-images/image-20230105174538044.png)
+
+### 4. 测试分析
+
+![image-20230105174650447](/Users/jamison/Library/Application Support/typora-user-images/image-20230105174650447.png)
+
+![image-20230105174707507](/Users/jamison/Library/Application Support/typora-user-images/image-20230105174707507.png)
+
+### 5. 慢查询日志分析工具：mysqldumpslow
+
+![image-20230105174811781](/Users/jamison/Library/Application Support/typora-user-images/image-20230105174811781.png)
+
+### 6. 关闭慢查询日志
+
+![image-20230105174922145](/Users/jamison/Library/Application Support/typora-user-images/image-20230105174922145.png)
+
+![image-20230105174945174](/Users/jamison/Library/Application Support/typora-user-images/image-20230105174945174.png)
+
+### 7. 删除慢查询日志
+
+![image-20230105175030280](/Users/jamison/Library/Application Support/typora-user-images/image-20230105175030280.png)
+
+## 查看SQL执行成本：SHOW PROFILE
+
+![image-20230105175145288](/Users/jamison/Library/Application Support/typora-user-images/image-20230105175145288.png)
+
+![image-20230105175207613](/Users/jamison/Library/Application Support/typora-user-images/image-20230105175207613.png)
+
+![image-20230105175223643](/Users/jamison/Library/Application Support/typora-user-images/image-20230105175223643.png)
+
+![image-20230105175257759](/Users/jamison/Library/Application Support/typora-user-images/image-20230105175257759.png)
+
+![image-20230105175314275](/Users/jamison/Library/Application Support/typora-user-images/image-20230105175314275.png)
+
+![image-20230105175326204](/Users/jamison/Library/Application Support/typora-user-images/image-20230105175326204.png)
+
+## 分析查询语句：EXPLAIN
+
+### 1. 概述
+
+![image-20230105200417778](/Users/jamison/Library/Application Support/typora-user-images/image-20230105200417778.png)
+
+![image-20230105200443432](/Users/jamison/Library/Application Support/typora-user-images/image-20230105200443432.png)
+
+### 2. 基本语法
+
+![image-20230105200522883](/Users/jamison/Library/Application Support/typora-user-images/image-20230105200522883.png)
+
+![image-20230105200543851](/Users/jamison/Library/Application Support/typora-user-images/image-20230105200543851.png)
+
+### 3. 数据准备
+
+![image-20230105200623667](/Users/jamison/Library/Application Support/typora-user-images/image-20230105200623667.png)
+
+![image-20230105200649076](/Users/jamison/Library/Application Support/typora-user-images/image-20230105200649076.png)
+
+![image-20230105200706714](/Users/jamison/Library/Application Support/typora-user-images/image-20230105200706714.png)
+
+![image-20230105200723132](/Users/jamison/Library/Application Support/typora-user-images/image-20230105200723132.png)
+
+![image-20230105200735648](/Users/jamison/Library/Application Support/typora-user-images/image-20230105200735648.png)
+
+### 4. EXPLAIN各列的作用
+
+为了有比较好的体验，我们调整了下EXPLAIN输出列的顺序。
+
+#### 4.1 table
+
+![image-20230105200938265](/Users/jamison/Library/Application Support/typora-user-images/image-20230105200938265.png)
+
+![image-20230105201038279](/Users/jamison/Library/Application Support/typora-user-images/image-20230105201038279.png)
+
+#### 4.2 id
+
+![image-20230105201231977](/Users/jamison/Library/Application Support/typora-user-images/image-20230105201231977.png)
+
+![image-20230105201311994](/Users/jamison/Library/Application Support/typora-user-images/image-20230105201311994.png)
+
+![image-20230105201348597](/Users/jamison/Library/Application Support/typora-user-images/image-20230105201348597.png)
+
+![image-20230105201600422](/Users/jamison/Library/Application Support/typora-user-images/image-20230105201600422.png)
+
+![image-20230105201614231](/Users/jamison/Library/Application Support/typora-user-images/image-20230105201614231.png)
+
+![image-20230105201627573](/Users/jamison/Library/Application Support/typora-user-images/image-20230105201627573.png)
+
+![image-20230105201641018](/Users/jamison/Library/Application Support/typora-user-images/image-20230105201641018.png)
+
+![image-20230105201708739](/Users/jamison/Library/Application Support/typora-user-images/image-20230105201708739.png)
+
+**小结：**
+
+![image-20230105201741240](/Users/jamison/Library/Application Support/typora-user-images/image-20230105201741240.png)
+
+#### 4.3 select_type
+
+![image-20230105213004949](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213004949.png)
+
+![image-20230105213034856](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213034856.png)
+
+![image-20230105213051720](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213051720.png)
+
+- simple
+
+  ![image-20230105213130461](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213130461.png)
+
+- primary
+
+  ![image-20230105213218425](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213218425.png)
+
+- Union
+
+  ![image-20230105213307736](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213307736.png)
+
+- Union result
+
+  ![image-20230105213352144](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213352144.png)
+
+  ![image-20230105213400548](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213400548.png)
+
+- subquery
+
+  ![image-20230105213430575](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213430575.png)
+
+  ![image-20230105213441878](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213441878.png)
+
+- dependent subquery
+
+  ![image-20230105213513235](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213513235.png)
+
+  ![image-20230105213523742](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213523742.png)
+
+- dependent union
+
+  ![image-20230105213551929](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213551929.png)
+
+  ![image-20230105213635361](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213635361.png)
+
+  in 关键字优化器会将其变成exist
+
+- derived
+
+  ![image-20230105213722635](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213722635.png)
+
+  ![image-20230105213734576](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213734576.png)
+
+- Materialized
+
+  ![image-20230105213815380](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213815380.png)
+
+  ![image-20230105213830407](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213830407.png)
+
+#### 4.4 partition(略)：匹配的分区信息
+
+![image-20230105213948703](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213948703.png)
+
+![image-20230105213959103](/Users/jamison/Library/Application Support/typora-user-images/image-20230105213959103.png)
+
+#### 4.5 type
+
+越靠前效果越好
+
+![image-20230105214024423](/Users/jamison/Library/Application Support/typora-user-images/image-20230105214024423.png)
+
+以下表为例子：
+
+![image-20230105214423986](/Users/jamison/Library/Application Support/typora-user-images/image-20230105214423986.png)
+
+- system
+
+  ![image-20230105214102135](/Users/jamison/Library/Application Support/typora-user-images/image-20230105214102135.png)
+
+  ![image-20230105214108969](/Users/jamison/Library/Application Support/typora-user-images/image-20230105214108969.png)
+
+  再插入一条记录后
+
+  ![image-20230105214147790](/Users/jamison/Library/Application Support/typora-user-images/image-20230105214147790.png)
+
+  ![image-20230105214118907](/Users/jamison/Library/Application Support/typora-user-images/image-20230105214118907.png)
+
+  ![image-20230105214214900](/Users/jamison/Library/Application Support/typora-user-images/image-20230105214214900.png)
+
+  因为innodb统计数据不是像myisam那样，用变量记录表中数据条数，这就是“统计数据是精确的”这句话的意思。
+
+- const
+
+  ![image-20230105214400245](/Users/jamison/Library/Application Support/typora-user-images/image-20230105214400245.png)
+
+  ![image-20230105214409132](/Users/jamison/Library/Application Support/typora-user-images/image-20230105214409132.png)
+
+- Eq_ref
+
+  ![image-20230105214842835](/Users/jamison/Library/Application Support/typora-user-images/image-20230105214842835.png)
+
+  ![image-20230105214849310](/Users/jamison/Library/Application Support/typora-user-images/image-20230105214849310.png)
+
+- ref
+
+  ![image-20230105214908029](/Users/jamison/Library/Application Support/typora-user-images/image-20230105214908029.png)
+
+  ![image-20230105214916032](/Users/jamison/Library/Application Support/typora-user-images/image-20230105214916032.png)
+
+- Ref_or_null
+
+  ![image-20230105214951144](/Users/jamison/Library/Application Support/typora-user-images/image-20230105214951144.png)
+
+  ![image-20230105214959847](/Users/jamison/Library/Application Support/typora-user-images/image-20230105214959847.png)
+
+- Index_merge
+
+  ![image-20230105215041458](/Users/jamison/Library/Application Support/typora-user-images/image-20230105215041458.png)
+
+  ![image-20230105215046651](/Users/jamison/Library/Application Support/typora-user-images/image-20230105215046651.png)
+
+- Unique_subquery
+
+  ![image-20230105215149701](/Users/jamison/Library/Application Support/typora-user-images/image-20230105215149701.png)
+
+  ![image-20230105215210287](/Users/jamison/Library/Application Support/typora-user-images/image-20230105215210287.png)
+
+- range
+
+  ![image-20230105215223157](/Users/jamison/Library/Application Support/typora-user-images/image-20230105215223157.png)
+
+  ![image-20230105215230605](/Users/jamison/Library/Application Support/typora-user-images/image-20230105215230605.png)
+
+- index
+
+  主要针对联合索引，索引覆盖简单解释就是不用回表，比如要查询的字段是联合索引的一部分
+
+  ![image-20230105215242315](/Users/jamison/Library/Application Support/typora-user-images/image-20230105215242315.png)
+
+  ![image-20230105215255420](/Users/jamison/Library/Application Support/typora-user-images/image-20230105215255420.png)
+
+- all
+
+  全表扫描，最差
+
+**小结：**
+
+![image-20230105215506345](/Users/jamison/Library/Application Support/typora-user-images/image-20230105215506345.png)
+
+#### 4.6 possible_keys和key
+
+![image-20230105215654297](/Users/jamison/Library/Application Support/typora-user-images/image-20230105215654297.png)
+
+举例：
+
+![image-20230105215704385](/Users/jamison/Library/Application Support/typora-user-images/image-20230105215704385.png)
+
+![image-20230105215713961](/Users/jamison/Library/Application Support/typora-user-images/image-20230105215713961.png)
+
+#### 4.7 key_len
+
+![image-20230105215749892](/Users/jamison/Library/Application Support/typora-user-images/image-20230105215749892.png)
+
+![image-20230105215759908](/Users/jamison/Library/Application Support/typora-user-images/image-20230105215759908.png)
+
+为什么为5，因为int 4字节加上unique标识1字节
+
+![image-20230105215813575](/Users/jamison/Library/Application Support/typora-user-images/image-20230105215813575.png)
+
+为什么为303，vachar(100)，在utf8当中一字符三个字节，加上null标志位1字节，记录变长长度2字节
+
+![image-20230105220120841](/Users/jamison/Library/Application Support/typora-user-images/image-20230105220120841.png)
+
+606比303要好，联合索引用了两个
+
+![image-20230105220134373](/Users/jamison/Library/Application Support/typora-user-images/image-20230105220134373.png)
+
+#### 4.8 ref
+
+![image-20230109195821859](/Users/jamison/Library/Application Support/typora-user-images/image-20230109195821859.png)
+
+![image-20230109195925408](/Users/jamison/Library/Application Support/typora-user-images/image-20230109195925408.png)
+
+#### 4.9 rows
+
+![image-20230109195852021](/Users/jamison/Library/Application Support/typora-user-images/image-20230109195852021.png)
+
+![image-20230109195901438](/Users/jamison/Library/Application Support/typora-user-images/image-20230109195901438.png)
+
+#### 4.10 filtered
+
+![image-20230109195959292](/Users/jamison/Library/Application Support/typora-user-images/image-20230109195959292.png)
+
+#### 4.11 Extra
+
+![image-20230109200059607](/Users/jamison/Library/Application Support/typora-user-images/image-20230109200059607.png)
+
+1. no table used
+
+   ![image-20230109200220368](/Users/jamison/Library/Application Support/typora-user-images/image-20230109200220368.png)
+
+2. Impossible Where
+
+   ![image-20230109200305563](/Users/jamison/Library/Application Support/typora-user-images/image-20230109200305563.png)
+
+3. Using Where
+
+   ![image-20230109200333359](/Users/jamison/Library/Application Support/typora-user-images/image-20230109200333359.png)
+
+   ![image-20230109200339987](/Users/jamison/Library/Application Support/typora-user-images/image-20230109200339987.png)
+
+   ![image-20230109200408247](/Users/jamison/Library/Application Support/typora-user-images/image-20230109200408247.png)
+
+4. No matching min/max row
+
+   ![image-20230109200521972](/Users/jamison/Library/Application Support/typora-user-images/image-20230109200521972.png)
+
+   ![image-20230109200533118](/Users/jamison/Library/Application Support/typora-user-images/image-20230109200533118.png)
+
+5. Using index
+
+   ![image-20230109200632599](/Users/jamison/Library/Application Support/typora-user-images/image-20230109200632599.png)
+
+   ![image-20230109200639511](/Users/jamison/Library/Application Support/typora-user-images/image-20230109200639511.png)
+
+6. Using index condition
+
+   ![image-20230109200744818](/Users/jamison/Library/Application Support/typora-user-images/image-20230109200744818.png)
+
+   ![image-20230109200752677](/Users/jamison/Library/Application Support/typora-user-images/image-20230109200752677.png)
+
+7. Using join buffer (hash join)
+
+   ![image-20230109200954455](/Users/jamison/Library/Application Support/typora-user-images/image-20230109200954455.png)
+
+   ![image-20230109201002396](/Users/jamison/Library/Application Support/typora-user-images/image-20230109201002396.png)
+
+8. Not exist
+
+   ![image-20230109201049387](/Users/jamison/Library/Application Support/typora-user-images/image-20230109201049387.png)
+
+   ![image-20230109201057385](/Users/jamison/Library/Application Support/typora-user-images/image-20230109201057385.png)
+
+9. Using union
+
+   ![image-20230109201223149](/Users/jamison/Library/Application Support/typora-user-images/image-20230109201223149.png)
+
+   ![image-20230109201230191](/Users/jamison/Library/Application Support/typora-user-images/image-20230109201230191.png)
+
+10. Using limit
+
+    ![image-20230109201250380](/Users/jamison/Library/Application Support/typora-user-images/image-20230109201250380.png)
+
+    ![image-20230109201257356](/Users/jamison/Library/Application Support/typora-user-images/image-20230109201257356.png)
+
+11. Using filesort
+
+    ![image-20230109201447681](/Users/jamison/Library/Application Support/typora-user-images/image-20230109201447681.png)
+
+    ![image-20230109201457955](/Users/jamison/Library/Application Support/typora-user-images/image-20230109201457955.png)
+
+    ![image-20230109201647069](/Users/jamison/Library/Application Support/typora-user-images/image-20230109201647069.png)
+
+12. Using temporary
+
+    ![image-20230109201752420](/Users/jamison/Library/Application Support/typora-user-images/image-20230109201752420.png)
+
+    ![image-20230109201800301](/Users/jamison/Library/Application Support/typora-user-images/image-20230109201800301.png)
+
+    ![image-20230109201818230](/Users/jamison/Library/Application Support/typora-user-images/image-20230109201818230.png)
+
+    #### 4.12 小结
+
+    ![image-20230109201905398](/Users/jamison/Library/Application Support/typora-user-images/image-20230109201905398.png)
+
+## EXPLAIN进一步使用
+
+### 1. EXPLAIN四种输出格式
+
+传统格式，JSON格式，TREE格式以及可视化输出。
+
+#### 1.1 传统格式
+
+![image-20230109204411334](/Users/jamison/Library/Application Support/typora-user-images/image-20230109204411334.png)
+
+#### 1.2 JSON格式
+
+![image-20230109204455202](/Users/jamison/Library/Application Support/typora-user-images/image-20230109204455202.png)
+
+![image-20230109204508099](/Users/jamison/Library/Application Support/typora-user-images/image-20230109204508099.png)
+
+![image-20230109204544924](/Users/jamison/Library/Application Support/typora-user-images/image-20230109204544924.png)
+
+![image-20230109204603847](/Users/jamison/Library/Application Support/typora-user-images/image-20230109204603847.png)
+
+![image-20230109204615270](/Users/jamison/Library/Application Support/typora-user-images/image-20230109204615270.png)
+
+![image-20230109204628007](/Users/jamison/Library/Application Support/typora-user-images/image-20230109204628007.png)
+
+![image-20230109204646197](/Users/jamison/Library/Application Support/typora-user-images/image-20230109204646197.png)
+
+cost_info怎么计算的
+
+![image-20230109204712185](/Users/jamison/Library/Application Support/typora-user-images/image-20230109204712185.png)
+
+![image-20230109204831059](/Users/jamison/Library/Application Support/typora-user-images/image-20230109204831059.png)
+
+#### 1.3 TREE格式
+
+![image-20230109204850959](/Users/jamison/Library/Application Support/typora-user-images/image-20230109204850959.png)
+
+#### 1.4 可视化输出
+
+![image-20230109204909050](/Users/jamison/Library/Application Support/typora-user-images/image-20230109204909050.png)
+
+![image-20230109204929560](/Users/jamison/Library/Application Support/typora-user-images/image-20230109204929560.png)
+
+### 2. SHOW WARNINGS使用
+
+![image-20230109205104427](/Users/jamison/Library/Application Support/typora-user-images/image-20230109205104427.png)
+
+![image-20230109205122729](/Users/jamison/Library/Application Support/typora-user-images/image-20230109205122729.png)
+
+## 分析优化器执行计划：trace
+
+![image-20230109210042284](/Users/jamison/Library/Application Support/typora-user-images/image-20230109210042284.png)
+
+![image-20230109210110938](/Users/jamison/Library/Application Support/typora-user-images/image-20230109210110938.png)
+
+![image-20230109210133604](/Users/jamison/Library/Application Support/typora-user-images/image-20230109210133604.png)
+
+![image-20230109210145255](/Users/jamison/Library/Application Support/typora-user-images/image-20230109210145255.png)
+
+![image-20230109210155781](/Users/jamison/Library/Application Support/typora-user-images/image-20230109210155781.png)
+
+![image-20230109210215133](/Users/jamison/Library/Application Support/typora-user-images/image-20230109210215133.png)
+
+.....
+
+![image-20230109210234804](/Users/jamison/Library/Application Support/typora-user-images/image-20230109210234804.png)
+
+## MySQL监控分析视图-sys schema
+
+![image-20230109210311605](/Users/jamison/Library/Application Support/typora-user-images/image-20230109210311605.png)
+
+### 1. Sys schema视图摘要
+
+![image-20230109210424966](/Users/jamison/Library/Application Support/typora-user-images/image-20230109210424966.png)
+
+### 2. Sys schema使用场景
+
+![image-20230109210528149](/Users/jamison/Library/Application Support/typora-user-images/image-20230109210528149.png)
+
+![image-20230109210556475](/Users/jamison/Library/Application Support/typora-user-images/image-20230109210556475.png)
+
+![image-20230109210619557](/Users/jamison/Library/Application Support/typora-user-images/image-20230109210619557.png)
+
