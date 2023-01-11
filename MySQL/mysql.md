@@ -4848,3 +4848,514 @@ cost_info怎么计算的
 
 ![image-20230109210619557](/Users/jamison/Library/Application Support/typora-user-images/image-20230109210619557.png)
 
+
+
+# 第二十三章 索引优化与查询优化
+
+都有哪些维度可以进行数据库调优？简言之：
+
+- 索引失效，没有充分利用索引--索引建立
+- 关联查询太多JOIN（设计缺陷或者不得已的需求）--SQL优化
+- 服务器调优及各个参数设置（缓冲，线程数等）--调整my.cnf
+- 数据过多 --分库分表
+
+关于数据库调优的知识非常分散。不同的DBMS，不同的公司，不同的职位，不同的项目遇到的问题都不尽相同。这里我们分为三个章节进行细致讲解。
+
+虽然SQL查询优化的技术有很多，但是大方向上安全可以分为**物理优化查询**和**逻辑优化查询**两大块。
+
+- 物理查询是通过**索引**和**表连接方式**等技术进行优化，这里重点需要掌握索引的使用。
+- 逻辑优化查询就是通过SQL**等价变换**提升查询效率，直白一点就是说，换一种查询写法执行效率更高。
+
+## 数据准备
+
+![image-20230110135600293](/Users/jamison/Library/Application Support/typora-user-images/image-20230110135600293.png)
+
+![image-20230110135630962](/Users/jamison/Library/Application Support/typora-user-images/image-20230110135630962.png)
+
+![image-20230110135647289](/Users/jamison/Library/Application Support/typora-user-images/image-20230110135647289.png)
+
+![image-20230110135707419](/Users/jamison/Library/Application Support/typora-user-images/image-20230110135707419.png)
+
+![image-20230110140347735](/Users/jamison/Library/Application Support/typora-user-images/image-20230110140347735.png)
+
+![image-20230110162123775](/Users/jamison/Library/Application Support/typora-user-images/image-20230110162123775.png)
+
+![image-20230110162137034](/Users/jamison/Library/Application Support/typora-user-images/image-20230110162137034.png)
+
+![image-20230110162210062](/Users/jamison/Library/Application Support/typora-user-images/image-20230110162210062.png)
+
+![image-20230110162221141](/Users/jamison/Library/Application Support/typora-user-images/image-20230110162221141.png)
+
+## 索引失效案例
+
+![image-20230110162302545](/Users/jamison/Library/Application Support/typora-user-images/image-20230110162302545.png)
+
+### 1. 全值匹配我最爱
+
+![image-20230110162443912](/Users/jamison/Library/Application Support/typora-user-images/image-20230110162443912.png)
+
+### 2. 最佳左前缀规则
+
+![image-20230110162546457](/Users/jamison/Library/Application Support/typora-user-images/image-20230110162546457.png)
+
+![image-20230110162600919](/Users/jamison/Library/Application Support/typora-user-images/image-20230110162600919.png)
+
+### 3 主键插入顺序
+
+![image-20230110162657016](/Users/jamison/Library/Application Support/typora-user-images/image-20230110162657016.png)
+
+![image-20230110162726297](/Users/jamison/Library/Application Support/typora-user-images/image-20230110162726297.png)
+
+#### 4. 计算、函数、类型转换（自动或者手动）导致索引失效
+
+![image-20230110162825518](/Users/jamison/Library/Application Support/typora-user-images/image-20230110162825518.png)
+
+![image-20230110163018026](/Users/jamison/Library/Application Support/typora-user-images/image-20230110163018026.png)
+
+![image-20230110163028973](/Users/jamison/Library/Application Support/typora-user-images/image-20230110163028973.png)
+
+![image-20230110163059282](/Users/jamison/Library/Application Support/typora-user-images/image-20230110163059282.png)
+
+![image-20230110163109628](/Users/jamison/Library/Application Support/typora-user-images/image-20230110163109628.png)
+
+**再举例：**
+
+![image-20230110163144264](/Users/jamison/Library/Application Support/typora-user-images/image-20230110163144264.png)
+
+![image-20230110163241192](/Users/jamison/Library/Application Support/typora-user-images/image-20230110163241192.png)
+
+**再举例：**
+
+![image-20230110163305491](/Users/jamison/Library/Application Support/typora-user-images/image-20230110163305491.png)
+
+![image-20230110163340749](/Users/jamison/Library/Application Support/typora-user-images/image-20230110163340749.png)
+
+### 5. 类型转换导致索引失效
+
+![image-20230110163406948](/Users/jamison/Library/Application Support/typora-user-images/image-20230110163406948.png)
+
+![image-20230110163432104](/Users/jamison/Library/Application Support/typora-user-images/image-20230110163432104.png)
+
+> 结论：设计实体类属性时，一定要与数据库字段类型相对应。否则，就会出现类型转换的情况。
+
+### 6. 范围右边的列索引失效
+
+需要范围查询的字段创建索引时放在最后，查询时也应该放在查询语句的最后。
+
+![image-20230110165956501](/Users/jamison/Library/Application Support/typora-user-images/image-20230110165956501.png)
+
+![image-20230110170144058](/Users/jamison/Library/Application Support/typora-user-images/image-20230110170144058.png)
+
+![image-20230110170310562](/Users/jamison/Library/Application Support/typora-user-images/image-20230110170310562.png)
+
+### 7. 不等于（!=或者<>）索引失效
+
+不一定会失效，优化器永远会从成本考虑，比如出现覆盖索引的情况时索引可能不会失效。
+
+![image-20230111181155443](/Users/jamison/Library/Application Support/typora-user-images/image-20230111181155443.png)
+
+![image-20230110170352683](/Users/jamison/Library/Application Support/typora-user-images/image-20230110170352683.png)
+
+​	![image-20230110170414122](/Users/jamison/Library/Application Support/typora-user-images/image-20230110170414122.png)
+
+### 8. is null可以使用索引，is not null不可以使用索引
+
+![image-20230110170625617](/Users/jamison/Library/Application Support/typora-user-images/image-20230110170625617.png)
+
+> 结论：最好在设计时，就将字段设置为not null
+
+### 9. like以通配符%开头索引失效
+
+不一定会失效，优化器永远会从成本考虑，比如出现覆盖索引的情况时索引可能不会失效。
+
+![image-20230111181225668](/Users/jamison/Library/Application Support/typora-user-images/image-20230111181225668.png)
+
+![image-20230110170804543](/Users/jamison/Library/Application Support/typora-user-images/image-20230110170804543.png)
+
+![image-20230110170836104](/Users/jamison/Library/Application Support/typora-user-images/image-20230110170836104.png)
+
+> 阿里：页面搜索严禁左模糊或者全模糊，如果需要请走搜索引擎来解决。
+
+### 10.OR 前后存在非索引的列索引失效
+
+![image-20230110171117275](/Users/jamison/Library/Application Support/typora-user-images/image-20230110171117275.png)
+
+![image-20230110171133785](/Users/jamison/Library/Application Support/typora-user-images/image-20230110171133785.png)
+
+### 11. 数据库和表的字符集统一使用utf8mb4
+
+![image-20230110171216797](/Users/jamison/Library/Application Support/typora-user-images/image-20230110171216797.png)
+
+> 防止乱码和转换导致索引失效
+
+### 12. 练习及一般建议
+
+![image-20230110171321769](/Users/jamison/Library/Application Support/typora-user-images/image-20230110171321769.png)
+
+![image-20230110171336070](/Users/jamison/Library/Application Support/typora-user-images/image-20230110171336070.png)
+
+> 建立索引时，单列选择过滤性最好的，组合索引过滤性好的排在前面，范围索引放在最后面。
+
+## 关联查询优化
+
+### 1. 数据准备
+
+![image-20230110174041818](/Users/jamison/Library/Application Support/typora-user-images/image-20230110174041818.png)
+
+### 2. 采用左外连接
+
+![image-20230110174116057](/Users/jamison/Library/Application Support/typora-user-images/image-20230110174116057.png)
+
+![image-20230110174207618](/Users/jamison/Library/Application Support/typora-user-images/image-20230110174207618.png)
+
+![image-20230110174302643](/Users/jamison/Library/Application Support/typora-user-images/image-20230110174302643.png)
+
+### 3. 采用内连接
+
+![image-20230110174407611](/Users/jamison/Library/Application Support/typora-user-images/image-20230110174407611.png)
+
+![image-20230110174510442](/Users/jamison/Library/Application Support/typora-user-images/image-20230110174510442.png)
+
+![image-20230110174716440](/Users/jamison/Library/Application Support/typora-user-images/image-20230110174716440.png)
+
+![image-20230110174801311](/Users/jamison/Library/Application Support/typora-user-images/image-20230110174801311.png)
+
+> 1. 对应内连接来说，在两个表的连接条件都存在索引的情况下，会选择小表作为驱动表，“小表驱动大表”。
+> 2. 对于内连接，查询优化器可以决定谁作为驱动表，谁作为被驱动表出现。
+
+### 4. join语句原理
+
+![image-20230110201448073](/Users/jamison/Library/Application Support/typora-user-images/image-20230110201448073.png)
+
+上面说的不准确5.5之后8之前，8之后用hash join替代了BNLJ
+
+![image-20230110203804803](/Users/jamison/Library/Application Support/typora-user-images/image-20230110203804803.png)
+
+#### 4.1 驱动表和被驱动表
+
+驱动表就是主表，被驱动表就是从表、非驱动表。
+
+- 对于内连接来说
+
+  ![image-20230110201802854](/Users/jamison/Library/Application Support/typora-user-images/image-20230110201802854.png)
+
+- 对于外连接来说
+
+  ![image-20230110201851511](/Users/jamison/Library/Application Support/typora-user-images/image-20230110201851511.png)
+
+#### 4.2 Simple Nested-Loop Join（简单嵌套循环连接）
+
+外表指的左边的
+
+![image-20230110202014498](/Users/jamison/Library/Application Support/typora-user-images/image-20230110202014498.png)
+
+![image-20230110202038447](/Users/jamison/Library/Application Support/typora-user-images/image-20230110202038447.png)
+
+#### 4.3 Index Nested-Loop Join（索引嵌套循环连接）
+
+![image-20230110202350507](/Users/jamison/Library/Application Support/typora-user-images/image-20230110202350507.png)
+
+![image-20230110202419461](/Users/jamison/Library/Application Support/typora-user-images/image-20230110202419461.png)
+
+![image-20230110202439850](/Users/jamison/Library/Application Support/typora-user-images/image-20230110202439850.png)
+
+#### 4.4 Block Nested-Loop join（块嵌套循环连接）
+
+![image-20230110202928303](/Users/jamison/Library/Application Support/typora-user-images/image-20230110202928303.png)
+
+![image-20230110202938640](/Users/jamison/Library/Application Support/typora-user-images/image-20230110202938640.png)
+
+![image-20230110203039037](/Users/jamison/Library/Application Support/typora-user-images/image-20230110203039037.png)
+
+![image-20230110203319568](/Users/jamison/Library/Application Support/typora-user-images/image-20230110203319568.png)
+
+#### 4.5 join小结
+
+![image-20230110203457822](/Users/jamison/Library/Application Support/typora-user-images/image-20230110203457822.png)
+
+#### 4.6 Hash Join
+
+![image-20230110203645411](/Users/jamison/Library/Application Support/typora-user-images/image-20230110203645411.png)
+
+![image-20230110203842581](/Users/jamison/Library/Application Support/typora-user-images/image-20230110203842581.png)
+
+## 子查询优化
+
+![image-20230111170521422](/Users/jamison/Library/Application Support/typora-user-images/image-20230111170521422.png)
+
+![image-20230111170801198](/Users/jamison/Library/Application Support/typora-user-images/image-20230111170801198.png)
+
+![image-20230111170825509](/Users/jamison/Library/Application Support/typora-user-images/image-20230111170825509.png)
+
+举例2：查询不为班长的学生信息
+
+![image-20230111170927132](/Users/jamison/Library/Application Support/typora-user-images/image-20230111170927132.png)
+
+![image-20230111171031835](/Users/jamison/Library/Application Support/typora-user-images/image-20230111171031835.png)
+
+## 排序优化
+
+### 1. 排序优化
+
+![image-20230111171222370](/Users/jamison/Library/Application Support/typora-user-images/image-20230111171222370.png)
+
+优化建议：
+
+![image-20230111171310360](/Users/jamison/Library/Application Support/typora-user-images/image-20230111171310360.png)
+
+### 2. 测试
+
+![image-20230111171408793](/Users/jamison/Library/Application Support/typora-user-images/image-20230111171408793.png)
+
+过程一：
+
+![image-20230111171432311](/Users/jamison/Library/Application Support/typora-user-images/image-20230111171432311.png)
+
+![image-20230111171512496](/Users/jamison/Library/Application Support/typora-user-images/image-20230111171512496.png)
+
+过程二：order by时不limit，索引失效
+
+为什么回事小呢，我觉得不限制的话导致数据集过大
+
+![image-20230111171647376](/Users/jamison/Library/Application Support/typora-user-images/image-20230111171647376.png)
+
+![image-20230111171737024](/Users/jamison/Library/Application Support/typora-user-images/image-20230111171737024.png)
+
+过程三：order by时顺序错误，索引失效
+
+![image-20230111171927370](/Users/jamison/Library/Application Support/typora-user-images/image-20230111171927370.png)
+
+解答：
+
+![image-20230111172037797](/Users/jamison/Library/Application Support/typora-user-images/image-20230111172037797.png)
+
+![image-20230111172050466](/Users/jamison/Library/Application Support/typora-user-images/image-20230111172050466.png)
+
+![image-20230111172102922](/Users/jamison/Library/Application Support/typora-user-images/image-20230111172102922.png)
+
+![image-20230111172124283](/Users/jamison/Library/Application Support/typora-user-images/image-20230111172124283.png)
+
+![image-20230111172143526](/Users/jamison/Library/Application Support/typora-user-images/image-20230111172143526.png)
+
+过程四：order by时规则不一致，索引失效（顺序错， 不索引；方向反，不索引）
+
+![image-20230111172422689](/Users/jamison/Library/Application Support/typora-user-images/image-20230111172422689.png)
+
+解答：
+
+创建了两个索引
+
+![image-20230111172542824](/Users/jamison/Library/Application Support/typora-user-images/image-20230111172542824.png)
+
+
+
+![image-20230111172457926](/Users/jamison/Library/Application Support/typora-user-images/image-20230111172457926.png)
+
+![image-20230111172523621](/Users/jamison/Library/Application Support/typora-user-images/image-20230111172523621.png)
+
+![image-20230111172635120](/Users/jamison/Library/Application Support/typora-user-images/image-20230111172635120.png)
+
+![image-20230111172647990](/Users/jamison/Library/Application Support/typora-user-images/image-20230111172647990.png)
+
+> order by子句，尽量使用index方式排序，避免使用filesort方式排序
+
+过程五：无过滤，不索引
+
+![image-20230111172804588](/Users/jamison/Library/Application Support/typora-user-images/image-20230111172804588.png)
+
+解答：
+
+![image-20230111172938455](/Users/jamison/Library/Application Support/typora-user-images/image-20230111172938455.png)
+
+看key_len只有5，只使用了age字段没用classid，可能是where过滤的之后数据已经很少了,直接选择回表了
+
+![image-20230111173326348](/Users/jamison/Library/Application Support/typora-user-images/image-20230111173326348.png)
+
+![image-20230111173342778](/Users/jamison/Library/Application Support/typora-user-images/image-20230111173342778.png)
+
+上面，不用classid是最左前缀原因，不用age是limit的原因
+
+![image-20230111173352485](/Users/jamison/Library/Application Support/typora-user-images/image-20230111173352485.png)
+
+小结：
+
+![image-20230111173425426](/Users/jamison/Library/Application Support/typora-user-images/image-20230111173425426.png)
+
+### 3. 案例实战
+
+![image-20230111173724878](/Users/jamison/Library/Application Support/typora-user-images/image-20230111173724878.png)
+
+![image-20230111173732617](/Users/jamison/Library/Application Support/typora-user-images/image-20230111173732617.png)
+
+![image-20230111173818751](/Users/jamison/Library/Application Support/typora-user-images/image-20230111173818751.png)
+
+优化思路：
+
+方案一：为了去掉filesort我们可以把索引建成
+
+![image-20230111173934278](/Users/jamison/Library/Application Support/typora-user-images/image-20230111173934278.png)
+
+没用到name字段，直接回表了
+
+方案二：尽量让where的过滤条件和排序使用上索引
+
+![image-20230111174248482](/Users/jamison/Library/Application Support/typora-user-images/image-20230111174248482.png)
+
+![image-20230111174326061](/Users/jamison/Library/Application Support/typora-user-images/image-20230111174326061.png)
+
+原因：
+
+![image-20230111174431464](/Users/jamison/Library/Application Support/typora-user-images/image-20230111174431464.png)
+
+可行
+
+### 4. filesort算法：双路排序和单路排序
+
+![image-20230111174541952](/Users/jamison/Library/Application Support/typora-user-images/image-20230111174541952.png)
+
+![image-20230111174603316](/Users/jamison/Library/Application Support/typora-user-images/image-20230111174603316.png)
+
+优化策略：
+
+![image-20230111174628610](/Users/jamison/Library/Application Support/typora-user-images/image-20230111174628610.png)
+
+![image-20230111174637611](/Users/jamison/Library/Application Support/typora-user-images/image-20230111174637611.png)
+
+![image-20230111174648087](/Users/jamison/Library/Application Support/typora-user-images/image-20230111174648087.png)
+
+## GROUP BY优化
+
+![image-20230111175034927](/Users/jamison/Library/Application Support/typora-user-images/image-20230111175034927.png)
+
+## 优化分页查询
+
+![image-20230111175524966](/Users/jamison/Library/Application Support/typora-user-images/image-20230111175524966.png)
+
+优化思路一：
+
+![image-20230111175555607](/Users/jamison/Library/Application Support/typora-user-images/image-20230111175555607.png)
+
+优化思路二：
+
+![image-20230111175642382](/Users/jamison/Library/Application Support/typora-user-images/image-20230111175642382.png)
+
+## 优先考虑覆盖索引
+
+### 1. 什么是覆盖索引？
+
+![image-20230111181641670](/Users/jamison/Library/Application Support/typora-user-images/image-20230111181641670.png)
+
+举例一：
+
+![image-20230111181749824](/Users/jamison/Library/Application Support/typora-user-images/image-20230111181749824.png)
+
+![image-20230111181812735](/Users/jamison/Library/Application Support/typora-user-images/image-20230111181812735.png)
+
+举例二：
+
+![image-20230111181927014](/Users/jamison/Library/Application Support/typora-user-images/image-20230111181927014.png)
+
+![image-20230111181959289](/Users/jamison/Library/Application Support/typora-user-images/image-20230111181959289.png)
+
+### 2. 覆盖索引的利弊
+
+![image-20230111182057627](/Users/jamison/Library/Application Support/typora-user-images/image-20230111182057627.png)
+
+##  索引下推
+
+### 1. 使用前后对比
+
+![image-20230111202520927](/Users/jamison/Library/Application Support/typora-user-images/image-20230111202520927.png)
+
+### 2. ICP的开启/关闭
+
+![image-20230111223450925](/Users/jamison/Library/Application Support/typora-user-images/image-20230111223450925.png)
+
+### 3. ICP的使用案例
+
+![image-20230111223523457](/Users/jamison/Library/Application Support/typora-user-images/image-20230111223523457.png)
+
+![image-20230111223552651](/Users/jamison/Library/Application Support/typora-user-images/image-20230111223552651.png)
+
+![image-20230111223649485](/Users/jamison/Library/Application Support/typora-user-images/image-20230111223649485.png)
+
+这个表中存在两个索引，分别是：
+
+![image-20230111223747884](/Users/jamison/Library/Application Support/typora-user-images/image-20230111223747884.png)
+
+![image-20230111223806314](/Users/jamison/Library/Application Support/typora-user-images/image-20230111223806314.png)
+
+### 4. 开启和关闭ICP的性能对比
+
+![image-20230111223856245](/Users/jamison/Library/Application Support/typora-user-images/image-20230111223856245.png)
+
+![image-20230111223921689](/Users/jamison/Library/Application Support/typora-user-images/image-20230111223921689.png)
+
+![image-20230111223943192](/Users/jamison/Library/Application Support/typora-user-images/image-20230111223943192.png)
+
+### 5. ICP的使用条件
+
+![image-20230111224026344](/Users/jamison/Library/Application Support/typora-user-images/image-20230111224026344.png)
+
+## 其它查询优化策略
+
+### 1. EXIST和IN的区分
+
+![image-20230111224935437](/Users/jamison/Library/Application Support/typora-user-images/image-20230111224935437.png)
+
+### 2. COUNT(*)与COUNT(具体字段)效率
+
+![image-20230111225146068](/Users/jamison/Library/Application Support/typora-user-images/image-20230111225146068.png)
+
+### 3. 关于SELECT(*)
+
+![image-20230111225226697](/Users/jamison/Library/Application Support/typora-user-images/image-20230111225226697.png)
+
+### 4. LIMIT 1对优化的影响
+
+![image-20230111225302994](/Users/jamison/Library/Application Support/typora-user-images/image-20230111225302994.png)
+
+### 5. 多使用COMMIT
+
+![image-20230111225338331](/Users/jamison/Library/Application Support/typora-user-images/image-20230111225338331.png)
+
+## 淘宝数据库主键如何设计的？
+
+![image-20230111231007326](/Users/jamison/Library/Application Support/typora-user-images/image-20230111231007326.png)
+
+### 1. 自增ID的问题
+
+![image-20230111231057137](/Users/jamison/Library/Application Support/typora-user-images/image-20230111231057137.png)
+
+### 2. 业务字段做主键
+
+![image-20230111231134671](/Users/jamison/Library/Application Support/typora-user-images/image-20230111231134671.png)
+
+![image-20230111231207269](/Users/jamison/Library/Application Support/typora-user-images/image-20230111231207269.png)
+
+![image-20230111231239919](/Users/jamison/Library/Application Support/typora-user-images/image-20230111231239919.png)
+
+![image-20230111231252783](/Users/jamison/Library/Application Support/typora-user-images/image-20230111231252783.png)
+
+![image-20230111231335997](/Users/jamison/Library/Application Support/typora-user-images/image-20230111231335997.png)
+
+### 3. 淘宝的主键设计
+
+![image-20230111231401038](/Users/jamison/Library/Application Support/typora-user-images/image-20230111231401038.png)
+
+![image-20230111231413524](/Users/jamison/Library/Application Support/typora-user-images/image-20230111231413524.png)
+
+### 4. 推荐的主键设计
+
+![image-20230111231438170](/Users/jamison/Library/Application Support/typora-user-images/image-20230111231438170.png)
+
+![image-20230111231501885](/Users/jamison/Library/Application Support/typora-user-images/image-20230111231501885.png)
+
+![image-20230111231537287](/Users/jamison/Library/Application Support/typora-user-images/image-20230111231537287.png)
+
+![image-20230111231609985](/Users/jamison/Library/Application Support/typora-user-images/image-20230111231609985.png)
+
+![image-20230111231646311](/Users/jamison/Library/Application Support/typora-user-images/image-20230111231646311.png)
+
+![image-20230111231709340](/Users/jamison/Library/Application Support/typora-user-images/image-20230111231709340.png)
+
