@@ -3850,6 +3850,8 @@ Output：
 
 ## 1. 向上转型
 
+https://www.bilibili.com/video/BV1PE41187Vd?p=116&vd_source=1761deea5b8c69ccd1cd089a400b2c54
+
 ![image-20230118103220758](/Users/jamison/Library/Application Support/typora-user-images/image-20230118103220758.png)
 
 **范例：观察方法覆写的操作**
@@ -3994,3 +3996,51 @@ public class JamisonDemo {
 ```
 
 ![image-20230118112341852](/Users/jamison/Library/Application Support/typora-user-images/image-20230118112341852.png)
+
+## 2. 向下转型
+
+https://www.bilibili.com/video/BV1PE41187Vd/?p=117&vd_source=1761deea5b8c69ccd1cd089a400b2c54
+
+![image-20230118152115440](/Users/jamison/Library/Application Support/typora-user-images/image-20230118152115440.png)
+
+**范例：观察向上转型的问题**
+
+![image-20230118152257504](/Users/jamison/Library/Application Support/typora-user-images/image-20230118152257504.png)
+
+![image-20230118152334832](/Users/jamison/Library/Application Support/typora-user-images/image-20230118152334832.png)
+
+**范例：观察错误的子类方法调用**
+
+![image-20230118152441328](/Users/jamison/Library/Application Support/typora-user-images/image-20230118152441328.png)
+
+![image-20230118152500532](/Users/jamison/Library/Application Support/typora-user-images/image-20230118152500532.png)
+
+![image-20230118152558807](/Users/jamison/Library/Application Support/typora-user-images/image-20230118152558807.png)
+
+![image-20230118152622524](/Users/jamison/Library/Application Support/typora-user-images/image-20230118152622524.png)
+
+如果想进行这些特殊功能的调用，就必须使用子类的对象来完成处理，那么此时就需要进行对象实例的向下转型。
+
+**范例：使用向下转型**
+
+![image-20230118152900972](/Users/jamison/Library/Application Support/typora-user-images/image-20230118152900972.png)
+
+![image-20230118152959239](/Users/jamison/Library/Application Support/typora-user-images/image-20230118152959239.png)
+
+![image-20230118153032667](/Users/jamison/Library/Application Support/typora-user-images/image-20230118153032667.png)
+
+如果想发生向下转型首先一定要发生向上转型，否则会出现异常。
+
+防止转型失败报错，可以判断一下
+
+![image-20230118153616564](/Users/jamison/Library/Application Support/typora-user-images/image-20230118153616564.png)
+
+**范例：错误的向下转型**
+
+![image-20230118153204988](/Users/jamison/Library/Application Support/typora-user-images/image-20230118153204988.png)
+
+![image-20230118153241027](/Users/jamison/Library/Application Support/typora-user-images/image-20230118153241027.png)
+
+![image-20230118153308489](/Users/jamison/Library/Application Support/typora-user-images/image-20230118153308489.png)
+
+另外的5%操作情况实际上就是留给不转型的处理，例如，String类就不需要进行转型并且都一定要使用。
