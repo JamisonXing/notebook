@@ -426,3 +426,152 @@ https://mybatis.org/mybatis-3/zh/configuration.html
            from tb_brand;
        </select>
    ```
+
+### 3. 查询-查询详情
+
+![image-20230119195300071](/Users/jamison/Library/Application Support/typora-user-images/image-20230119195300071.png)
+
+假设按照id来查询
+
+1. 参数占位符问题
+
+   ```xml
+   <!--
+       *参数占位符：
+           1. #{}:会将其替换为?，为了防止SQL注入
+           2. ${}:直接拼sql，会存在sql注入问题
+           3. 使用时机：
+               *参数传递的时候：#{}
+               *表名或者类名不确定的情况下：${} 会存在sql注入问题
+   -->
+   <select id="selectById" resultMap="brandResultMap">
+       select *
+       from tb_brand
+       where id = #{id};
+   </select>
+   ```
+
+2. 特殊字符处理
+
+   ```xml
+   <!--     
+   *特殊字符处理(比如'<'就不能识别)：
+               1. 转义字符：'<'的转移字符为'&lt'
+               2. CDATA区
+    -->
+   
+       <!--CDATA区解决特殊字符问题-->
+       <select id="selectById" resultMap="brandResultMap">
+           select *
+           from tb_brand
+           where id
+           <![CDATA[
+               <
+           ]]>
+           #{id};
+       </select>
+   ```
+
+小结：
+
+![image-20230119200027612](/Users/jamison/Library/Application Support/typora-user-images/image-20230119200027612.png)
+
+### 4. 查询-条件查询
+
+业务需求：
+
+![image-20230119195149510](/Users/jamison/Library/Application Support/typora-user-images/image-20230119195149510.png)
+
+![image-20230119200054323](/Users/jamison/Library/Application Support/typora-user-images/image-20230119200054323.png)
+
+1. 散装参数使用@Param(”对应#{}中的参数名“)
+
+   ![image-20230119204122857](/Users/jamison/Library/Application Support/typora-user-images/image-20230119204122857.png)
+
+   ```java
+   //传入参数
+   int status = 1;
+   String companyName = "华为";
+   String brandName = "华为";
+   
+   //因为是模糊查询所以要对参数进行处理
+   companyName = "%" + companyName + "%";
+   brandName = "%" + brandName + "%";
+   
+           //3 mapper代理方式执行
+           BrandMapper mapper = sqlSession.getMapper(BrandMapper.class);
+           List<Brand> brands = mapper.selectByCondition(status, companyName, brandName);
+           System.out.println(brands);
+   ```
+
+   ```xml
+   <select id="selectByCondition" resultMap="brandResultMap">
+       select *
+       from tb_brand
+       where
+           status = #{status}
+           and company_name like #{companyName}
+           and brand_name like #{brandName};
+   </select>
+   ```
+
+2. 同一个实体类封装参数
+
+   ![image-20230119204632137](/Users/jamison/Library/Application Support/typora-user-images/image-20230119204632137.png)
+
+   映射文件不用变，代码要变
+
+   ```java
+           //传入参数
+           int status = 1;
+           String companyName = "华为";
+           String brandName = "华为";
+   
+           //因为是模糊查询所以要对参数进行处理
+           companyName = "%" + companyName + "%";
+           brandName = "%" + brandName + "%";
+   
+           //封装对象参数
+           Brand brand = new Brand();
+           brand.setStatus(1);
+           brand.setCompanyName(companyName);
+           brand.setBrandName(brandName);
+   
+   				//传入对象就行
+           BrandMapper mapper = sqlSession.getMapper(BrandMapper.class);
+           List<Brand> brands = mapper.selectByCondition(brand);
+           System.out.println(brands);
+   ```
+
+3. map集合
+
+   ![image-20230119205616588](/Users/jamison/Library/Application Support/typora-user-images/image-20230119205616588.png)
+
+   映射文件不用变，代码要传入一个map
+
+   ```java
+           //传入参数
+           int status = 1;
+           String companyName = "华为";
+           String brandName = "华为";
+   
+           //因为是模糊查询所以要对参数进行处理
+           companyName = "%" + companyName + "%";
+           brandName = "%" + brandName + "%";
+   
+           //封装对象参数
+           HashMap map = new HashMap();
+           map.put("status", 1);
+           map.put("companyName", companyName);
+           map.put("brandName", brandName);
+           
+       		//3 mapper代理方式执行
+           BrandMapper mapper = sqlSession.getMapper(BrandMapper.class);
+           List<Brand> brands = mapper.selectByCondition(map);
+           System.out.println(brands);
+   ```
+
+小结：
+
+![image-20230119205926672](/Users/jamison/Library/Application Support/typora-user-images/image-20230119205926672.png)
+
