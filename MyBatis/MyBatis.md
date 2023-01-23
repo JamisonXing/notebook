@@ -770,3 +770,31 @@ void deleteByIds(@Param("ids")int[] ids);
     </foreach>;
 </delete>
 ```
+
+## 五、MyBatis参数传递&注解开发
+
+### 1. 参数传递
+
+![image-20230123215029498](/Users/jamison/Library/Application Support/typora-user-images/image-20230123215029498.png)
+
+参数封装：
+- 多个参数
+
+  ![image-20230123215446544](/Users/jamison/Library/Application Support/typora-user-images/image-20230123215446544.png)
+
+  自己打断点调试，其实@Param注解就是改了map的key名，准确的说是改了arg0的key名，arg0在使用@Param后就不存在了。
+
+- 单个参数：
+
+  ![image-20230123215118633](/Users/jamison/Library/Application Support/typora-user-images/image-20230123215118633.png)
+
+![image-20230123215041355](/Users/jamison/Library/Application Support/typora-user-images/image-20230123215041355.png)
+
+总而言之，都是用Param注解。
+
+### 2. 注解开发
+
+![image-20230123215826631](/Users/jamison/Library/Application Support/typora-user-images/image-20230123215826631.png)
+
+![image-20230123215851229](/Users/jamison/Library/Application Support/typora-user-images/image-20230123215851229.png)
+
