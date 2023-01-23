@@ -632,3 +632,141 @@ https://mybatis.org/mybatis-3/zh/configuration.html
     </where>
 </select>
 ```
+
+## 四、Mybatis添加&修改&删除
+
+### 1. 基础添加-添加
+
+![image-20230123195217893](/Users/jamison/Library/Application Support/typora-user-images/image-20230123195217893.png)
+
+**注意：**
+
+可以设置为自动提交，即关闭事务，
+
+![image-20230123195551405](/Users/jamison/Library/Application Support/typora-user-images/image-20230123195551405.png)
+
+没有设置关闭事务时，要手动提交事务，否则更新无效。
+
+![image-20230123195352637](/Users/jamison/Library/Application Support/typora-user-images/image-20230123195352637.png)
+
+### 2. 基础添加-主键返回
+
+有时业务会要求查询主键：
+
+![image-20230123202426363](/Users/jamison/Library/Application Support/typora-user-images/image-20230123202426363.png)
+
+如果不在insert标签上添加， useGeneratedKeys="true" keyProperty="id"这两个配置，则会返回null。
+
+![image-20230123202643643](/Users/jamison/Library/Application Support/typora-user-images/image-20230123202643643.png)
+
+添加配置后：
+
+```xml
+<!--加上useGeneratedKeys和keyProperty属性，可以实现主键返回-->
+<insert id="add"  useGeneratedKeys="true" keyProperty="id">
+    insert into tb_brand (brand_name, company_name, ordered, description, status)
+    values (#{brandName}, #{companyName}, #{ordered}, #{description}, #{status})
+</insert>
+```
+
+![image-20230123202746102](/Users/jamison/Library/Application Support/typora-user-images/image-20230123202746102.png)
+
+### 3. 修改-修改全部字段
+
+![image-20230123203027973](/Users/jamison/Library/Application Support/typora-user-images/image-20230123203027973.png)
+
+```java
+    @Test
+    public void update() throws IOException {
+        //接收参数
+        int status = 1;
+        String companyName = "波导";
+        String brandName = "波导手机";
+        int ordered = 300;
+        String description = "波导手机，手机中的战斗机";
+        int id = 8;
+
+        //封装对象
+        Brand brand = new Brand();
+        brand.setStatus(status);
+        brand.setCompanyName(companyName);
+        brand.setBrandName(brandName);
+        brand.setDescription(description);
+        brand.setOrdered(ordered);
+        brand.setId(id);
+
+        //1. 获取SqlSessionFactory
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        //2. 获取SqlSession对象
+//        SqlSession sqlSession = sqlSessionFactory.openSession();
+        //默认关闭事务
+        SqlSession sqlSession = sqlSessionFactory.openSession(true);
+
+        //3. 获取Mapper接口的代理对象
+        BrandMapper brandMapper = sqlSession.getMapper(BrandMapper.class);
+
+        //4. 执行方法
+        int count = brandMapper.update(brand);
+        System.out.println(count);
+
+        //提交事务
+        sqlSession.commit();
+
+        //6. 释放资源
+        sqlSession.close();
+    }
+```
+
+### 3. 修改-修改动态字段
+
+![image-20230123204047325](/Users/jamison/Library/Application Support/typora-user-images/image-20230123204047325.png)
+
+### 4. 删除-删除一个
+
+![image-20230123211324760](/Users/jamison/Library/Application Support/typora-user-images/image-20230123211324760.png)
+
+### 5. 删除-批量删除
+
+![image-20230123211654370](/Users/jamison/Library/Application Support/typora-user-images/image-20230123211654370.png)
+
+```xml
+<delete id="deleteByIds">
+    delete from tb_brand
+    where id
+    in
+    <foreach collection="array" item="id" separator="," open="(" close=")">
+        #{id}
+    </foreach>;
+</delete>
+```
+
+```xml
+<!--
+    MyBatis会将数组参数封装成一个map集合
+        *默认：collection的 array : 数组
+        *在mapper方法的参数列表加上@Param(别名),collection="别名"
+-->
+```
+
+这里的collection属性可以改成自己指定的名字，需要@Param注解
+
+```java
+void deleteByIds(@Param("ids")int[] ids);
+```
+
+就变成这样
+
+```xml
+<!--使用注解-->
+<delete id="deleteByIds">
+    delete from tb_brand
+    where id
+    in
+    <foreach collection="ids" item="id" separator="," open="(" close=")">
+        #{id}
+    </foreach>;
+</delete>
+```
