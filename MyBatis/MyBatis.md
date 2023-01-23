@@ -575,3 +575,60 @@ https://mybatis.org/mybatis-3/zh/configuration.html
 
 ![image-20230119205926672](/Users/jamison/Library/Application Support/typora-user-images/image-20230119205926672.png)
 
+### 5. 查询-多条件-动态查询
+
+![image-20230122163128225](/Users/jamison/Library/Application Support/typora-user-images/image-20230122163128225.png)
+
+因为每次查询，用户与可能不会填满每一个条件，当缺少某一个条件的时候，SQL语句要动态变化。
+
+**动态SQL:**
+
+![image-20230122163208349](/Users/jamison/Library/Application Support/typora-user-images/image-20230122163208349.png)
+
+所以映射文件可以改成这样：
+
+![image-20230122163429028](/Users/jamison/Library/Application Support/typora-user-images/image-20230122163429028.png)
+
+但是这样会出现一个问题：
+
+当只有company_name字段的时候，会直接在where后面加上"and company_name like ..."，语法错误，
+
+**这里有两种解决方案：**
+
+1. 使用恒等式
+
+   ![image-20230122163706374](/Users/jamison/Library/Application Support/typora-user-images/image-20230122163706374.png)
+
+2. 使用where关键字
+
+   ![image-20230122170142032](/Users/jamison/Library/Application Support/typora-user-images/image-20230122170142032.png)
+
+**小结：**
+
+![image-20230123185721059](/Users/jamison/Library/Application Support/typora-user-images/image-20230123185721059.png)
+
+### 6. 查询-单条件-动态查询
+
+![image-20230123191249036](/Users/jamison/Library/Application Support/typora-user-images/image-20230123191249036.png)
+
+可以加where标签优化，不用写恒等式了：
+
+```xml
+<select id="selectBySingleCondition" resultMap="brandResultMap">
+    select *
+    from tb_brand
+    <where>
+        <choose>
+            <when test="status != null">
+                status = #{status}
+            </when>
+            <when test="companyName != null and companyName !=''">
+                company_name like #{companyName}
+            </when>
+            <when test="brandName != null and brandName !=''">
+                brand_name like #{brandName}
+            </when>
+        </choose>
+    </where>
+</select>
+```
