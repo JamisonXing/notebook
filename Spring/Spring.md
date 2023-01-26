@@ -232,5 +232,245 @@ spring方式：
 
 ![image-20230126121953792](/Users/jamison/Library/Application Support/typora-user-images/image-20230126121953792.png)
 
+## 3. bean的声明周期
+
+### 3.1 bean声明周期控制
+
+![image-20230126125357792](/Users/jamison/Library/Application Support/typora-user-images/image-20230126125357792.png)
+
+- 配置
+
+  ![image-20230126125805655](/Users/jamison/Library/Application Support/typora-user-images/image-20230126125805655.png)
+
+  ![image-20230126125829533](/Users/jamison/Library/Application Support/typora-user-images/image-20230126125829533.png)
+
+- 运行
+
+  要关闭容器才能触发destory方法，否则虚拟机直接关闭来不及执行destory方法，而ApplicationContext接口没有定义close方法，所以使用ClassPathXmlApplicationContext。
+
+  ![image-20230126130226528](/Users/jamison/Library/Application Support/typora-user-images/image-20230126130226528.png)
+
+  ![image-20230126130021342](/Users/jamison/Library/Application Support/typora-user-images/image-20230126130021342.png)
+
+  也可以使用registerShutdownHook方法关闭容器，比close温和，它不一定要放在最后：
+
+  ![image-20230126130527304](/Users/jamison/Library/Application Support/typora-user-images/image-20230126130527304.png)
+
+  还可以不自己声明init和destory方法，实现InitializingBean, DisposableBean两个接口，override afterProperties和destory方法即可，而且不用配置。
+
+  ```java
+  public class BookServiceImpl implements BookService, InitializingBean, DisposableBean {
+      //5.删除业务层中使用new的方式创建的dao对象
+      private BookDao bookDao;
+  
+      public void save() {
+          System.out.println("bookService save..");
+          bookDao.save();
+      }
+  
+      //6. 提供对应的Set方法
+      public void setBookDao(BookDao bookDao) {
+          this.bookDao = bookDao;
+      }
+  
+      public void destroy() throws Exception {
+          System.out.println("destroy...");
+      }
+  
+      public void afterPropertiesSet() throws Exception {
+          System.out.println("init...");
+      }
+  }
+  ```
+
+### 3.2 小结
+
+![image-20230126125714460](/Users/jamison/Library/Application Support/typora-user-images/image-20230126125714460.png)
+
+# 第三章 注入
+
+## 1. 两种依赖注入方式
+
+![image-20230126134006789](/Users/jamison/Library/Application Support/typora-user-images/image-20230126134006789.png)
+
+### 1.1 setter注入
+
+- 引用类型
+
+  ![image-20230126134116116](/Users/jamison/Library/Application Support/typora-user-images/image-20230126134116116.png)
+
+- 简单类型
+
+  ![image-20230126134620425](/Users/jamison/Library/Application Support/typora-user-images/image-20230126134620425.png)
+
+### 1.2 构造器注入
+
+- 引用类型
+
+  ![image-20230126135703137](/Users/jamison/Library/Application Support/typora-user-images/image-20230126135703137.png)
+
+- 简单类型
+
+  ![image-20230126135840376](/Users/jamison/Library/Application Support/typora-user-images/image-20230126135840376.png)
+
+  ![image-20230126135848296](/Users/jamison/Library/Application Support/typora-user-images/image-20230126135848296.png)
+
+### 1.3 依赖注入方式选择
+
+实际上开发过程中使用setter比较多
+
+![image-20230126140119571](/Users/jamison/Library/Application Support/typora-user-images/image-20230126140119571.png)
+
+小结：
+
+![image-20230126140131648](/Users/jamison/Library/Application Support/typora-user-images/image-20230126140131648.png)
+
+## 2. 依赖自动装配
+
+![image-20230126155358501](/Users/jamison/Library/Application Support/typora-user-images/image-20230126155358501.png)
+
+setter方式注入：
+
+![image-20230126155416278](/Users/jamison/Library/Application Support/typora-user-images/image-20230126155416278.png)
+
+- 按类型
+
+  ![image-20230126155603914](/Users/jamison/Library/Application Support/typora-user-images/image-20230126155603914.png)
+
+- 按名称
+
+  ![image-20230126155629766](/Users/jamison/Library/Application Support/typora-user-images/image-20230126155629766.png)
+
+**依赖自动装配的特征：**
+
+![image-20230126155736705](/Users/jamison/Library/Application Support/typora-user-images/image-20230126155736705.png)
+
+## 3. 集合注入
+
+```java
+public class BookDaoImpl implements BookDao {
+
+    private int[] array;
+
+    private List<String> list;
+
+    private Set<String> set;
+
+    private Map<String,String> map;
+
+    private Properties properties;
 
 
+
+
+    public void setArray(int[] array) {
+        this.array = array;
+    }
+
+    public void setList(List<String> list) {
+        this.list = list;
+    }
+
+    public void setSet(Set<String> set) {
+        this.set = set;
+    }
+
+    public void setMap(Map<String, String> map) {
+        this.map = map;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
+    }
+
+
+
+
+    public void save() {
+        System.out.println("book dao save ...");
+
+        System.out.println("遍历数组:" + Arrays.toString(array));
+
+        System.out.println("遍历List" + list);
+
+        System.out.println("遍历Set" + set);
+
+        System.out.println("遍历Map" + map);
+
+        System.out.println("遍历Properties" + properties);
+    }
+}
+```
+
+```java
+    <bean id="bookDao" class="com.itheima.dao.impl.BookDaoImpl">
+        <!--数组注入-->
+        <property name="array">
+            <array>
+                <value>100</value>
+                <value>200</value>
+                <value>300</value>
+            </array>
+        </property>
+        <!--list集合注入-->
+        <property name="list">
+            <list>
+                <value>itcast</value>
+                <value>itheima</value>
+                <value>boxuegu</value>
+                <value>chuanzhihui</value>
+            </list>
+        </property>
+        <!--set集合注入-->
+        <property name="set">
+            <set>
+                <value>itcast</value>
+                <value>itheima</value>
+                <value>boxuegu</value>
+                <value>boxuegu</value>
+            </set>
+        </property>
+        <!--map集合注入-->
+        <property name="map">
+            <map>
+                <entry key="country" value="china"/>
+                <entry key="province" value="henan"/>
+                <entry key="city" value="kaifeng"/>
+            </map>
+        </property>
+        <!--Properties注入-->
+        <property name="properties">
+            <props>
+                <prop key="country">china</prop>
+                <prop key="province">henan</prop>
+                <prop key="city">kaifeng</prop>
+            </props>
+        </property>
+    </bean>
+```
+
+## 4. 加载properties文件
+
+1. 开启context命名空间
+
+   灰色部分是新加的
+
+   ![image-20230126161020186](/Users/jamison/Library/Application Support/typora-user-images/image-20230126161020186.png)
+
+2. 使用context空间加载properties文件
+
+   其实这里的写法不规范，后面会讲。
+
+   ![image-20230126161148037](/Users/jamison/Library/Application Support/typora-user-images/image-20230126161148037.png)
+
+3. 使用属性占位符${}读取properties文件中的属性
+
+   ![image-20230126161318851](/Users/jamison/Library/Application Support/typora-user-images/image-20230126161318851.png)
+
+4. 细节和注意点
+
+   ![image-20230126161438684](/Users/jamison/Library/Application Support/typora-user-images/image-20230126161438684.png)
+
+   ![image-20230126161453326](/Users/jamison/Library/Application Support/typora-user-images/image-20230126161453326.png)
+
+   不加载系统属性的原因是，某些properties文件中的属性a是系统属性a，使用${a}读取的是系统属性a，为了额避免这种情况。
