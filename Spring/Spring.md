@@ -100,3 +100,137 @@
 
 ![image-20230125210745025](/Users/jamison/Library/Application Support/typora-user-images/image-20230125210745025.png)
 
+# 第二章 bean实例化
+
+## 1. bean基础配置
+
+### 1.1 bean基础配置
+
+![image-20230125212620175](/Users/jamison/Library/Application Support/typora-user-images/image-20230125212620175.png)
+
+### 1.2 bean别名配置
+
+![image-20230125212721847](/Users/jamison/Library/Application Support/typora-user-images/image-20230125212721847.png)
+
+### 1.3 bean作用范围说明
+
+bean默认为单例，可以设置为多例：
+
+```xml
+<bean id="bookDao" name="dao" class="com.jamison.dao.impl.BookDaoImpl" scope="prototype"/>
+```
+
+```java
+public class APP2 {
+    public static void main(String[] args) {
+        //3. 获取IoC容器
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+        //4.获取bean（根据bean配置id获取）
+        BookDao bookDao = (BookDao) ctx.getBean("bookDao");
+        BookDao bookDao1 = (BookDao) ctx.getBean("bookDao");
+//        bookDao.save();
+//        BookService bookService = (BookService) ctx.getBean("bookService");
+//        bookService.save();
+
+        System.out.println(bookDao);
+        System.out.println(bookDao1);
+    }
+}
+```
+
+result:
+
+```java
+com.jamison.dao.impl.BookDaoImpl@69ea3742
+com.jamison.dao.impl.BookDaoImpl@4b952a2d
+```
+
+![image-20230125213327285](/Users/jamison/Library/Application Support/typora-user-images/image-20230125213327285.png)
+
+## 2. bean实例化
+
+bean是如何创建的，实例化bean的三种方式：
+
+![image-20230126121116329](/Users/jamison/Library/Application Support/typora-user-images/image-20230126121116329.png)
+
+### 2.1 构造方法
+
+![image-20230126111649967](/Users/jamison/Library/Application Support/typora-user-images/image-20230126111649967.png)
+
+实际上调用的是无参构造，有参构造会报错：
+
+![image-20230126111731647](/Users/jamison/Library/Application Support/typora-user-images/image-20230126111731647.png)
+
+而且private修饰的构造方法，spring也可以调用因为是通过反射实现的：
+
+![image-20230126111852799](/Users/jamison/Library/Application Support/typora-user-images/image-20230126111852799.png)
+
+### 2.2 静态工厂(了解)
+
+- 静态工厂
+
+  ```java
+  public class BookDaoFactory {
+      public static BookDao bookDaoFactory() {
+          System.out.println("bookDaoFactory setup...");
+          return new BookDaoImpl();
+      }
+  }
+  ```
+
+- 配置
+
+  ```xml
+  <bean id="bookDao" class="com.jamison.factory.BookDaoFactory" factory-method="bookDaoFactory"/>
+  ```
+
+- 运行
+
+  ```java
+  public class APP3 {
+      public static void main(String[] args) {
+          ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+          BookDao bookDao = (BookDao) ctx.getBean("bookDao");
+          bookDao.save();
+      }
+  }
+  ```
+
+### 2.3 实例工厂
+
+工厂方法不是静态的，需要先创建工厂类对象，才能调用该方法
+
+![image-20230126121333096](/Users/jamison/Library/Application Support/typora-user-images/image-20230126121333096.png)
+
+普通方式：
+
+![image-20230126121429238](/Users/jamison/Library/Application Support/typora-user-images/image-20230126121429238.png)
+
+spring方式：
+
+![image-20230126121510572](/Users/jamison/Library/Application Support/typora-user-images/image-20230126121510572.png)
+
+![image-20230126121531744](/Users/jamison/Library/Application Support/typora-user-images/image-20230126121531744.png)
+
+但是有缺点：
+
+![image-20230126121602756](/Users/jamison/Library/Application Support/typora-user-images/image-20230126121602756.png)
+
+于是有了第四种方式：
+
+### 2.4 FactoryBean（常用）
+
+![image-20230126121816347](/Users/jamison/Library/Application Support/typora-user-images/image-20230126121816347.png)
+
+![image-20230126121826729](/Users/jamison/Library/Application Support/typora-user-images/image-20230126121826729.png)
+
+![image-20230126121832637](/Users/jamison/Library/Application Support/typora-user-images/image-20230126121832637.png)
+
+如果想创建多例或者单例的对象，可以再bean类中加上isSingleton方法：![image-20230126121936471](/Users/jamison/Library/Application Support/typora-user-images/image-20230126121936471.png)
+
+小结：
+
+![image-20230126121953792](/Users/jamison/Library/Application Support/typora-user-images/image-20230126121953792.png)
+
+
+
