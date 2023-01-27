@@ -535,7 +535,97 @@ BeanFactory采用延迟加载的方式加载bean，我们常用的都是即时�
 
 ![image-20230127235620824](/Users/jamison/Library/Application Support/typora-user-images/image-20230127235620824.png)
 
-
-
 ### 3.2 纯注解开发
+
+创建一个配置类，注解声明，代替xml配置文件。
+
+![image-20230128000340899](/Users/jamison/Library/Application Support/typora-user-images/image-20230128000340899.png)
+
+![image-20230128000540453](/Users/jamison/Library/Application Support/typora-user-images/image-20230128000540453.png)
+
+### 3.3 小结
+
+![image-20230128000611748](/Users/jamison/Library/Application Support/typora-user-images/image-20230128000611748.png)
+
+## 4. bean管理
+
+可以与之前学的进行对比，记住注解就行。
+
+### 4.1 bean作用范围
+
+![image-20230128000759778](/Users/jamison/Library/Application Support/typora-user-images/image-20230128000759778.png)
+
+### 4.2 bean证明周期
+
+![image-20230128000818315](/Users/jamison/Library/Application Support/typora-user-images/image-20230128000818315.png)
+
+### 4.3 小结
+
+![image-20230128000840225](/Users/jamison/Library/Application Support/typora-user-images/image-20230128000840225.png)
+
+## 5. 依赖注入
+
+### 5.1 自动装配
+
+![image-20230128001026864](/Users/jamison/Library/Application Support/typora-user-images/image-20230128001026864.png)
+
+当然了，bookDao已经是bean了，才可以autowired。
+
+![image-20230128001257822](/Users/jamison/Library/Application Support/typora-user-images/image-20230128001257822.png)
+
+Qualifer用于区分不了用的是哪个bean的情况
+
+### 5.2 加载properties文件
+
+![image-20230128001613168](/Users/jamison/Library/Application Support/typora-user-images/image-20230128001613168.png)
+
+注意不支持通配符
+
+### 5.3 小结
+
+![image-20230128001700618](/Users/jamison/Library/Application Support/typora-user-images/image-20230128001700618.png)
+
+
+
+## 6. 第三方bean管理
+
+### 6.1 第三方bean管理
+
+![image-20230128002248754](/Users/jamison/Library/Application Support/typora-user-images/image-20230128002248754.png)
+
+![image-20230128002259079](/Users/jamison/Library/Application Support/typora-user-images/image-20230128002259079.png)
+
+![image-20230128002319404](/Users/jamison/Library/Application Support/typora-user-images/image-20230128002319404.png)
+
+### 6.2 第三方bean依赖注入
+
+![image-20230128002921113](/Users/jamison/Library/Application Support/typora-user-images/image-20230128002921113.png)
+
+![image-20230128002931435](/Users/jamison/Library/Application Support/typora-user-images/image-20230128002931435.png)
+
+### 6.3 小结
+
+![image-20230128002955300](/Users/jamison/Library/Application Support/typora-user-images/image-20230128002955300.png)
+
+## 7. 注解开发总结
+
+### 7.1 XML配置与注解配置比较
+
+![image-20230128003304217](/Users/jamison/Library/Application Support/typora-user-images/image-20230128003304217.png)
+
+## 8. Spring整合MyBatis
+
+![image-20230128003402745](/Users/jamison/Library/Application Support/typora-user-images/image-20230128003402745.png)
+
+![image-20230128003438112](/Users/jamison/Library/Application Support/typora-user-images/image-20230128003438112.png)
+
+### 8.1 整合
+
+![image-20230128004906164](/Users/jamison/Library/Application Support/typora-user-images/image-20230128004906164.png)
+
+![image-20230128004929044](/Users/jamison/Library/Application Support/typora-user-images/image-20230128004929044.png)
+
+### 8.2 小结
+
+![image-20230128004946881](/Users/jamison/Library/Application Support/typora-user-images/image-20230128004946881.png)
 
