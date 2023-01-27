@@ -474,3 +474,68 @@ public class BookDaoImpl implements BookDao {
    ![image-20230126161453326](/Users/jamison/Library/Application Support/typora-user-images/image-20230126161453326.png)
 
    不加载系统属性的原因是，某些properties文件中的属性a是系统属性a，使用${a}读取的是系统属性a，为了额避免这种情况。
+
+# 第四章 注解开发&整合MyBatis
+
+## 1. 容器
+
+### 1.1 创建容器
+
+![image-20230127225128578](/Users/jamison/Library/Application Support/typora-user-images/image-20230127225128578.png)
+
+### 1.2 获取bean
+
+![image-20230127225143816](/Users/jamison/Library/Application Support/typora-user-images/image-20230127225143816.png)
+
+### 1.3 BeanFactory是顶级接口
+
+![image-20230127225711854](/Users/jamison/Library/Application Support/typora-user-images/image-20230127225711854.png)
+
+![image-20230127230201186](/Users/jamison/Library/Application Support/typora-user-images/image-20230127230201186.png)
+
+BeanFactory采用延迟加载的方式加载bean，我们常用的都是即时加载：
+
+![image-20230127230548239](/Users/jamison/Library/Application Support/typora-user-images/image-20230127230548239.png)
+
+即时加载。
+
+### 1.4 小结
+
+1. 容器类层次结构图
+
+   ![image-20230127230303841](/Users/jamison/Library/Application Support/typora-user-images/image-20230127230303841.png)
+
+2. BeanFactory初始化
+
+   ![image-20230127230332278](/Users/jamison/Library/Application Support/typora-user-images/image-20230127230332278.png)
+
+3. 小结
+
+   ![image-20230127230744537](/Users/jamison/Library/Application Support/typora-user-images/image-20230127230744537.png)
+
+## 2. 核心容器总结（前四章）
+
+### 2.1 容器相关
+
+![image-20230127231055830](/Users/jamison/Library/Application Support/typora-user-images/image-20230127231055830.png)
+
+### 2.2 bean相关
+
+![image-20230127231119579](/Users/jamison/Library/Application Support/typora-user-images/image-20230127231119579.png)
+
+### 2.3 依赖注入相关
+
+![image-20230127231144166](/Users/jamison/Library/Application Support/typora-user-images/image-20230127231144166.png)
+
+## 3. 注解开发
+
+### 3.1 注解开发定义bean
+
+![image-20230127235608324](/Users/jamison/Library/Application Support/typora-user-images/image-20230127235608324.png)
+
+![image-20230127235620824](/Users/jamison/Library/Application Support/typora-user-images/image-20230127235620824.png)
+
+
+
+### 3.2 纯注解开发
+
