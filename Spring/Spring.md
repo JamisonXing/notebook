@@ -629,3 +629,266 @@ Qualifer用于区分不了用的是哪个bean的情况
 
 ![image-20230128004946881](/Users/jamison/Library/Application Support/typora-user-images/image-20230128004946881.png)
 
+# 第五章 Spring整合junit&AOP入门
+
+## 1. Spring整合junit
+
+```xml
+<dependency>
+  <groupId>junit</groupId>
+  <artifactId>junit</artifactId>
+  <version>4.12</version>
+  <scope>test</scope>
+</dependency>
+
+<dependency>
+  <groupId>org.springframework</groupId>
+  <artifactId>spring-test</artifactId>
+  <version>5.2.10.RELEASE</version>
+</dependency>
+```
+
+![image-20230128144655149](/Users/jamison/Library/Application Support/typora-user-images/image-20230128144655149.png)
+
+小结：
+
+![image-20230128144719291](/Users/jamison/Library/Application Support/typora-user-images/image-20230128144719291.png)
+
+## 2. AOP简介
+
+### 2.1 AOP简介与作用
+
+![image-20230128145002272](/Users/jamison/Library/Application Support/typora-user-images/image-20230128145002272.png)
+
+### 2.2 AOP核心概念
+
+![image-20230128145036566](/Users/jamison/Library/Application Support/typora-user-images/image-20230128145036566.png)
+
+![image-20230128145212001](/Users/jamison/Library/Application Support/typora-user-images/image-20230128145212001.png)
+
+### 2.3 小结
+
+![image-20230128145240194](/Users/jamison/Library/Application Support/typora-user-images/image-20230128145240194.png)
+
+## 3. AOP入门案例
+
+### 3.1 入门案例思路分析
+
+![image-20230128145431134](/Users/jamison/Library/Application Support/typora-user-images/image-20230128145431134.png)
+
+### 3.2 注解版步骤
+
+1. 导坐标
+
+   ![image-20230128145548778](/Users/jamison/Library/Application Support/typora-user-images/image-20230128145548778.png)
+
+2. 定义dao接口与实现类
+
+   ![image-20230128145636626](/Users/jamison/Library/Application Support/typora-user-images/image-20230128145636626.png)
+
+3. 定义通知类，制作通知
+
+   ![image-20230128145705283](/Users/jamison/Library/Application Support/typora-user-images/image-20230128145705283.png)
+
+4. 定义切入点
+
+   ![image-20230128145735960](/Users/jamison/Library/Application Support/typora-user-images/image-20230128145735960.png)
+
+5. 绑定切入点和通知的关系，并指定通知添加到原始连接点的具体执行位置
+
+   ![image-20230128145852831](/Users/jamison/Library/Application Support/typora-user-images/image-20230128145852831.png)
+
+6. 定义通知类受Spring容器管理，并定义当前类为切面类
+
+   ![image-20230128145953569](/Users/jamison/Library/Application Support/typora-user-images/image-20230128145953569.png)
+
+7. 开启Spring对AOP的注解驱动支持
+
+   ![image-20230128150027325](/Users/jamison/Library/Application Support/typora-user-images/image-20230128150027325.png)
+
+## 4. AOP工作流程
+
+![image-20230128150410579](/Users/jamison/Library/Application Support/typora-user-images/image-20230128150410579.png)
+
+![image-20230128150441919](/Users/jamison/Library/Application Support/typora-user-images/image-20230128150441919.png)
+
+AOP是通过代理模式实现的，本质是代理模式。
+
+AOP核心概念：
+
+![image-20230128150616014](/Users/jamison/Library/Application Support/typora-user-images/image-20230128150616014.png)
+
+小结：
+
+![image-20230128150629705](/Users/jamison/Library/Application Support/typora-user-images/image-20230128150629705.png)
+
+# 第六章 AOP切入点表达式&通知类型
+
+## 1. AOP切入点表达式
+
+![image-20230128172327412](/Users/jamison/Library/Application Support/typora-user-images/image-20230128172327412.png)
+
+通常采用描述方法一，方法二用的是实现类耦合度高。
+
+### 1.1 语法格式
+
+![image-20230128172441278](/Users/jamison/Library/Application Support/typora-user-images/image-20230128172441278.png)
+
+### 1.2 通配符
+
+![image-20230128172523437](/Users/jamison/Library/Application Support/typora-user-images/image-20230128172523437.png)
+
+### 1.3 书写技巧
+
+![image-20230128172553241](/Users/jamison/Library/Application Support/typora-user-images/image-20230128172553241.png)
+
+## 2. AOP通知类型
+
+最重要的环绕通知
+
+![image-20230128172721536](/Users/jamison/Library/Application Support/typora-user-images/image-20230128172721536.png)
+
+- 前置通知
+
+  ![image-20230128172815320](/Users/jamison/Library/Application Support/typora-user-images/image-20230128172815320.png)
+
+- 后置通知
+
+  ![image-20230128172841303](/Users/jamison/Library/Application Support/typora-user-images/image-20230128172841303.png)
+
+- 环绕通知
+
+  ![image-20230128172918604](/Users/jamison/Library/Application Support/typora-user-images/image-20230128172918604.png)
+
+  如果有多个参数的话，ProceedingJoinPoint必须放在参数列表的第一位，还有一些环绕通知的注意事项：
+
+  ![image-20230128173118052](/Users/jamison/Library/Application Support/typora-user-images/image-20230128173118052.png)
+
+- 返回后通知
+
+  ![image-20230128173204147](/Users/jamison/Library/Application Support/typora-user-images/image-20230128173204147.png)
+
+- 抛出异常后通知
+
+  ![image-20230128173243250](/Users/jamison/Library/Application Support/typora-user-images/image-20230128173243250.png)
+
+## 3. 案例：测量业务层接口万次执行效率
+
+通过需求可知使用环绕通知实现。
+
+![image-20230128173416402](/Users/jamison/Library/Application Support/typora-user-images/image-20230128173416402.png)
+
+核心代码优化过程：
+
+![image-20230128173618380](/Users/jamison/Library/Application Support/typora-user-images/image-20230128173618380.png)
+
+turn to
+
+![image-20230128173636939](/Users/jamison/Library/Application Support/typora-user-images/image-20230128173636939.png)
+
+## 4. AOP通知获取数据
+
+![image-20230128173813797](/Users/jamison/Library/Application Support/typora-user-images/image-20230128173813797.png)
+
+### 4.1 获取参数
+
+分为around和其他;
+
+![image-20230128173927075](/Users/jamison/Library/Application Support/typora-user-images/image-20230128173927075.png)
+
+### 4.2 获取返回值
+
+afterReturning和around
+
+![image-20230128174108980](/Users/jamison/Library/Application Support/typora-user-images/image-20230128174108980.png)
+
+### 4.3 获取异常
+
+afterThrowing和around
+
+![image-20230128174224320](/Users/jamison/Library/Application Support/typora-user-images/image-20230128174224320.png)
+
+## 5. 案例：百度网盘密码数据兼容处理
+
+![image-20230128174344339](/Users/jamison/Library/Application Support/typora-user-images/image-20230128174344339.png)
+
+步骤：
+
+![image-20230128174417072](/Users/jamison/Library/Application Support/typora-user-images/image-20230128174417072.png)
+
+## 6. AOP总结
+
+![image-20230128174455859](/Users/jamison/Library/Application Support/typora-user-images/image-20230128174455859.png)
+
+![image-20230128174519031](/Users/jamison/Library/Application Support/typora-user-images/image-20230128174519031.png)
+
+![image-20230128174532237](/Users/jamison/Library/Application Support/typora-user-images/image-20230128174532237.png)
+
+![image-20230128174547721](/Users/jamison/Library/Application Support/typora-user-images/image-20230128174547721.png)
+
+![image-20230128174558355](/Users/jamison/Library/Application Support/typora-user-images/image-20230128174558355.png)
+
+# 第七章 Spring事务
+
+Spring事务简介：
+
+![image-20230128174719682](/Users/jamison/Library/Application Support/typora-user-images/image-20230128174719682.png)
+
+## 1. 案例：银行账户转账
+
+![image-20230128174807195](/Users/jamison/Library/Application Support/typora-user-images/image-20230128174807195.png)
+
+步骤：
+
+![image-20230128174839040](/Users/jamison/Library/Application Support/typora-user-images/image-20230128174839040.png)
+
+![image-20230128174855141](/Users/jamison/Library/Application Support/typora-user-images/image-20230128174855141.png)
+
+![image-20230128174906321](/Users/jamison/Library/Application Support/typora-user-images/image-20230128174906321.png)
+
+## 2. Spring事务角色
+
+**事务角色**：事务管理员和事务协调员
+
+![image-20230128175028916](/Users/jamison/Library/Application Support/typora-user-images/image-20230128175028916.png)
+
+![image-20230128175045613](/Users/jamison/Library/Application Support/typora-user-images/image-20230128175045613.png)
+
+![image-20230128175101361](/Users/jamison/Library/Application Support/typora-user-images/image-20230128175101361.png)
+
+![image-20230128175112432](/Users/jamison/Library/Application Support/typora-user-images/image-20230128175112432.png)
+
+## 3. 事务相关配置
+
+### 3.1 事务配置
+
+![image-20230128175321683](/Users/jamison/Library/Application Support/typora-user-images/image-20230128175321683.png)
+
+例子：
+
+![image-20230128175356120](/Users/jamison/Library/Application Support/typora-user-images/image-20230128175356120.png)
+
+### 3.2 案例：转账业务追加日志
+
+![image-20230128175411452](/Users/jamison/Library/Application Support/typora-user-images/image-20230128175411452.png)
+
+尝试：
+
+![image-20230128175514470](/Users/jamison/Library/Application Support/typora-user-images/image-20230128175514470.png)
+
+实际上在不使用事务传播行为的情况下，这是不可行的，他们三个事务还是属于一个事务管理员：
+
+![image-20230128175637256](/Users/jamison/Library/Application Support/typora-user-images/image-20230128175637256.png)
+
+这里需要使用事务传播行为来解决问问题，见下节
+
+### 3.3 事务传播行为
+
+**事务传播行为是事务协调员对事务管理员所携带事务的处理态度**
+
+![image-20230128175738243](/Users/jamison/Library/Application Support/typora-user-images/image-20230128175738243.png)
+
+![image-20230128175933231](/Users/jamison/Library/Application Support/typora-user-images/image-20230128175933231.png)
+
+![image-20230128175949703](/Users/jamison/Library/Application Support/typora-user-images/image-20230128175949703.png)
+
