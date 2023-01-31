@@ -1,4 +1,4 @@
-​		![image-20230129160758828](/Users/jamison/Library/Application Support/typora-user-images/image-20230129160758828.png)
+		![image-20230129160758828](/Users/jamison/Library/Application Support/typora-user-images/image-20230129160758828.png)
 
 ![image-20230129160815777](/Users/jamison/Library/Application Support/typora-user-images/image-20230129160815777.png)
 
@@ -327,3 +327,146 @@
 ![image-20230129183451111](/Users/jamison/Library/Application Support/typora-user-images/image-20230129183451111.png)
 
 ![image-20230129183550727](/Users/jamison/Library/Application Support/typora-user-images/image-20230129183550727.png)
+
+# 第三章 RESTful
+
+## 1. REST简介
+
+表现形式状态转换
+
+![image-20230131145955921](/Users/jamison/Library/Application Support/typora-user-images/image-20230131145955921.png)
+
+restful风格：
+
+开发中常用的四种，get 查询,post 新增/保存,put 修改/查询,delete 删除
+
+![image-20230131150050275](/Users/jamison/Library/Application Support/typora-user-images/image-20230131150050275.png)
+
+## 2. RESTful入门案例
+
+请求方案设定，请求参数设定
+
+### 2.1 步骤
+
+![image-20230131150317177](/Users/jamison/Library/Application Support/typora-user-images/image-20230131150317177.png)
+
+![image-20230131150332125](/Users/jamison/Library/Application Support/typora-user-images/image-20230131150332125.png)
+
+### 2.2 注解
+
+- @RequestMapping
+
+  ![image-20230131150453418](/Users/jamison/Library/Application Support/typora-user-images/image-20230131150453418.png)
+
+- @PathVariable
+
+  ![image-20230131150545075](/Users/jamison/Library/Application Support/typora-user-images/image-20230131150545075.png)
+
+### 2.3 @RequestBody,@RequestParam,@PathVariable区别与应用
+
+![image-20230131150814545](/Users/jamison/Library/Application Support/typora-user-images/image-20230131150814545.png)
+
+## 3. RESTful快速开发
+
+### 3.1 简化前后
+
+简化前：
+
+![image-20230131150959485](/Users/jamison/Library/Application Support/typora-user-images/image-20230131150959485.png)
+
+![image-20230131150949946](/Users/jamison/Library/Application Support/typora-user-images/image-20230131150949946.png)
+
+简化后：
+
+![image-20230131151100507](/Users/jamison/Library/Application Support/typora-user-images/image-20230131151100507.png)
+
+### 3.2 使用的注解
+
+- @RestController
+
+  ![image-20230131151231906](/Users/jamison/Library/Application Support/typora-user-images/image-20230131151231906.png)
+
+- @Get/Post/Delete/Put-Mapping
+
+  ![image-20230131151431445](/Users/jamison/Library/Application Support/typora-user-images/image-20230131151431445.png)
+
+## 4. 案例：基于RESTful页面数据交互
+
+步骤：
+
+1. 编写controller
+
+   ![image-20230131151703684](/Users/jamison/Library/Application Support/typora-user-images/image-20230131151703684.png)
+
+2. 设置静态资源放行
+
+   因为ServletContainersInitConfig(web容器配置类)类中对所有路径都设置为要通过mvc处理：
+
+   ![image-20230131151946286](/Users/jamison/Library/Application Support/typora-user-images/image-20230131151946286.png)
+
+   所以要再编写一个SpringMvcSupport放行静态资源：
+
+   ![image-20230131152106214](/Users/jamison/Library/Application Support/typora-user-images/image-20230131152106214.png)
+
+3. 前端页面异步调用
+
+   ![image-20230131152131751](/Users/jamison/Library/Application Support/typora-user-images/image-20230131152131751.png)
+
+# 第四章 表现层和前端数据传输
+
+## 1. SSM整合
+
+![image-20230131185614284](/Users/jamison/Library/Application Support/typora-user-images/image-20230131185614284.png)
+
+### 1.1 Spring整合Mybatis
+
+![image-20230131185647876](/Users/jamison/Library/Application Support/typora-user-images/image-20230131185647876.png)
+
+![image-20230131185702408](/Users/jamison/Library/Application Support/typora-user-images/image-20230131185702408.png)
+
+![image-20230131185723865](/Users/jamison/Library/Application Support/typora-user-images/image-20230131185723865.png)
+
+事务处理：
+
+![image-20230131185812244](/Users/jamison/Library/Application Support/typora-user-images/image-20230131185812244.png)
+
+### 1.2 Spring整合SpringMVC
+
+![image-20230131185936391](/Users/jamison/Library/Application Support/typora-user-images/image-20230131185936391.png)
+
+![image-20230131185948868](/Users/jamison/Library/Application Support/typora-user-images/image-20230131185948868.png)
+
+![image-20230131190008646](/Users/jamison/Library/Application Support/typora-user-images/image-20230131190008646.png)
+
+## 2. 表现层数据封装
+
+后端返回的数据可以有很多格式
+
+![image-20230131190148124](/Users/jamison/Library/Application Support/typora-user-images/image-20230131190148124.png)
+
+为了方便前后端对接，需要同一格式：
+
+根据项目组的约定来决定使用某一种格式
+
+- data
+
+  ![image-20230131190445714](/Users/jamison/Library/Application Support/typora-user-images/image-20230131190445714.png)
+
+- code
+
+  ![image-20230131190505934](/Users/jamison/Library/Application Support/typora-user-images/image-20230131190505934.png)
+
+- message
+
+  ![image-20230131190523454](/Users/jamison/Library/Application Support/typora-user-images/image-20230131190523454.png)
+
+后端需要编写统一数据返回的结果类：
+
+根据项目组的约定来决定
+
+![image-20230131190635600](/Users/jamison/Library/Application Support/typora-user-images/image-20230131190635600.png)
+
+![image-20230131192120623](/Users/jamison/Library/Application Support/typora-user-images/image-20230131192120623.png)
+
+![image-20230131192144570](/Users/jamison/Library/Application Support/typora-user-images/image-20230131192144570.png)
+
