@@ -470,3 +470,142 @@ restful风格：
 
 ![image-20230131192144570](/Users/jamison/Library/Application Support/typora-user-images/image-20230131192144570.png)
 
+
+
+# 第五章 异常处理&前后台协议联调
+
+## 1.异常处理器
+
+### 1.1 常见异常和思考
+
+开发过程中难免遇到异常，出现异常的常见位置和诱因如下：
+
+![image-20230202170023175](/Users/jamison/Library/Application Support/typora-user-images/image-20230202170023175.png)
+
+思考：
+
+![image-20230202170059421](/Users/jamison/Library/Application Support/typora-user-images/image-20230202170059421.png)
+
+![image-20230202170109450](/Users/jamison/Library/Application Support/typora-user-images/image-20230202170109450.png)
+
+### 1.2 异常处理器
+
+集中的、统一的处理项目中出现的异常
+
+![image-20230202170321278](/Users/jamison/Library/Application Support/typora-user-images/image-20230202170321278.png)
+
+效果对比：
+
+![image-20230202170459265](/Users/jamison/Library/Application Support/typora-user-images/image-20230202170459265.png)
+
+### 1.3 注解
+
+![image-20230202170421049](/Users/jamison/Library/Application Support/typora-user-images/image-20230202170421049.png)
+
+## 2. 项目异常处理
+
+### 2.1 项目异常分类
+
+![image-20230202170637572](/Users/jamison/Library/Application Support/typora-user-images/image-20230202170637572.png)
+
+### 2.2 项目异常处理方案
+
+![image-20230202170711797](/Users/jamison/Library/Application Support/typora-user-images/image-20230202170711797.png)
+
+### 2.3 项目异常处理步骤
+
+1. 自定义项目系统级异常
+
+   ![image-20230202170808986](/Users/jamison/Library/Application Support/typora-user-images/image-20230202170808986.png)
+
+2. 自定义项目业务级异常
+
+   ![image-20230202170844769](/Users/jamison/Library/Application Support/typora-user-images/image-20230202170844769.png)
+
+3. 自定义异常编码
+
+   ![image-20230202170927790](/Users/jamison/Library/Application Support/typora-user-images/image-20230202170927790.png)
+
+4. 触发自定义异常
+
+   ![image-20230202170953033](/Users/jamison/Library/Application Support/typora-user-images/image-20230202170953033.png)
+
+5. 拦截并处理异常
+
+   ![image-20230202171025243](/Users/jamison/Library/Application Support/typora-user-images/image-20230202171025243.png)
+
+6. 异常处理器效果对比
+
+   ![image-20230202171051252](/Users/jamison/Library/Application Support/typora-user-images/image-20230202171051252.png)
+
+## 3. SSM整合标准开发
+
+自己看视频动手实践
+
+
+
+# 第六章 拦截器
+
+## 1. 拦截器简介
+
+### 1.1 拦截器概念
+
+![image-20230202171632580](/Users/jamison/Library/Application Support/typora-user-images/image-20230202171632580.png)
+
+![image-20230202171908437](/Users/jamison/Library/Application Support/typora-user-images/image-20230202171908437.png)
+
+### 1.2 拦截器与过滤器的区别
+
+![image-20230202171929410](/Users/jamison/Library/Application Support/typora-user-images/image-20230202171929410.png)
+
+## 2. 拦截器入门案例
+
+### 2.1 实现步骤
+
+1. 声明拦截器bean，并实现HandlerIntercepter接口（注意：扫描加载bean)
+
+   ![image-20230202172132342](/Users/jamison/Library/Application Support/typora-user-images/image-20230202172132342.png)
+
+2. 定义配置类，继承WebConfigurationSupport，实现addInterceptror方法（注意：扫描加载配置）
+
+   ![image-20230202172247507](/Users/jamison/Library/Application Support/typora-user-images/image-20230202172247507.png)
+
+3. 添加拦截器并设定拦截的访问路径，路径可以通过可变参数设置多个
+
+   ![image-20230202172344461](/Users/jamison/Library/Application Support/typora-user-images/image-20230202172344461.png)
+
+4. 使用标准接口WebConfigurer简化开发（注意：侵入性较强）
+
+   ![image-20230202172635940](/Users/jamison/Library/Application Support/typora-user-images/image-20230202172635940.png)
+
+### 2.2 执行流程
+
+![image-20230202172725415](/Users/jamison/Library/Application Support/typora-user-images/image-20230202172725415.png)
+
+### 2.3 小结
+
+![image-20230202172756245](/Users/jamison/Library/Application Support/typora-user-images/image-20230202172756245.png)
+
+## 3. 拦截器参数
+
+1. 前置处理方法的参数 preHandle
+
+   ![image-20230202172919540](/Users/jamison/Library/Application Support/typora-user-images/image-20230202172919540.png)
+
+2. 后置处理方法的参数 postHandle
+
+   ![image-20230202173041953](/Users/jamison/Library/Application Support/typora-user-images/image-20230202173041953.png)
+
+3. 完成后处理方法的参数 afterCompletion
+
+   ![image-20230202173127560](/Users/jamison/Library/Application Support/typora-user-images/image-20230202173127560.png)
+
+**小结：**
+
+![image-20230202173204190](/Users/jamison/Library/Application Support/typora-user-images/image-20230202173204190.png)
+
+## 4. 拦截器链配置
+
+![image-20230202173554495](/Users/jamison/Library/Application Support/typora-user-images/image-20230202173554495.png)
+
+pre其中一个报错会导致后面的controller，post和**部分**after不运行，部分after的意思是成功运行的pre的after方法会运行，比如pre3报错，那么pre1,pre2的after2，after1会运行。
