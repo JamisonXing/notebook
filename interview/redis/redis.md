@@ -468,3 +468,7 @@ AOF: 记录之后所有对Redis数据进行修改的操作
 - cluster扩缩容
   - ![image-20230405220732738](/Users/jamison/notebook/interview/redis/assets/image-20230405220732738.png)
   - 用户查询时正在扩缩容怎么办见上图
+
+![image-20230405221335615](assets/image-20230405221335615.png)
+
+![image-20230405221359296](./assets/image-20230405221359296.png)
