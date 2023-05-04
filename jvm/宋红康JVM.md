@@ -93,7 +93,7 @@ Java是目前应用最为广泛的软件开发平台之一。随着Java以及Jav
 
 ![image-20230418210156704](./assets/image-20230418210156704.png)
 
-## JVM-跨平台的语言
+## JVM-跨语言的平台
 
 ![image-20230418210826399](./assets/image-20230418210826399.png)
 
@@ -284,7 +284,7 @@ Java虚拟机的启动是通过引导类加载器（bootstrap class loader）创
    - 而解释器就是走到哪，解释到哪。
 4. 现在Hotspot内置了此虚拟机。
 
-## Exact JVM
+### Exact JVM
 
 1. 为了解决上一个虚拟机问题，jdk1.2时，Sun提供了此虚拟机。
 2. Exact Memory Management：准确式内存管理
@@ -295,7 +295,7 @@ Java虚拟机的启动是通过引导类加载器（bootstrap class loader）创
    - 编译器与解释器混合工作模式
 4. 只在Solaris平台短暂使用，其他平台上还是classic vm，英雄气短，终被Hotspot虚拟机替换
 
-## HotSpot VM(重点)
+### HotSpot VM(重点)
 
 1. HotSpot历史
    - 最初由一家名为“Longview Technologies”的小公司设计
@@ -310,7 +310,7 @@ Java虚拟机的启动是通过引导类加载器（bootstrap class loader）创
    - 通过计数器找到最具编译价值代码，触发即时编译或栈上替换
    - 通过编译器与解释器协同工作，在最优化的程序响应时间与最佳执行性能中取得平衡
 
-## JRockit(商用三大虚拟机之一)
+### JRockit(商用三大虚拟机之一)
 
 1. 专注于服务器端应用：它可以**不太关注程序启动速度，因此JRockit内部不包含解析器实现**，全部代码都靠即时编译器编译后执行。
 2. 大量的行业基准测试显示，**JRockit JVM是世界上最快的JVM**：使用JRockit产品，客户已经体验到了显著的性能提高（一些超过了70%）和硬件成本的减少（达50%）。
@@ -400,7 +400,7 @@ Java虚拟机的启动是通过引导类加载器（bootstrap class loader）创
 4. 工作原理是将这些语言的源代码或源代码编译后的中间格式，通过解释器转换为能被Graal VM接受的中间表示。Graal VM提供Truffle工具集快速构建面向一种新语言的解释器。在运行时还能进行即时编译优化，获得比原生编译器更优秀的执行效率。
 5. **如果说HotSpot有一天真的被取代，Graalvm希望最大**。但是Java的软件生态没有丝毫变化。
 
-## 总结
+### 总结
 
 具体JVM的内存结构，其实取决于其实现，不同厂商的JVM，或者同一厂商发布的不同版本，都有可能存在一定差异。主要以Oracle HotSpot VM为默认虚拟机。
 
@@ -432,15 +432,15 @@ Java虚拟机的启动是通过引导类加载器（bootstrap class loader）创
 类加载器子系统作用：
 
 1. 负责从从文件系统中或者网络中加载Class文件，class文件开头有特定的文件标识。
-2. ClassLoader只负责class文件的加载，至于它是否可以运行，则由Execution Engine决定。
-3. 加载的类信息存放于一块称为方法区的内存空间。除了类的信息外，方法区中还会存放运行时常量池信息，可能还包括字符串字面量和数字常量（这部分常量信息是Class文件中常量池部分的内存映射）
+2. ClassLoader**只负责class文件的加载，至于它是否可以运行**，则由Execution Engine决定。
+3. 加载的类信息存放于一块称为**方法区**的内存空间。除了类的信息外，**方法区中还会存放运行时常量池信息**，可能还包括字符串字面量和数字常量（这部分常量信息是Class文件中常量池部分的内存映射）
 
 ![img](./assets/68747470733a2f2f6e706d2e656c656d6563646e2e636f6d2f796f7574686c716c40312e302e382f4a564d2f636861707465725f3030322f303030342e706e67.png)
 
 ## 类加载器CLassLoader角色
 
 1. class file（在下图中就是Car.class文件）存在于本地硬盘上，可以理解为设计师画在纸上的模板，而最终这个模板在执行的时候是要加载到JVM当中来根据这个文件实例化出n个一模一样的实例。
-2. class file加载到JVM中，被称为DNA元数据模板（在下图中就是内存中的Car Class），放在方法区。
+2. class file加载到JVM中，被称为**DNA元数据模板（在下图中就是内存中的Car Class），放在方法区。**
 3. 在.class文件–>JVM–>最终成为元数据模板，此过程就要一个运输工具（类装载器Class Loader），扮演一个快递员的角色。
 
 ![img](./assets/68747470733a2f2f6e706d2e656c656d6563646e2e636f6d2f796f7574686c716c40312e302e382f4a564d2f636861707465725f3030322f303030352e706e67.png)
@@ -551,7 +551,7 @@ public class HelloApp {
 
 #### clinit()
 
-1. 初始化阶段就是执行类构造器方法`<clinit>()`的过程
+1. **初始化阶段就是执行类构造器方法`<clinit>()`的过程**
 2. 此方法不需定义，是javac编译器自动收集类中的所有**类变量**的赋值动作和静态代码块中的语句合并而来。也就是说，当我们代码中包含static变量的时候，就会有clinit方法
 3. `<clinit>()`方法中的指令按语句在源文件中出现的顺序执行
 4. `<clinit>()`不同于类的构造器。（关联：构造器是虚拟机视角下的`<init>()`）
@@ -746,7 +746,7 @@ public class ClassLoaderTest {
 2. 它用来加载Java的核心库（JAVA_HOME/jre/lib/rt.jar、resources.jar或sun.boot.class.path路径下的内容），用于提供JVM自身需要的类
 3. 并不继承自java.lang.ClassLoader，没有父加载器
 4. 加载扩展类和应用程序类加载器，并作为他们的父类加载器
-5. 出于安全考虑，Bootstrap启动类加载器只加载包名为java、javax、sun等开头的类
+5. 出于安全考虑，Bootstrap启动类加载器**只加载包名为java、javax、sun等开头的类**
 
 #### 扩展类加载器
 
@@ -1026,6 +1026,8 @@ Process finished with exit code 1
 
 #### 举例3
 
+线程上下文类加载器破坏了“双亲委派模型”，可以在执行线程中抛弃双亲委派加载链模式，使程序可以逆向使用类加载器。http://t.csdn.cn/oQGPi
+
 当我们加载jdbc.jar 用于实现数据库连接的时候
 
 1. 我们现在程序中需要用到SPI接口，而SPI接口属于rt.jar包中Java核心api
@@ -1144,7 +1146,7 @@ Process finished with exit code 1
 2. 这里，**并非是广义上所指的物理寄存器**，或许将其翻译为PC计数器（或指令计数器）会更加贴切（也称为程序钩子），并且也不容易引起一些不必要的误会。**JVM中的PC寄存器是对物理PC寄存器的一种抽象模拟**。
 3. 它是一块很小的内存空间，**几乎可以忽略不记（因为记录着下一条指令的地址）**。也是运行速度最快的存储区域。
 4. 在JVM规范中，每个线程都有它自己的程序计数器，是线程私有的，生命周期与线程的生命周期保持一致。
-5. 任何时间一个线程都只有一个方法在执行，也就是所谓的**当前方法**。程序计数器会存储当前线程正在执行的Java方法的JVM指令地址；或者，如果是在执行native方法，则是未指定值（undefned）。
+5. **任何时间一个线程都只有一个方法在执行**，也就是所谓的**当前方法**。程序计数器会存储当前线程正在执行的Java方法的JVM指令地址；或者，如果是在执行native方法，则是未指定值（undefned）。
 6. 它是**程序控制流**的指示器，分支、循环、跳转、异常处理、线程恢复等基础功能都需要依赖这个计数器来完成。
 7. 字节码解释器工作时就是通过改变这个计数器的值来选取下一条需要执行的字节码指令。
 8. 它是**唯一一个**在Java虚拟机规范中**没有规定任何OutofMemoryError情况的区域。**
@@ -1154,3 +1156,328 @@ Process finished with exit code 1
 用来存储指向下一条指令的地址。由执行引擎读取下一条指令，并执行。
 
 ![img](./assets/68747470733a2f2f6e706d2e656c656d6563646e2e636f6d2f796f7574686c716c40312e302e382f4a564d2f636861707465725f3030332f303030382e706e67.png)
+
+### 举例
+
+```java
+public class PCRegisterTest {
+
+    public static void main(String[] args) {
+        int i = 10;
+        int j = 20;
+        int k = i + j;
+
+        String s = "abc";
+        System.out.println(i);
+        System.out.println(k);
+
+    }
+}
+```
+
+**查看字节码**
+
+> 看字节码的方法：https://blog.csdn.net/21aspnet/article/details/88351875
+
+```java
+Classfile /F:/IDEAWorkSpaceSourceCode/JVMDemo/out/production/chapter04/com/atguigu/java/PCRegisterTest.class
+  Last modified 2020-11-2; size 675 bytes
+  MD5 checksum 53b3ef104479ec9e9b7ce5319e5881d3
+  Compiled from "PCRegisterTest.java"
+public class com.atguigu.java.PCRegisterTest
+  minor version: 0
+  major version: 52
+  flags: ACC_PUBLIC, ACC_SUPER
+Constant pool:
+   #1 = Methodref          #6.#26         // java/lang/Object."<init>":()V
+   #2 = String             #27            // abc
+   #3 = Fieldref           #28.#29        // java/lang/System.out:Ljava/io/PrintStream;
+   #4 = Methodref          #30.#31        // java/io/PrintStream.println:(I)V
+   #5 = Class              #32            // com/atguigu/java/PCRegisterTest
+   #6 = Class              #33            // java/lang/Object
+   #7 = Utf8               <init>
+   #8 = Utf8               ()V
+   #9 = Utf8               Code
+  #10 = Utf8               LineNumberTable
+  #11 = Utf8               LocalVariableTable
+  #12 = Utf8               this
+  #13 = Utf8               Lcom/atguigu/java/PCRegisterTest;
+  #14 = Utf8               main
+  #15 = Utf8               ([Ljava/lang/String;)V
+  #16 = Utf8               args
+  #17 = Utf8               [Ljava/lang/String;
+  #18 = Utf8               i
+  #19 = Utf8               I
+  #20 = Utf8               j
+  #21 = Utf8               k
+  #22 = Utf8               s
+  #23 = Utf8               Ljava/lang/String;
+  #24 = Utf8               SourceFile
+  #25 = Utf8               PCRegisterTest.java
+  #26 = NameAndType        #7:#8          // "<init>":()V
+  #27 = Utf8               abc
+  #28 = Class              #34            // java/lang/System
+  #29 = NameAndType        #35:#36        // out:Ljava/io/PrintStream;
+  #30 = Class              #37            // java/io/PrintStream
+  #31 = NameAndType        #38:#39        // println:(I)V
+  #32 = Utf8               com/atguigu/java/PCRegisterTest
+  #33 = Utf8               java/lang/Object
+  #34 = Utf8               java/lang/System
+  #35 = Utf8               out
+  #36 = Utf8               Ljava/io/PrintStream;
+  #37 = Utf8               java/io/PrintStream
+  #38 = Utf8               println
+  #39 = Utf8               (I)V
+{
+  public com.atguigu.java.PCRegisterTest();
+    descriptor: ()V
+    flags: ACC_PUBLIC
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+      LineNumberTable:
+        line 7: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lcom/atguigu/java/PCRegisterTest;
+
+  public static void main(java.lang.String[]);
+    descriptor: ([Ljava/lang/String;)V
+    flags: ACC_PUBLIC, ACC_STATIC
+    Code:
+      stack=2, locals=5, args_size=1
+         0: bipush        10
+         2: istore_1
+         3: bipush        20
+         5: istore_2
+         6: iload_1
+         7: iload_2
+         8: iadd
+         9: istore_3
+        10: ldc           #2                  // String abc
+        12: astore        4
+        14: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
+        17: iload_1
+        18: invokevirtual #4                  // Method java/io/PrintStream.println:(I)V
+        21: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
+        24: iload_3
+        25: invokevirtual #4                  // Method java/io/PrintStream.println:(I)V
+        28: return
+      LineNumberTable:
+        line 10: 0
+        line 11: 3
+        line 12: 6
+        line 14: 10
+        line 15: 14
+        line 16: 21
+        line 18: 28
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      29     0  args   [Ljava/lang/String;
+            3      26     1     i   I
+            6      23     2     j   I
+           10      19     3     k   I
+           14      15     4     s   Ljava/lang/String;
+}
+SourceFile: "PCRegisterTest.java"
+```
+
+左边的数字代表**指令地址（指令偏移）**，即 PC 寄存器中可能存储的值，然后执行引擎读取 PC 寄存器中的值，并执行该指令。
+
+![img](./assets/68747470733a2f2f6e706d2e656c656d6563646e2e636f6d2f796f7574686c716c40312e302e382f4a564d2f636861707465725f3030332f303030392e706e67.png)
+
+### 常见的面试问题
+
+**使用PC寄存器存储字节码指令地址有什么用呢？或者问为什么使用 PC 寄存器来记录当前线程的执行地址呢？**
+
+1. 因为CPU需要不停的切换各个线程，这时候切换回来以后，就得知道接着从哪开始继续执行
+2. JVM的字节码解释器就需要通过改变PC寄存器的值来明确下一条应该执行什么样的字节码指令
+
+![img](./assets/68747470733a2f2f6e706d2e656c656d6563646e2e636f6d2f796f7574686c716c40312e302e382f4a564d2f636861707465725f3030332f303031302e706e67.png)
+
+**PC寄存器为什么被设定为私有的？**
+
+1. 我们都知道所谓的多线程在一个特定的时间段内只会执行其中某一个线程的方法，CPU会不停地做任务切换，这样必然导致经常中断或恢复，如何保证分毫无差呢？**为了能够准确地记录各个线程正在执行的当前字节码指令地址，最好的办法自然是为每一个线程都分配一个PC寄存器**，这样一来各个线程之间便可以进行独立计算，从而不会出现相互干扰的情况。
+2. 由于CPU时间片轮限制，众多线程在并发执行过程中，任何一个确定的时刻，一个处理器或者多核处理器中的一个内核，只会执行某个线程中的一条指令。
+3. 这样必然导致经常中断或恢复，如何保证分毫无差呢？每个线程在创建后，都会产生自己的程序计数器和栈帧，程序计数器在各个线程之间互不影响。
+
+> 注意并行和并发的区别，笔者的并发系列有讲
+
+### CPU时间片
+
+1. CPU时间片即CPU分配给各个程序的时间，每个线程被分配一个时间段，称作它的时间片。
+
+2. 在宏观上：我们可以同时打开多个应用程序，每个程序并行不悖，同时运行。
+
+3. 但在微观上：由于只有一个CPU，一次只能处理程序要求的一部分，如何处理公平，一种方法就是引入时间片，**每个程序轮流执行**。
+
+![img](./assets/68747470733a2f2f6e706d2e656c656d6563646e2e636f6d2f796f7574686c716c40312e302e382f4a564d2f636861707465725f3030332f303031312e706e67.png)
+
+# 第四章 虚拟机栈
+
+## 简介
+
+### 虚拟机栈出现的背景
+
+1. 由于跨平台性的设计，Java的指令都是根据栈来设计的。不同平台CPU架构不同，所以不能设计为基于寄存器的【如果设计成基于寄存器的，耦合度高，性能会有所提升，因为可以对具体的CPU架构进行优化，但是跨平台性大大降低】。
+2. 优点是跨平台，指令集小，编译器容易实现，缺点是性能下降，实现同样的功能需要更多的指令。
+
+### 内存中的栈
+
+1. 首先栈是运行时的单位，而堆是存储的单位。
+2. 即：栈解决程序的运行问题，即程序如何执行，或者说如何处理数据。堆解决的是数据存储的问题，即数据怎么放，放哪里
+
+![img](./assets/68747470733a2f2f6e706d2e656c656d6563646e2e636f6d2f796f7574686c716c40312e302e382f4a564d2f636861707465725f3030342f303030312e706e67.png)
+
+### 虚拟机栈的基本内容
+
+- Java虚拟机栈是什么？
+
+  - Java虚拟机栈（Java Virtual Machine Stack），早期也叫Java栈。每个线程在创建时都会创建一个虚拟机栈，其内部保存一个个的栈帧（Stack Frame），**对应着一次次的Java方法调用**，栈是**线程私有的**。
+
+    ```java
+    public class StackTest {
+    
+        public static void main(String[] args) {
+            StackTest test = new StackTest();
+            test.methodA();
+        }
+    
+        public void methodA() {
+            int i = 10;
+            int j = 20;
+    
+            methodB();
+        }
+    
+        public void methodB(){
+            int k = 30;
+            int m = 40;
+        }
+    }
+    ```
+
+    ![img](./assets/68747470733a2f2f6e706d2e656c656d6563646e2e636f6d2f796f7574686c716c40312e302e382f4a564d2f636861707465725f3030342f303030322e706e67.png)
+
+- 虚拟机栈的声明周期
+
+  - 生命周期和线程一致，也就是线程结束了，该虚拟机栈也销毁了
+
+- 虚拟机栈的作用
+
+  - 主管Java程序的运行，它保存方法的局部变量（8 种基本数据类型、对象的引用地址）、部分结果，并参与方法的调用和返回。
+  - 局部变量，它是相比于成员变量来说的（或属性）
+  - 基本数据类型变量 VS 引用类型变量（类、数组、接口）
+
+### 虚拟机栈的特点
+
+- 栈是一种快速有效的分配存储方式，访问速度仅次于程序计数器。
+- JVM直接对Java栈的操作只有两个：
+  - 每个方法执行，伴随着**进栈**（入栈、压栈）
+  - 执行结束后的**出栈**工作
+- 对于栈来说**不存在垃圾回收问题**
+  - **栈不需要GC，但是可能存在OOM**
+
+![img](./assets/68747470733a2f2f6e706d2e656c656d6563646e2e636f6d2f796f7574686c716c40312e302e382f4a564d2f636861707465725f3030342f303030332e706e67.png)
+
+### 虚拟机栈的异常
+
+面试题：栈中可能出现的异常？
+
+- Java 虚拟机规范允许Java栈的大小是动态的或者是固定不变的。
+  - 如果采用固定大小的Java虚拟机栈，那每一个线程的Java虚拟机栈容量可以在线程创建的时候独立选定。如果线程请求分配的栈容量超过Java虚拟机栈允许的最大容量，Java虚拟机将会抛出一个**StackoverflowError** 异常。
+  - 如果Java虚拟机栈可以动态扩展，并且在尝试扩展的时候无法申请到足够的内存，或者在创建新的线程时没有足够的内存去创建对应的虚拟机栈，那Java虚拟机将会抛出一个 **OutofMemoryError** 异常。
+
+### 设置栈内存的大小
+
+#### 概念
+
+> 多去官方文档看看：https://docs.oracle.com/en/java/javase/11/tools/java.html#GUID-3B1CE181-CD30-4178-9602-230B800D4FAE
+>
+> 地址经常变
+
+我们可以使用参数 **-Xss** 选项来设置线程的最大栈空间，栈的大小直接决定了函数调用的最大可达深度。
+
+> Sets the thread stack size (in bytes). Append the letter `k` or `K` to indicate KB, `m` or `M` to indicate MB, and `g` or `G` to indicate GB. The default value depends on the platform:
+>
+> - Linux/x64 (64-bit): 1024 KB
+> - macOS (64-bit): 1024 KB
+> - Oracle Solaris/x64 (64-bit): 1024 KB
+> - Windows: The default value depends on virtual memory
+
+The following examples set the thread stack size to 1024 KB in different units:
+
+```java
+-Xss1m
+-Xss1024k
+-Xss1048576
+```
+
+#### 举例
+
+```java
+public class StackErrorTest {
+    private static int count = 1;
+    public static void main(String[] args) {
+        System.out.println(count);
+        count++;
+        main(args);
+    }
+}
+```
+
+**没设置参数前**
+
+部分输出结果：
+
+```java
+11404
+11405
+11406
+Exception in thread "main" java.lang.StackOverflowError
+	at sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:691)
+```
+
+说明栈在11406这个深度溢出了
+
+**设置栈参数之后**
+
+![img](./assets/68747470733a2f2f6e706d2e656c656d6563646e2e636f6d2f796f7574686c716c40312e302e382f4a564d2f636861707465725f3030342f303030342e706e67.png)
+
+部分输出结果
+
+```java
+2474
+2475
+2476
+Exception in thread "main" java.lang.StackOverflowError
+	at sun.nio.cs.UTF_8.updatePositions(UTF_8.java:77)
+```
+
+说明参数起作用了
+
+## 栈的存储单位
+
+### 栈中存储什么
+
+1. **每个线程都有自己的栈**，栈中的数据都是以**栈帧**（Stack Frame）的格式存在
+2. 在这个线程上正在执行的每个方法都各自对应一个栈帧（Stack Frame）。
+3. 栈帧是一个内存区块，是一个数据集，维系着方法执行过程中的各种数据信息。
+
+### 栈的运行原理
+
+1. JVM直接对Java栈的操作只有两个，就是对栈帧的**压栈和出栈**，遵循先进后出（后进先出）原则
+2. 在一条活动线程中，一个时间点上，只会有一个活动的栈帧。即只有当前正在执行的方法的栈帧（栈顶栈帧）是有效的。这个栈帧被称为**当前栈帧（Current Frame）**，与当前栈帧相对应的方法就是**当前方法（Current Method）**，定义这个方法的类就是**当前类（Current Class）**
+3. 执行引擎运行的所有字节码指令**只针对当前栈帧进行操作**。
+4. 如果在该方法中调用了其他方法，对应的新的栈帧会被创建出来，放在栈的顶端，成为新的当前帧。
+
+![img](./assets/68747470733a2f2f6e706d2e656c656d6563646e2e636f6d2f796f7574686c716c40312e302e382f4a564d2f636861707465725f3030342f303030352e706e67.png)
+
+- **不同线程中所包含的栈帧是不允许存在相互引用的**，即不可能在一个栈帧之中引用另外一个线程的栈帧。
+- 如果当前方法调用了其他方法，方法返回之际，当前栈帧会传回此方法的执行结果给前一个栈帧，接着，虚拟机会丢弃当前栈帧，使得前一个栈帧重新成为当前栈帧。
+- Java方法有**两种返回函数的方式**。
+  - 一种是正常的函数返回，使用return指令。
+  - 另一种是方法执行中出现未捕获处理的异常，以抛出异常的方式结束。
+  - 但不管使用哪种方式，**都会导致栈帧被弹出**。
