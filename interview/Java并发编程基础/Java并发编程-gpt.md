@@ -1,3 +1,19 @@
+# AQS
+
+有人说Lock、 CountDownLatch、Semaphore 等都用到了 AQS，那么在哪部分使用到了呢
+
+AQS（AbstractQueuedSynchronizer）是 Java 并发包中的一个抽象类，它提供了一种基于队列的同步器的实现框架。Lock、CountDownLatch、Semaphore 等同步工具类都是基于 AQS 实现的。
+
+AQS 的主要作用是管理同步状态和线程的排队，它定义了两种同步状态：独占模式（Exclusive Mode）和共享模式（Shared Mode）。具体来说，AQS 提供了一些基本的操作方法，如获取/释放同步状态、线程的排队和唤醒等。
+
+这些同步工具类在使用 AQS 时，会通过继承 AQS 并实现特定的方法来实现自己的同步逻辑。下面是它们在 AQS 中的主要使用方式：
+
+1. Lock：ReentrantLock 是基于 AQS 实现的互斥锁。在 AQS 中，ReentrantLock 通过继承 AQS 并实现 tryAcquire 和 tryRelease 方法来控制锁的获取和释放。
+2. CountDownLatch：CountDownLatch 是一个倒计时门栓，它允许一个或多个线程等待其他线程完成操作后再继续执行。在 AQS 中，CountDownLatch 使用共享模式，即多个线程可以同时等待。通过继承 AQS 并实现 tryAcquireShared 和 tryReleaseShared 方法，CountDownLatch 实现了倒计时等待的功能。
+3. Semaphore：Semaphore 是一个信号量，用于控制同时访问某个资源的线程数。在 AQS 中，Semaphore 也使用了共享模式。通过继承 AQS 并实现 tryAcquireShared 和 tryReleaseShared 方法，Semaphore 实现了对资源的控制。
+
+这些同步工具类都通过 AQS 提供的队列和同步状态管理机制来实现线程的排队和同步控制，具体的同步逻辑会在继承 AQS 后的实现类中进行定义。这样可以减少了对线程的直接操作，提供了更高层次的抽象和灵活性。
+
 # ReentrantLock
 
 ## 核心代码
@@ -331,3 +347,229 @@ public class RaceExample {
 在上面的例子中，有5名运动员参加比赛。`startSignal` 是用于发出比赛开始信号的 CountDownLatch，初始计数为1。`readySignal` 是每个运动员准备好的 CountDownLatch，初始计数为5。`finishSignal` 是每个运动员跑完的 CountDownLatch，初始计数为5。
 
 当主线程准备好开始比赛时，它会调用 `startSignal.countDown()` 发出开始信号，然后等待所有运动员跑完比赛。每个运动员会在准备好后调用 `readySignal.countDown()` 通知主线程，然后等待开始信号调用 `startSignal.await()`。当开始信号发出后，所有运动员同时开始跑步，每个运动员跑完后
+
+# semaphore
+
+## semaphore是什么
+
+Semaphore 是 Java 并发包中提供的一种同步工具，用于控制对资源的访问数量。它基于计数器的原理，用于限制同时访问某个资源的线程数量。
+
+Semaphore 维护了一个计数器，该计数器表示当前可用的许可数。线程在访问资源之前必须先获取许可，如果许可数大于 0，则线程可以获取许可并减少许可数；如果许可数为 0，则线程必须等待，直到有其他线程释放许可为止。
+
+Semaphore 提供了两个主要的操作：
+
+- `acquire()`: 获取许可。如果许可数大于 0，则线程获取许可并将许可数减一；如果许可数为 0，则线程被阻塞，直到有其他线程释放许可。
+- `release()`: 释放许可。线程调用该方法将许可数加一，并唤醒一个等待的线程（如果有）。
+
+Semaphore 的典型应用场景包括：
+
+- 控制资源的并发访问数量：例如，数据库连接池中可以使用 Semaphore 来限制同时获取连接的线程数量。
+- 实现有限资源池：例如，线程池中的任务可以使用 Semaphore 来限制可并发执行的任务数量。
+- 解决生产者-消费者问题：通过 Semaphore 可以控制生产者和消费者的并发执行，确保生产者不会过度生产或消费者不会过度消费。
+
+Semaphore 是一个非常有用的并发工具，可以帮助控制并发访问资源的数量，避免资源的过度竞争和冲突。
+
+## semaphore的核心源码并解释
+
+Semaphore 是 Java 并发包中的一个类，其核心源码实现如下：
+
+```java
+public class Semaphore {
+    private final Sync sync;
+
+    public Semaphore(int permits) {
+        sync = new NonfairSync(permits);
+    }
+
+    public Semaphore(int permits, boolean fair) {
+        sync = fair ? new FairSync(permits) : new NonfairSync(permits);
+    }
+
+    public void acquire() throws InterruptedException {
+        sync.acquireShared(1);
+    }
+
+    public void release() {
+        sync.releaseShared(1);
+    }
+
+    private static abstract class Sync extends AbstractQueuedSynchronizer {
+        Sync(int permits) {
+            setState(permits);
+        }
+
+        final int getPermits() {
+            return getState();
+        }
+
+        final int nonfairTryAcquireShared(int acquires) {
+            for (;;) {
+                int available = getState();
+                int remaining = available - acquires;
+                if (remaining < 0 || compareAndSetState(available, remaining)) {
+                    return remaining;
+                }
+            }
+        }
+
+        protected final boolean tryReleaseShared(int releases) {
+            for (;;) {
+                int current = getState();
+                int next = current + releases;
+                if (next < current) { // overflow
+                    throw new Error("Maximum permit count exceeded");
+                }
+                if (compareAndSetState(current, next)) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    private static final class NonfairSync extends Sync {
+        NonfairSync(int permits) {
+            super(permits);
+        }
+
+        protected int tryAcquireShared(int acquires) {
+            return nonfairTryAcquireShared(acquires);
+        }
+    }
+
+    private static final class FairSync extends Sync {
+        FairSync(int permits) {
+            super(permits);
+        }
+
+        protected int tryAcquireShared(int acquires) {
+            for (;;) {
+                if (hasQueuedPredecessors()) {
+                    return -1;
+                }
+                int available = getState();
+                int remaining = available - acquires;
+                if (remaining < 0 || compareAndSetState(available, remaining)) {
+                    return remaining;
+                }
+            }
+        }
+    }
+}
+```
+
+Semaphore 类的核心实现是通过继承 AbstractQueuedSynchronizer（AQS）类来实现的。AQS 提供了同步器的基本功能和框架，Semaphore 则在此基础上实现了信号量的特定功能。
+
+Semaphore 类中有两个静态内部类 `NonfairSync` 和 `FairSync`，分别用于非公平模式和公平模式的信号量。它们都继承了 `Sync` 类，`Sync` 类是 Semaphore 实际同步的核心类，继承了 AQS。
+
+在 `Sync` 类中，通过维护一个状态变量 `state` 来表示可用的许可数量。`Sync` 的构造函数初始化了初始许可数量。`tryAcquireShared` 方法用于尝试获取许可，`tryReleaseShared` 方法用于释放许可。
+
+在 `NonfairSync` 中，`tryAcquireShared` 方法使用了非公平的方式尝试获取许可。它首先尝试减少许可数量，如果剩余的许可数量小于 0 或者成功减少许可数量，则返回剩余的许可数量。
+
+在 `FairSync` 中，`tryAcquireShared` 方法使用了公平的方式尝试获取许可。它首先检查是否有排在自己前面的等待线程，如果有，则返回 -1 表示获取许可失败。如果没有排在自己前面的等待线程，则尝试减少许可数量，如果剩余的许可数量小于 0 或者成功减少许可数量，则返回剩余的许可数量。
+
+Semaphore 类提供了 `acquire()` 和 `release()` 方法，分别用于获取和释放许可。`acquire()` 方法会调用 `sync.acquireShared(1)`，而 `release()` 方法会调用 `sync.releaseShared(1)`，实际上是通过调用 AQS 的相应方法来实现的。
+
+Semaphore 的核心思想是使用 AQS 提供的同步功能和状态管理来实现对许可的控制和管理。通过控制许可数量，Semaphore 能够限制同时访问资源的线程数量。
+
+## 应用场景有哪些
+
+Semaphore 在实际应用中有很多场景，下面列举几个常见的应用场景：
+
+1. 限流：Semaphore 可以用来控制同时访问某个资源的线程数量，从而实现对系统的流量进行限制。比如，一个接口每秒只能处理一定数量的请求，可以使用 Semaphore 来限制并发访问的请求数量，防止系统被过多的请求压垮。
+2. 资源池管理：Semaphore 可以用来管理有限资源的访问，比如连接池。在数据库连接池、线程池等场景中，可以使用 Semaphore 来控制可用资源的数量，确保资源的合理分配和管理。
+3. 并发任务控制：Semaphore 可以用来控制并发执行的任务数量。在某些场景下，需要控制同时执行的任务数量，比如并发下载文件、并发处理数据等。Semaphore 可以用来限制并发执行的任务数量，避免系统资源被过度占用。
+4. 解决生产者-消费者问题：Semaphore 可以用来解决生产者-消费者模型中的同步问题。比如，生产者线程和消费者线程之间需要进行同步操作，确保生产者不会过度生产或消费者不会过度消费。Semaphore 可以控制生产者和消费者的并发执行数量，实现同步和平衡。
+5. 多线程协调：Semaphore 可以用来实现多个线程之间的协调和通信。比如，某个线程需要等待其他线程执行完毕后才能继续执行，可以使用 Semaphore 来进行线程的等待和唤醒操作，实现线程之间的同步和协调。
+
+这些只是 Semaphore 的一些常见应用场景，实际上，Semaphore 在并发编程中的应用非常广泛，可以根据具体的业务需求进行灵活的应用和扩展。
+
+## 业务场景有哪些
+
+Semaphore 在实际业务场景中有很多应用，以下是一些常见的业务场景：
+
+1. 并发限制：在某些情况下，需要限制同时执行某个操作的线程数量。例如，一个文件上传服务器需要限制同时上传的文件数量，可以使用 Semaphore 控制并发上传的线程数量。
+2. 资源池管理：在连接池、线程池等场景中，Semaphore 可以用于管理可用资源的数量。例如，数据库连接池可以使用 Semaphore 来限制可用连接的数量，确保连接的合理分配和管理。
+3. 任务调度和执行：在任务调度和执行的场景中，Semaphore 可以控制并发执行的任务数量。例如，一个定时任务调度器需要限制同时执行的任务数量，可以使用 Semaphore 进行任务调度和控制。
+4. 缓存管理：在缓存管理中，Semaphore 可以用于控制对缓存资源的并发访问。例如，一个缓存系统中，某个缓存块只能同时被一个线程访问，可以使用 Semaphore 控制对该缓存块的访问数量。
+5. 控制流量：在网络通信或接口访问中，需要限制请求的并发量以保护系统免受过多的负载。Semaphore 可以用于控制请求的并发数量，限制流量并保持系统的稳定性。
+6. 生产者-消费者模型：在生产者-消费者模型中，Semaphore 可以用于实现生产者和消费者之间的协调。例如，生产者需要等待消费者处理完某些数据后才能继续生产，可以使用 Semaphore 进行线程间的等待和通信。
+
+这些是 Semaphore 在业务场景中常见的应用之一，具体的应用场景取决于业务需求和设计。Semaphore 的灵活性和可扩展性使其适用于各种并发编程场景，能够提供并发控制和资源管理的解决方案。
+
+Semaphore的业务场景有哪些
+
+
+
+ChatGPT
+
+
+
+Semaphore 在实际业务场景中有很多应用，以下是一些常见的业务场景：
+
+1. 并发限制：在某些情况下，需要限制同时执行某个操作的线程数量。例如，一个文件上传服务器需要限制同时上传的文件数量，可以使用 Semaphore 控制并发上传的线程数量。
+2. 资源池管理：在连接池、线程池等场景中，Semaphore 可以用于管理可用资源的数量。例如，数据库连接池可以使用 Semaphore 来限制可用连接的数量，确保连接的合理分配和管理。
+3. 任务调度和执行：在任务调度和执行的场景中，Semaphore 可以控制并发执行的任务数量。例如，一个定时任务调度器需要限制同时执行的任务数量，可以使用 Semaphore 进行任务调度和控制。
+4. 缓存管理：在缓存管理中，Semaphore 可以用于控制对缓存资源的并发访问。例如，一个缓存系统中，某个缓存块只能同时被一个线程访问，可以使用 Semaphore 控制对该缓存块的访问数量。
+5. 控制流量：在网络通信或接口访问中，需要限制请求的并发量以保护系统免受过多的负载。Semaphore 可以用于控制请求的并发数量，限制流量并保持系统的稳定性。
+6. 生产者-消费者模型：在生产者-消费者模型中，Semaphore 可以用于实现生产者和消费者之间的协调。例如，生产者需要等待消费者处理完某些数据后才能继续生产，可以使用 Semaphore 进行线程间的等待和通信。
+
+这些是 Semaphore 在业务场景中常见的应用之一，具体的应用场景取决于业务需求和设计。Semaphore 的灵活性和可扩展性使其适用于各种并发编程场景，能够提供并发控制和资源管理的解决方案。
+
+## 给我一个Semaphore例子，我来练习
+
+下面是一个使用 Semaphore 的示例代码，演示了如何控制并发访问资源的数量
+
+```java
+javaCopy code
+import java.util.concurrent.Semaphore;
+
+public class SemaphoreExample {
+    private static final int THREAD_COUNT = 10;
+    private static final int MAX_CONCURRENT_ACCESS = 5;
+
+    private static Semaphore semaphore = new Semaphore(MAX_CONCURRENT_ACCESS);
+
+    public static void main(String[] args) {
+        for (int i = 1; i <= THREAD_COUNT; i++) {
+            Thread thread = new Thread(new Worker(i));
+            thread.start();
+        }
+    }
+
+    static class Worker implements Runnable {
+        private int workerId;
+
+        public Worker(int workerId) {
+            this.workerId = workerId;
+        }
+
+        @Override
+        public void run() {
+            try {
+                System.out.println("Worker " + workerId + " is trying to access the resource");
+                semaphore.acquire();
+                System.out.println("Worker " + workerId + " has acquired the resource");
+
+                // 模拟对资源的访问
+                Thread.sleep(2000);
+
+                System.out.println("Worker " + workerId + " is releasing the resource");
+                semaphore.release();
+                System.out.println("Worker " + workerId + " has released the resource");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+```
+
+在上面的代码中，定义了一个最大并发访问数量为 5 的 Semaphore 对象 `semaphore`。
+
+`Worker` 类实现了 `Runnable` 接口，在 `run()` 方法中，线程首先尝试通过 `semaphore.acquire()` 获取许可。如果许可数大于 0，则线程可以获取许可并减少许可数；如果许可数为 0，则线程将被阻塞，直到有其他线程释放许可。
+
+线程成功获取许可后，模拟对资源的访问（在这里用 `Thread.sleep(2000)` 模拟）。然后通过 `semaphore.release()` 方法释放许可，许可数加一，并唤醒等待的线程（如果有）。
+
+运行该示例代码时，你会看到最多同时有 5 个线程在访问资源，其他线程将被阻塞直到有许可可用。
+
+你可以尝试修改 `MAX_CONCURRENT_ACCESS` 的值，观察并发访问的数量是否受到限制。
