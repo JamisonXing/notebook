@@ -122,6 +122,60 @@ ReentrantLock 在生产环境中有广泛的应用场景，特别是在复杂的
 
 这些场景只是举例，实际应用中的使用场景可能更加多样化和复杂化。在选择使用 ReentrantLock 时，需要结合具体业务需求和并发情况来进行评估和设计。
 
+## 给我一个ReentrantLock例子，我来练习
+
+当多个线程同时访问一个共享资源时，使用 ReentrantLock 可以实现线程安全的访问控制。下面是一个简单的示例，展示了如何使用 ReentrantLock 来保证线程安全访问一个计数器：
+
+```java
+javaCopy code
+import java.util.concurrent.locks.ReentrantLock;
+
+public class CounterExample {
+    private int count = 0;
+    private ReentrantLock lock = new ReentrantLock();
+
+    public void increment() {
+        lock.lock();
+        try {
+            count++;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        CounterExample counterExample = new CounterExample();
+
+        Runnable task = () -> {
+            for (int i = 0; i < 1000; i++) {
+                counterExample.increment();
+            }
+        };
+
+        Thread thread1 = new Thread(task);
+        Thread thread2 = new Thread(task);
+
+        thread1.start();
+        thread2.start();
+
+        thread1.join();
+        thread2.join();
+
+        System.out.println("Final count: " + counterExample.getCount());
+    }
+}
+```
+
+在上面的例子中，`CounterExample` 类包含一个计数器和一个 ReentrantLock 对象。`increment()` 方法使用 `lock()` 获取锁，然后执行 `count++` 操作，最后使用 `unlock()` 释放锁。
+
+在 `main()` 方法中，创建了两个线程分别执行 `increment()` 方法来增加计数器的值。通过使用 ReentrantLock，确保了每个线程在访问计数器时的互斥性，从而实现了线程安全的操作。
+
+运行该示例代码后，你可以观察到最终的计数器值应该为 2000，因为每个线程都执行了1000次的增加操作。
+
 # CountDownLatch
 
 ## CountDownLatch是什么
