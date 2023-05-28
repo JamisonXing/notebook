@@ -781,3 +781,164 @@ public class VolatileExample {
 ## 小结
 
 volatile关键字具有可见性和有序性的特点，只能控制单一变量，对变量写操作的时候会有write barrier写屏障，修改后立即刷新到内存中，在此期间不允许指令重排，保证了可见性和有序性，读操作时候会有read barrier读屏障将主内存中的值加载到工作线程中，确保看到是最新值。应用于标志位的状态同步和创建单例模式时的双重检查锁机制。
+
+# Wait & Notify
+
+## java并发编程中的wait和notify方法是什么
+
+在Java并发编程中，`wait()`和`notify()`是用于线程之间进行通信和同步的两个方法。
+
+1. `wait()`: `wait()`方法使当前线程进入等待状态，直到其他线程调用相同对象的`notify()`或`notifyAll()`方法来唤醒它。当一个线程调用了`wait()`方法后，它会释放它所持有的对象锁，并且进入等待队列，直到被唤醒。
+2. `notify()`: `notify()`方法用于唤醒在相同对象上调用`wait()`方法而进入等待状态的单个线程。如果有多个线程在等待，则只能唤醒其中一个线程，并且唤醒的线程是不确定的。调用`notify()`方法后，并不会立即释放对象锁，而是等到当前线程执行完毕后才会释放锁。
+
+这两个方法通常与`synchronized`关键字一起使用，用于实现线程之间的协调和同步。典型的使用方式是在一个共享对象的临界区内部使用`synchronized`关键字来获取对象锁，然后在需要等待某个条件满足的地方调用`wait()`方法进入等待状态，等待其他线程通过调用`notify()`或`notifyAll()`来唤醒它。
+
+注意事项：
+
+- `wait()`和`notify()`方法只能在同步块或同步方法中使用，因为它们依赖于对象锁。
+- `wait()`和`notify()`方法必须在持有对象锁的线程上调用。
+- 在调用`wait()`和`notify()`方法时，线程必须拥有对象的监视器（也就是对象锁）。否则，将会抛出`IllegalMonitorStateException`异常。
+
+需要注意的是，Java并发包中还提供了更高级别的线程通信和同步机制，如`Condition`、`CountDownLatch`、`CyclicBarrier`、`Semaphore`等，这些机制提供了更灵活和强大的线程协调和同步能力，可以根据具体的需求选择使用。
+
+## wait和notify的实现源码，并解释
+
+以下是`wait()`和`notify()`方法的简化实现源码，以帮助解释其工作原理：
+
+```
+javaCopy code
+class Object {
+    private boolean isNotified = false;
+
+    public synchronized void wait() throws InterruptedException {
+        while (!isNotified) {
+            wait(); // 释放对象锁，并等待被唤醒
+        }
+        isNotified = false;
+    }
+
+    public synchronized void notify() {
+        isNotified = true;
+        notify(); // 唤醒一个等待中的线程
+    }
+}
+```
+
+上述代码是一个简化的实现，以便说明`wait()`和`notify()`的基本概念。
+
+- `wait()`方法会首先检查一个标志位（`isNotified`），如果标志位为假，则线程进入等待状态，调用`wait()`方法会释放对象锁，并使线程进入等待队列。等待状态的线程将等待被其他线程通过`notify()`方法唤醒。
+- `notify()`方法将标志位设置为真，并调用`notify()`方法来唤醒一个等待中的线程。被唤醒的线程将重新尝试获取对象锁，并继续执行。
+
+需要注意的是，实际的`wait()`和`notify()`方法的实现更为复杂，并且依赖于底层的操作系统和虚拟机的实现。这里提供的简化版本只是为了帮助理解它们的基本工作原理。
+
+在实际的并发编程中，为了正确地使用`wait()`和`notify()`方法，需要遵循以下几点：
+
+1. 必须在同步代码块或同步方法中调用`wait()`和`notify()`方法，以确保对象锁的正确使用。
+2. 在调用`wait()`方法前，必须获取对象的锁，即当前线程必须拥有对象锁。
+3. 在调用`notify()`方法时，也必须获取对象的锁，即当前线程必须拥有对象锁，并且只有在释放锁之后，等待的线程才能获得锁并继续执行。
+
+这些注意事项的遵守可以确保正确的线程协作和同步，避免常见的并发问题，如死锁和线程饥饿。在实践中，更好的方式是使用Java并发包提供的更高级别的线程通信和同步机制，如`Lock`、`Condition`、`Semaphore`等，它们提供了更强大和灵活的功能，可以更好地满足复杂的并发编程需求。
+
+## wait和notify的业务场景
+
+`wait()`和`notify()`方法通常用于实现线程之间的协调和同步，特别适用于以下业务场景：
+
+1. 生产者-消费者模型：在多线程环境下，生产者线程负责生产数据，而消费者线程负责消费数据。当生产者线程发现数据缓冲区已满时，它可以调用`wait()`方法进入等待状态，直到消费者线程消费了一些数据后通过`notify()`方法唤醒生产者线程。同样地，当消费者线程发现数据缓冲区为空时，它可以调用`wait()`方法进入等待状态，直到生产者线程生产了一些数据后通过`notify()`方法唤醒消费者线程。这样可以确保生产者和消费者线程之间的有效协调。
+2. 线程间的交替执行：有时候需要两个或多个线程按照一定的顺序交替执行。例如，线程A执行完一段逻辑后需要等待线程B执行完后才能继续执行，然后线程B再等待线程C执行完后继续执行，以此类推。在这种情况下，线程A可以在执行完逻辑后调用`wait()`方法进入等待状态，然后在线程B执行完后调用`notify()`方法唤醒线程A，以此类推实现线程间的交替执行。
+3. 条件满足时执行：有时候线程需要等待某个条件满足时才能继续执行。例如，一个线程需要等待某个共享资源变为可用才能继续执行。这时候线程可以调用`wait()`方法进入等待状态，直到其他线程修改了共享资源并通过`notify()`方法唤醒等待的线程，使其条件得到满足后才能继续执行。
+
+需要注意的是，使用`wait()`和`notify()`方法进行线程间通信时，需要确保在同步块或同步方法中调用这些方法，并正确地获取和释放对象锁，以避免出现并发问题。此外，Java并发包中还提供了更高级别的线程通信和同步机制，如`Lock`、`Condition`、`Semaphore`等，它们提供了更灵活和强大的功能，可以更好地满足复杂的业务场景需求。
+
+## 给我个wait和notify的业务例子，我来练习
+
+当一个团队计划进行多个任务时，可以使用`wait()`和`notify()`来协调团队成员的执行。以下是一个简单的示例：
+
+```java
+javaCopy code
+import java.util.ArrayList;
+import java.util.List;
+
+class Task {
+    private int taskId;
+    private boolean isCompleted;
+
+    public Task(int taskId) {
+        this.taskId = taskId;
+        this.isCompleted = false;
+    }
+
+    public synchronized void completeTask() {
+        this.isCompleted = true;
+        notify(); // 通知等待的团队成员任务已完成
+    }
+
+    public synchronized void waitForCompletion() throws InterruptedException {
+        while (!isCompleted) {
+            wait(); // 等待任务完成的通知
+        }
+    }
+}
+
+class TeamMember implements Runnable {
+    private int memberId;
+    private List<Task> tasks;
+
+    public TeamMember(int memberId, List<Task> tasks) {
+        this.memberId = memberId;
+        this.tasks = tasks;
+    }
+
+    @Override
+    public void run() {
+        for (Task task : tasks) {
+            try {
+                System.out.println("Team member " + memberId + " is working on Task " + task.taskId);
+                Thread.sleep(2000); // 模拟任务执行时间
+                task.completeTask(); // 标记任务完成
+                System.out.println("Team member " + memberId + " completed Task " + task.taskId);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+public class TeamWorkExample {
+    public static void main(String[] args) {
+        List<Task> tasks = new ArrayList<>();
+        tasks.add(new Task(1));
+        tasks.add(new Task(2));
+        tasks.add(new Task(3));
+
+        Thread member1 = new Thread(new TeamMember(1, tasks));
+        Thread member2 = new Thread(new TeamMember(2, tasks));
+        Thread member3 = new Thread(new TeamMember(3, tasks));
+
+        member1.start();
+        member2.start();
+        member3.start();
+
+        for (Task task : tasks) {
+            try {
+                task.waitForCompletion(); // 等待任务完成
+                System.out.println("All team members completed Task " + task.taskId);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+```
+
+在上述示例中，团队成员（`TeamMember`）并行执行任务（`Task`）。每个团队成员会依次执行任务列表中的任务，并在任务完成后通过`completeTask()`方法标记任务完成。主线程在每个任务上调用`waitForCompletion()`方法等待团队成员完成任务，即调用了`wait()`方法进入等待状态。当团队成员完成任务时，会调用相应任务的`completeTask()`方法，该方法内部会调用`notify()`方法来通知等待的团队成员任务已完成，从而主线程可以继续执行。
+
+请注意，在该示例中，`Task`类的方法都使用了`synchronized`关键字，以确保线程安全和正确的使用`wait()`和`notify()`方法。
+
+运行示例后，你将看到团队成员按照任务顺序依次执行，主线程等待每个任务的完成，然后输出相应的完成消息。
+
+请尝试修改和扩展此示例，以加深对`wait()`和`notify()`的理解，并进行练习。
+
+## 小结
+
+wait方法释放对象锁，并使当前线程进入等待状态，notify唤醒在相同对象上调用wait方法而进入等待的线程，如果是多个线程在等待则随机唤醒其中一个线程。这两个方法的使用前提都是需要获取对象锁，所以通常和synchronized一起使用，在同步代码块中调用wait和notify方法。。
+
