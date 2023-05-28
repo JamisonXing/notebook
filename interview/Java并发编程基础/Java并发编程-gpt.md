@@ -1112,3 +1112,208 @@ ThreadLocal可能导致内存泄漏的原因是，它与线程的生命周期绑
 ## 小结
 
 ThreadLocal是线程级别的变量，存储每个线程的私有数据，底层是map实现key是线程，value是要存的值，注意使用时计时清理内存防止发生内存泄漏，比如线程池情况下，不清除这个变量值，下次还使用这个线程，则ThreadLocal值还在，还有长时间运行的线程，ThreadLocal变量和与之关联的对象也一直处于内存中，可能导致内存泄漏。
+
+# Java并发编程的阻塞队列
+
+## Java并发编程中有哪几种阻塞队列
+
+Java 并发编程中提供了以下几种常见的阻塞队列实现：
+
+1. `ArrayBlockingQueue`：基于数组的有界阻塞队列。它按照先进先出（FIFO）的原则对元素进行排序。
+2. `LinkedBlockingQueue`：基于链表的阻塞队列。它可以选择是有界的或无界的。当队列为空时，从队列中获取元素的操作将会被阻塞，直到有元素可用。
+3. `PriorityBlockingQueue`：基于优先级的阻塞队列。它可以根据元素的优先级进行排序，优先级最高的元素在队列头部。
+4. `DelayQueue`：延迟队列，用于存储实现了 `Delayed` 接口的元素。每个元素都有一个过期时间，在过期之前，不能从队列中获取该元素。按照过期时间进行排序，即最早过期的元素在队列头部。
+5. `SynchronousQueue`：同步队列，它是一个特殊的阻塞队列，只能容纳单个元素。在同步队列中，插入操作必须等待另一个线程的获取操作，反之亦然。
+
+这些阻塞队列实现提供了线程安全的操作，并且支持阻塞操作，能够在多线程环境下安全地进行并发访问和修改。根据具体的需求和场景，选择适当的阻塞队列实现可以帮助简化并发编程的逻辑和处理。
+
+## ArrayBlockingQueue
+
+### java并发编程的ArrayBlockingQueue是什么
+
+`ArrayBlockingQueue` 是 Java 并发编程中提供的一种阻塞队列实现。它是一个基于数组的有界队列，可以在内部维护一个固定大小的数组，用于存储元素。该队列按照先进先出（FIFO）的原则对元素进行排序。
+
+以下是 `ArrayBlockingQueue` 的一些关键特点：
+
+1. 有界性：`ArrayBlockingQueue` 在创建时需要指定一个固定的容量，即队列可以容纳的元素数量。一旦队列达到容量上限，后续的插入操作将被阻塞，直到有空间可用。
+2. 阻塞操作：`ArrayBlockingQueue` 提供了阻塞操作的特性。当队列为空时，从队列中获取元素的操作将会被阻塞，直到有元素可用。同样地，当队列已满时，插入元素的操作也会被阻塞，直到有空间可用。
+3. 线程安全：`ArrayBlockingQueue` 内部使用锁来保证多线程环境下的线程安全性，以便多个线程可以安全地并发访问和修改队列中的元素。
+4. 公平性：`ArrayBlockingQueue` 可以选择在构造函数中设置是否使用公平性。当使用公平性时，等待时间较长的线程将优先获得访问队列的权利。
+5. 支持多种操作：`ArrayBlockingQueue` 提供了一系列用于插入、删除和检查元素的方法，如 `put()`、`take()`、`offer()`、`poll()` 等。
+
+使用 `ArrayBlockingQueue` 可以方便地实现生产者-消费者模型，其中生产者线程向队列中插入元素，而消费者线程从队列中获取元素。队列的阻塞特性可以帮助协调生产者和消费者之间的操作，以避免线程间的竞争和资源浪费。
+
+### ArrayBlockingQueue的核心源码，并解释
+
+以下是 `ArrayBlockingQueue` 的核心源码，并对其进行解释：
+
+```java
+javaCopy code
+public class ArrayBlockingQueue<E> extends AbstractQueue<E>
+        implements BlockingQueue<E>, java.io.Serializable {
+    
+    private final E[] items; // 用于存储队列元素的数组
+    private int takeIndex; // 下一个要获取元素的索引
+    private int putIndex; // 下一个要插入元素的索引
+    private int count; // 当前队列中的元素数量
+    private final ReentrantLock lock; // 用于保证线程安全的锁对象
+    private final Condition notEmpty; // 非空条件变量，用于阻塞获取操作
+    private final Condition notFull; // 非满条件变量，用于阻塞插入操作
+
+    // 构造函数，初始化队列
+    public ArrayBlockingQueue(int capacity, boolean fair) {
+        if (capacity <= 0)
+            throw new IllegalArgumentException();
+        this.items = (E[]) new Object[capacity];
+        this.lock = new ReentrantLock(fair);
+        this.notEmpty = lock.newCondition();
+        this.notFull = lock.newCondition();
+    }
+
+    // 插入元素到队列尾部，如果队列已满则阻塞等待
+    public void put(E e) throws InterruptedException {
+        Objects.requireNonNull(e);
+        final ReentrantLock lock = this.lock;
+        lock.lockInterruptibly();
+        try {
+            while (count == items.length)
+                notFull.await();
+            enqueue(e);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    // 从队列头部获取并删除元素，如果队列为空则阻塞等待
+    public E take() throws InterruptedException {
+        final ReentrantLock lock = this.lock;
+        lock.lockInterruptibly();
+        try {
+            while (count == 0)
+                notEmpty.await();
+            return dequeue();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    // 将元素插入队列尾部
+    private void enqueue(E x) {
+        final E[] items = this.items;
+        items[putIndex] = x;
+        if (++putIndex == items.length)
+            putIndex = 0;
+        count++;
+        notEmpty.signal();
+    }
+
+    // 从队列头部获取并删除元素
+    private E dequeue() {
+        final E[] items = this.items;
+        E x = items[takeIndex];
+        items[takeIndex] = null;
+        if (++takeIndex == items.length)
+            takeIndex = 0;
+        count--;
+        notFull.signal();
+        return x;
+    }
+
+    // 其他方法和实现细节省略...
+}
+```
+
+`ArrayBlockingQueue` 使用一个数组 `items` 来存储队列中的元素，使用 `takeIndex` 和 `putIndex` 分别表示下一个要获取和插入的元素的索引。`count` 表示当前队列中的元素数量。
+
+在插入元素时，`put()` 方法会获取锁，并在队列已满时阻塞等待。一旦有空间可用，它会调用 `enqueue()` 方法将元素插入到队列尾部，并唤醒可能在等待获取操作的线程。
+
+在获取元素时，`take()` 方法会获取锁，并在队列为空时阻塞等待。一旦有元素可用，它会调用 `dequeue()` 方法从队列头部获取并删除元素，并唤醒可能在等待插入操作的线程。
+
+`enqueue()` 和 `dequeue()` 方法负责实际的元素插入和获取操作，它们会根据索引移动和更新计数。同时，它们也会使用条件变量 `notEmpty` 和 `notFull` 来实现阻塞和唤醒操作，以确保在队列满或空的情况下正确地阻塞和唤醒等待的线程。
+
+通过使用锁和条件变量，`ArrayBlockingQueue` 实现了线程安全的并发访问和操作，保证了多线程环境下队列的正确性和一致性。
+
+### ArrayBlockingQueue使用的业务场景是什么
+
+`ArrayBlockingQueue` 适用于以下业务场景：
+
+1. 生产者-消费者模型：`ArrayBlockingQueue` 可以用作生产者和消费者之间的缓冲区。生产者线程可以将数据插入队列，而消费者线程可以从队列中获取数据进行处理。该队列的阻塞特性可用于在生产者或消费者暂时不可用时进行等待，以平衡两者之间的速度差异。
+2. 任务调度：`ArrayBlockingQueue` 可以用于实现简单的任务调度器。将任务放入队列，然后由多个工作线程从队列中获取任务并执行。这种模式可以用于实现线程池，限制同时执行的任务数量，以及根据需要动态调整工作线程数量。
+3. 数据传输和同步：`ArrayBlockingQueue` 可以用于在多个线程之间传输和同步数据。一个线程可以将数据放入队列，而另一个线程可以从队列中获取该数据进行处理。这种方式可以有效地协调和同步不同线程之间的操作。
+4. 有界缓存：由于 `ArrayBlockingQueue` 是有界队列，因此它可以用作有界缓存的实现。当队列已满时，后续的插入操作将被阻塞，从而控制缓存的大小。这对于控制资源的使用和限制系统负载很有用。
+
+需要注意的是，`ArrayBlockingQueue` 的有界性意味着在达到容量上限后，插入操作将被阻塞，因此需要根据具体场景和需求选择合适的队列大小，避免出现阻塞过早或队列溢出的问题。
+
+### 给我一个ArrayBlockingQueue例子，我来练习
+
+当然！以下是一个使用 `ArrayBlockingQueue` 的简单例子：
+
+```java
+javaCopy code
+import java.util.concurrent.ArrayBlockingQueue;
+
+public class ArrayBlockingQueueExample {
+    public static void main(String[] args) {
+        // 创建一个容量为3的 ArrayBlockingQueue
+        ArrayBlockingQueue<Integer> queue = new ArrayBlockingQueue<>(3);
+
+        // 创建生产者线程
+        Thread producerThread = new Thread(() -> {
+            try {
+                // 生产并插入元素到队列
+                for (int i = 1; i <= 5; i++) {
+                    queue.put(i);
+                    System.out.println("Produced: " + i);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // 创建消费者线程
+        Thread consumerThread = new Thread(() -> {
+            try {
+                // 消费队列中的元素
+                while (true) {
+                    int value = queue.take();
+                    System.out.println("Consumed: " + value);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // 启动生产者和消费者线程
+        producerThread.start();
+        consumerThread.start();
+    }
+}
+```
+
+在这个例子中，我们创建了一个容量为3的 `ArrayBlockingQueue`。生产者线程负责向队列中插入元素（1到5），而消费者线程负责从队列中获取并消费元素。
+
+当队列已满时，生产者线程会被阻塞等待，直到队列有空间可用。当队列为空时，消费者线程会被阻塞等待，直到队列中有元素可供消费。
+
+运行该例子，你将看到生产者线程不断地向队列中插入元素，而消费者线程则不断地从队列中获取并消费元素，实现了生产者-消费者模型。注意观察输出结果，以理解队列的阻塞特性和顺序性。
+
+## LinkedBlockingQueue
+
+### java并发编程的LinkedBlockingQueue是什么
+
+`LinkedBlockingQueue` 是 Java 并发编程中的一个阻塞队列实现，它基于链表数据结构实现。
+
+`LinkedBlockingQueue` 内部使用链表来存储队列中的元素，因此它可以根据需要动态地调整容量，**即可以是无界的也可以是有界的队列。**
+
+与 `ArrayBlockingQueue` 不同，`LinkedBlockingQueue` 的容量可以根据实际需要进行动态扩展，因此理论上可以存储无限数量的元素（受限于内存）。这使得 `LinkedBlockingQueue` 特别适用于需要存储大量元素的场景。
+
+`LinkedBlockingQueue` 支持并发访问和修改，提供了线程安全的操作。它提供了阻塞的插入和获取操作，这意味着在队列为空时，获取操作会被阻塞，直到有元素可用；在队列已满时，插入操作会被阻塞，直到有空间可用。
+
+由于 `LinkedBlockingQueue` **是一个无界队列（如果没有指定容量**），因此在使用时需要注意控制队列的大小，以避免内存溢出的风险。
+
+可以通过以下方式创建一个 `LinkedBlockingQueue` 实例：
+
+```java
+LinkedBlockingQueue<E> queue = new LinkedBlockingQueue<>();
+```
+
+在实际应用中，`LinkedBlockingQueue` 可以用于多线程的生产者-消费者模型，任务调度，消息传递等场景，提供了一种高效且线程安全的数据交换方式。
